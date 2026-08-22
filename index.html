@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<title>أسياد السوق — Lords of the Market 3.0</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<style>
+  html, body { background:#07090C; margin:0; color:#E7EAEE; font-family:'Cairo', system-ui, sans-serif; overflow-x:hidden; }
+  * { box-sizing: border-box; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-thumb { background:#1E252F; border-radius: 4px; }
+  @keyframes pulseGlow { 0%,100% { box-shadow: 0 0 15px rgba(201,162,79,0.15); } 50% { box-shadow: 0 0 25px rgba(201,162,79,0.4); } }
+  @keyframes pulseRed { 0%,100% { opacity: .6; } 50% { opacity: 1; } }
+  @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .glow-gold { animation: pulseGlow 2.5s infinite; }
+  .flash-red { animation: pulseRed 1s infinite; }
+  .ticker-track { animation: tickerScroll 24s linear infinite; }
+  .cyber-panel { background: #0E1217; border: 1px solid #1C232D; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ================= Firebase Config ================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyC7U1BdQR2H4r0hzmtxcHOc9x0rxpFpQmA",
+  authDomain: "lords-market.firebaseapp.com",
+  databaseURL: "https://lords-market-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "lords-market",
+  storageBucket: "lords-market.firebasestorage.app",
+  messagingSenderId: "1009340369256",
+  appId: "1:1009340369256:web:c38c781161cbf584806edd",
+  measurementId: "G-NCN4ZQRN7V",
+};
+
+const CONFIG_MISSING = !firebaseConfig.apiKey || firebaseConfig.apiKey.indexOf("PASTE") === 0;
+let db = null;
+if (!CONFIG_MISSING) {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+}
+
+/* ================= Advanced Audio Engine ================= */
+class SoundEngine {
+  constructor() { this.ctx = null; }
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) this.ctx = new AudioCtx();
+    }
+  }
+  playTone(freq, type = "sine", duration = 0.15, vol = 0.1) {
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch(e) {}
+  }
+  cash() { this.playTone(880, "triangle", 0.1, 0.15); setTimeout(() => this.playTone(1320, "sine", 0.2, 0.15), 70); }
+  buy() { this.playTone(520, "sine", 0.1, 0.12); setTimeout(() => this.playTone(650, "sine", 0.15, 0.12), 60); }
+  sell() { this.playTone(650, "sine", 0.1, 0.12); setTimeout(() => this.playTone(480, "sine", 0.15, 0.12), 60); }
+  alert() { 
+    this.playTone(300, "sawtooth", 0.15, 0.2);
+    setTimeout(() => this.playTone(450, "sawtooth", 0.2, 0.2), 120);
+  }
+  win() {
+    this.playTone(523, "triangle", 0.1, 0.15);
+    setTimeout(() => this.playTone(659, "triangle", 0.1, 0.15), 80);
+    setTimeout(() => this.playTone(783, "triangle", 0.1, 0.15), 160);
+    setTimeout(() => this.playTone(1046, "triangle", 0.25, 0.2), 240);
+  }
+  lose() {
+    this.playTone(400, "sawtooth", 0.15, 0.15);
+    setTimeout(() => this.playTone(280, "sawtooth", 0.25, 0.2), 120);
+  }
+  hack() { this.playTone(140, "square", 0.35, 0.2); }
+  msg() { this.playTone(1050, "sine", 0.08, 0.1); setTimeout(() => this.playTone(1400, "sine", 0.12, 0.1), 60); }
+}
+const sfx = new SoundEngine();
+
+/* ================= ثوابت اللعبة ================= */
+const RESOURCES = [
+  { key: "data", label: "بيانات", color: "#5FB4C9", icon: "📡", desc: "أسرع الموارد تقلباً" },
+  { key: "tech", label: "تقنية", color: "#C9A24F", icon: "⚡", desc: "أعلى الموارد قيمة" },
+  { key: "influence", label: "نفوذ", color: "#A888DB", icon: "🏛️", desc: "ضروري لصفقات القوة" },
+];
+
+const MAX_ROUNDS = 10;
+const ROUND_TIME_LIMIT = 90;
+const START_CASH = 800;
+const START_MARKET = { data: 100, tech: 150, influence: 90 };
+const MAX_TV_SLOTS = 8;
+const BASE_INCOME = 150;
+const DIVIDEND_PER_SHARE = 30;
+
+const SECRET_MISSIONS = [
+  { id: "m1", title: "حوت السوق", desc: "اجمع 4 أسهم تصويت على الأقل قبل نهاية اللعبة.", bonus: 400, check: (p) => p.shares >= 4 },
+  { id: "m2", title: "تبييض شامل", desc: "اغسل 400¥ على الأقل لتصبح أصولاً نظيفة.", bonus: 350, check: (p) => p.legalAssets >= 400 },
+  { id: "m3", title: "محتكر التقنية", desc: "امتلك 4 وحدات تقنية محظورة في أي وقت.", bonus: 300, check: (p) => p.tech >= 4 },
+  { id: "m4", title: "سيد النفوذ", desc: "امتلك 4 وحدات نفوذ سياسي.", bonus: 300, check: (p) => p.influence >= 4 },
+  { id: "m5", title: "السيولة الملكية", desc: "انهِ اللعبة ومعك أكثر من 1,500¥ كاش.", bonus: 450, check: (p) => p.cash >= 1500 },
+];
+
+const BREAKING_NEWS = [
+  { title: "طفرة في الذكاء الاصطناعي!", desc: "ارتفع سعر التقنية المحظورة بنسبة 40% فوراً.", apply: (r) => { r.market.tech = clampPrice(r.market.tech * 1.4); } },
+  { title: "تسريب مصرفي سري!", desc: "تم كشف سيولة بعض التكتلات في تقرير السوق.", apply: (r) => {} },
+  { title: "حظر جمركي مفاجئ!", desc: "انخفاض سعر البيانات بنسبة 30%.", apply: (r) => { r.market.data = clampPrice(r.market.data * 0.7); } },
+  { title: "مساعدات دولية للتنمية!", desc: "توزيع 100¥ كاش إضافي لكل التكتلات.", apply: (r) => { Object.values(r.players).forEach(p => p.cash += 100); } },
+];
+
+const COUNCIL_DECISIONS = [
+  { id: "stimulus", title: "حزمة تحفيز اقتصادي", desc: "توزيع 150¥ كاش لكل التكتلات فوراً.", apply: (r) => { Object.values(r.players).forEach(p => p.cash += 150); } },
+  { id: "tax_rich", title: "ضريبة الثروة الطارئة", desc: "سحب 15% من كاش التكتل الأغنى.", apply: (r) => {
+      let maxP = null, maxC = -1;
+      Object.values(r.players).forEach(p => { if(p.cash > maxC) { maxC = p.cash; maxP = p; } });
+      if (maxP && maxC > 0) { const cut = Math.round(maxC * 0.15); maxP.cash -= cut; }
+    }
+  },
+  { id: "crash_tech", title: "تأميم تقني", desc: "تخفيض سعر التقنية 30% لزيادة الطلب عليها.", apply: (r) => { r.market.tech = clampPrice(r.market.tech * 0.7); } },
+  { id: "boost_data", title: "شراء حكومي للبيانات", desc: "رفع سعر البيانات المسروقة 35% فوراً.", apply: (r) => { r.market.data = clampPrice(r.market.data * 1.35); } },
+  { id: "block_police", title: "تجميد التفتيش الأمني", desc: "منع مداهمات التفتيش ومصادرة الأموال لهذه الجولة.", apply: (r) => { r.immuneAll = true; } },
+];
+
+const QUICK_CONTRACTS = [
+  { id: "mine", label: "تعدين بيانات سحابية", costRes: null, costAmt: 0, rewardCash: 80, rewardRes: "data", rewardResAmt: 1, desc: "عمل مجاني: يعطيك 80¥ + 1 بيانات" },
+  { id: "consult", label: "استشارة نفوذ سرية", costRes: "influence", costAmt: 1, rewardCash: 240, rewardRes: null, rewardResAmt: 0, desc: "سلّم 1 نفوذ واستلم 240¥ كاش" },
+  { id: "upgrade", label: "تطوير كود محظور", costRes: "data", costAmt: 2, rewardCash: 0, rewardRes: "tech", rewardResAmt: 2, desc: "حوّل 2 بيانات إلى 2 تقنية محظورة" },
+];
+
+const BLACK_MARKET_ITEMS = [
+  { id: "freeze", label: "تجميد حساب مصرفي", cost: 150, targeted: true, desc: "منع الخصم من التداول جولة كاملة" },
+  { id: "immune", label: "حصانة سيادية", cost: 120, targeted: false, desc: "حماية تامة من مداهمات التفتيش" },
+  { id: "hack", label: "قرصنة محفظة فورية", cost: 250, targeted: true, desc: "سرقة 20% من كاش الخصم مباشرة" },
+];
+
+const ICONS = {
+  trending: "📈", users: "👥", radio: "📡", skull: "💀", bank: "🏛️",
+  zap: "⚡", eye: "👁️", shield: "🛡️", timer: "⏱️", crown: "👑",
+  cash: "💵", vote: "🗳️", trade: "🔄", gem: "💎", wifi: "📶",
+  refresh: "🔄", handshake: "🤝", kick: "🚫", transfer: "🎖️",
+  freeze: "🧊", immune: "🛡️", dashboard: "🎛️", leave: "🚪", qr: "📱",
+  blackmarket: "🕶️", alert: "🚨", msg: "💬", hack: "💻", contract: "📜",
+  gamble: "🎲", mission: "🎯", gift: "💸"
+};
+
+function uid() { return Math.random().toString(36).slice(2, 9); }
+function clampPrice(p) { return Math.max(20, Math.round(p)); }
+function fmt(n) { return Math.round(n || 0).toLocaleString("en-US"); }
+function clone(o) { return typeof structuredClone === "function" ? structuredClone(o) : JSON.parse(JSON.stringify(o)); }
+function sanitizeKey(s) { return s.replace(/[.#$\[\]\/]/g, "_"); }
+function posInt(v, min = 0, max = 999999) {
+  const n = parseInt(v, 10);
+  return (!Number.isFinite(n) || isNaN(n)) ? min : Math.min(max, Math.max(min, n));
+}
+
+function saveSession(code, name) {
+  try { localStorage.setItem("lom_room", code); localStorage.setItem("lom_name", name); } catch (e) {}
+}
+function loadSession() {
+  try { return { code: localStorage.getItem("lom_room") || "", name: localStorage.getItem("lom_name") || "" }; }
+  catch (e) { return { code: "", name: "" }; }
+}
+function clearSession() {
+  try { localStorage.removeItem("lom_room"); localStorage.removeItem("lom_name"); } catch (e) {}
+}
+
+function freshPlayer() {
+  const randMission = SECRET_MISSIONS[Math.floor(Math.random() * SECRET_MISSIONS.length)];
+  return {
+    cash: START_CASH, data: 1, tech: 1, influence: 1,
+    shares: 1, legalAssets: 0,
+    debt: null, mercenaryOf: null,
+    contractUsed: false,
+    mission: randMission,
+    frozenUntil: null, immuneUntil: null,
+    roundLog: { bought: { data: 0, tech: 0, influence: 0 } },
+  };
+}
+
+function freshRoom(code) {
+  const evId = uid();
+  return {
+    code, round: 1, phase: "lobby", leader: null,
+    timerEnds: 0,
+    blackMarketOpen: false,
+    immuneAll: false,
+    currentNews: null,
+    market: { ...START_MARKET },
+    marketHistory: { data: [100], tech: [150], influence: [90] },
+    sharePrice: 50,
+    players: {},
+    trades: {}, loanOffers: {}, traps: {}, messages: {},
+    vote: null,
+    events: { [evId]: { round: 0, text: "تأسست غرفة التجارة. بانتظار انضمام التكتلات...", ts: Date.now() } },
+    lastInspection: null,
+  };
+}
+
+function hydrateRoom(raw, code) {
+  if (!raw) return null;
+  return {
+    code: raw.code || code,
+    round: raw.round || 1,
+    phase: raw.phase || "lobby",
+    leader: raw.leader || null,
+    timerEnds: raw.timerEnds || 0,
+    blackMarketOpen: !!raw.blackMarketOpen,
+    immuneAll: !!raw.immuneAll,
+    currentNews: raw.currentNews || null,
+    market: raw.market || { ...START_MARKET },
+    marketHistory: raw.marketHistory || { data: [100], tech: [150], influence: [90] },
+    sharePrice: raw.sharePrice || 50,
+    players: raw.players || {},
+    trades: raw.trades || {},
+    loanOffers: raw.loanOffers || {},
+    traps: raw.traps || {},
+    messages: raw.messages || {},
+    vote: raw.vote || null,
+    events: raw.events || {},
+    lastInspection: raw.lastInspection || null,
+  };
+}
+
+/* ================= Firebase Hook ================= */
+function useRoom(code) {
+  const [room, setRoom] = useState(null);
+  const [connected, setConnected] = useState(false);
+  const [lastSync, setLastSync] = useState(null);
+
+  useEffect(() => {
+    if (!code || !db) return;
+    const ref = db.ref("rooms/" + code);
+    const cb = ref.on("value", (snap) => {
+      setRoom(hydrateRoom(snap.val(), code));
+      setConnected(true);
+      setLastSync(Date.now());
+    }, () => setConnected(false));
+    return () => ref.off("value", cb);
+  }, [code]);
+
+  const mutateFor = useCallback(async (roomCode, mutator) => {
+    if (!roomCode || !db) throw new Error("لا يوجد اتصال بقاعدة البيانات");
+    const ref = db.ref("rooms/" + roomCode);
+    const snap = await ref.get();
+    let current = snap.exists() ? hydrateRoom(snap.val(), roomCode) : null;
+    if (!current) current = freshRoom(roomCode);
+    const next = mutator(clone(current));
+    if (next) {
+      await ref.set(next);
+      setRoom(hydrateRoom(next, roomCode));
+      setConnected(true);
+      setLastSync(Date.now());
+    }
+    return next;
+  }, []);
+
+  const mutate = useCallback((mutator) => mutateFor(code, mutator), [code, mutateFor]);
+  const pull = useCallback(async () => {
+    if (!code || !db) return;
+    const snap = await db.ref("rooms/" + code).get();
+    if (snap.exists()) { setRoom(hydrateRoom(snap.val(), code)); setLastSync(Date.now()); }
+  }, [code]);
+
+  return { room, mutate, mutateFor, connected, lastSync, pull };
+}
+
+/* ================= GAME LOGIC ================= */
+function pushEvent(room, text) {
+  const id = uid();
+  room.events[id] = { round: room.round, text, ts: Date.now() };
+  const entries = Object.entries(room.events).sort((a, b) => b[1].ts - a[1].ts);
+  if (entries.length > 35) entries.slice(35).forEach(([k]) => delete room.events[k]);
+}
+
+function sortedEvents(room) {
+  return Object.values(room.events || {}).sort((a, b) => b.ts - a.ts);
+}
+
+function applyMarketFluctuation(room) {
+  Object.keys(room.market).forEach((k) => {
+    const factor = 1 + (Math.random() * 0.32 - 0.14);
+    const oldP = room.market[k];
+    room.market[k] = clampPrice(oldP * factor);
+    if (!room.marketHistory[k]) room.marketHistory[k] = [];
+    room.marketHistory[k].push(room.market[k]);
+    if (room.marketHistory[k].length > 10) room.marketHistory[k].shift();
+  });
+}
+
+function startRoundIncome(room) {
+  Object.values(room.players).forEach(p => {
+    const dividend = (p.shares || 1) * DIVIDEND_PER_SHARE;
+    p.cash += (BASE_INCOME + dividend);
+    p.contractUsed = false;
+  });
+  pushEvent(room, `💵 إيداع الدخل الأساسي (${BASE_INCOME}¥) وأرباح الأسهم لجميع التكتلات.`);
+}
+
+function triggerNews(room) {
+  if (Math.random() < 0.7) {
+    const news = BREAKING_NEWS[Math.floor(Math.random() * BREAKING_NEWS.length)];
+    room.currentNews = news;
+    if (news.apply) news.apply(room);
+    pushEvent(room, `🚨 خبر عاجل: ${news.title} — ${news.desc}`);
+  } else {
+    room.currentNews = null;
+  }
+}
+
+function nextPhase(room) {
+  if (room.phase === "lobby") {
+    room.phase = "planning";
+    room.timerEnds = Date.now() + ROUND_TIME_LIMIT * 1000;
+    startRoundIncome(room);
+    triggerNews(room);
+    room.blackMarketOpen = Math.random() < 0.6;
+    pushEvent(room, `🔔 بدأت الجولة ${room.round} — مرحلة التخطيط والتداول.`);
+    return;
+  }
+  if (room.phase === "planning") {
+    room.phase = "execution";
+    room.timerEnds = Date.now() + 20 * 1000;
+    resolveTraps(room);
+    pushEvent(room, `⚙️ أُغلقت الأوامر وجارٍ التنفيذ في السوق.`);
+    return;
+  }
+  if (room.phase === "execution") {
+    room.phase = "events";
+    room.timerEnds = Date.now() + 35 * 1000;
+    resolveDebts(room);
+    pushEvent(room, `🏛️ مرحلة قرارات المجلس ومداهمات التفتيش.`);
+    return;
+  }
+  if (room.phase === "events") {
+    if (room.round >= MAX_ROUNDS) {
+      room.phase = "ended";
+      room.timerEnds = 0;
+      pushEvent(room, `🏁 انتهت اللعبة بعد ${MAX_ROUNDS} جولات.`);
+      return;
+    }
+    room.round += 1;
+    room.phase = "planning";
+    room.immuneAll = false;
+    room.timerEnds = Date.now() + ROUND_TIME_LIMIT * 1000;
+    applyMarketFluctuation(room);
+    startRoundIncome(room);
+    triggerNews(room);
+    room.blackMarketOpen = Math.random() < 0.6;
+    Object.values(room.players).forEach(p => p.roundLog = { bought: { data: 0, tech: 0, influence: 0 } });
+    pushEvent(room, `🔔 بدأت الجولة ${room.round} — تقلبات جديدة بالسوق!`);
+  }
+}
+
+function resolveTraps(room) {
+  Object.values(room.traps).forEach(trap => {
+    if (trap.resolved || trap.round !== room.round) return;
+    const target = room.players[trap.target];
+    trap.resolved = true;
+    if (!target) return;
+    const bought = (target.roundLog.bought[trap.resource]) || 0;
+    if (bought >= trap.threshold) {
+      const value = bought * room.market[trap.resource];
+      const taken = Math.min(Math.round(value * (trap.cutPercent / 100)), Math.max(0, target.cash));
+      target.cash -= taken;
+      const owner = room.players[trap.owner];
+      if (owner) owner.cash += taken;
+      trap.triggered = true;
+      pushEvent(room, `⚡ فخ مالي! خسر ${trap.target} مبلغ ${fmt(taken)}¥ لصالح ${trap.owner}.`);
+    }
+  });
+}
+
+function resolveDebts(room) {
+  Object.entries(room.players).forEach(([pname, p]) => {
+    if (p.debt && room.round > p.debt.due && !p.mercenaryOf) {
+      p.mercenaryOf = p.debt.lender;
+      pushEvent(room, `☠️ تعثر ${pname} عن سداد الدين وتحوّل إلى تابع (مرتزق)!`);
+    }
+  });
+  if (!room.immuneAll && room.round % 2 === 0 && Math.random() < 0.4) {
+    let confiscatedTotal = 0;
+    Object.values(room.players).forEach(p => {
+      const immune = p.immuneUntil && p.immuneUntil >= room.round;
+      if (!immune && p.cash > 100 && Math.random() < 0.45) {
+        const pct = 0.25 + Math.random() * 0.35;
+        const amt = Math.round(p.cash * pct);
+        p.cash -= amt; confiscatedTotal += amt;
+      }
+    });
+    if (confiscatedTotal > 0) {
+      room.lastInspection = { round: room.round, amount: confiscatedTotal };
+      pushEvent(room, `🚨 مداهمة أمنية مفاجئة! تم حجز ${fmt(confiscatedTotal)}¥ من سيولة التكتلات.`);
+    }
+  }
+}
+
+/* ================= UI ATOMS ================= */
+function Ico({ name, size = 15, className = "", style = {} }) {
+  return <span className={className} style={{ fontSize: size, lineHeight: 1, ...style }}>{ICONS[name] || "•"}</span>;
+}
+
+function Stamp({ children, tone = "danger" }) {
+  const colors = {
+    danger: "border-[#C9605F] text-[#F0A6A5] bg-[#C9605F]/10",
+    gold: "border-[#C9A24F] text-[#F3DB94] bg-[#C9A24F]/10",
+    cyan: "border-[#5FB4C9] text-[#9EE2F3] bg-[#5FB4C9]/10"
+  };
+  return <span className={`inline-block border px-2 py-0.5 text-[10px] font-bold rounded ${colors[tone]}`}>{children}</span>;
+}
+
+function Panel({ title, icon, tone, children, className = "", right }) {
+  return (
+    <div className={`cyber-panel rounded-xl overflow-hidden ${className}`}>
+      {title && (
+        <div className="flex items-center justify-between gap-2 px-3.5 py-2.5 bg-[#12161D] border-b border-[#1C232D]">
+          <div className="flex items-center gap-2">
+            {icon && <Ico name={icon} size={15} style={{ color: tone || "#C9A24F" }} />}
+            <span className="text-[12px] font-bold text-[#CAD2DC]">{title}</span>
+          </div>
+          {right}
+        </div>
+      )}
+      <div className="p-3.5">{children}</div>
+    </div>
+  );
+}
+
+function Btn({ children, onClick, tone = "gold", disabled, small, className = "" }) {
+  const tones = {
+    gold: "bg-[#C9A24F] text-[#07090C] hover:bg-[#dec078] active:scale-95",
+    danger: "bg-[#C9605F] text-white hover:bg-[#df7675] active:scale-95",
+    cyan: "bg-[#5FB4C9] text-[#07090C] hover:bg-[#85cbe0] active:scale-95",
+    ghost: "bg-[#141A22] border border-[#262F3D] text-[#DCE2E9] hover:border-[#C9A24F] active:scale-95",
+  };
+  return (
+    <button onClick={(e) => { sfx.init(); onClick && onClick(e); }} disabled={disabled}
+      className={`${tones[tone]} ${small ? "text-[11px] px-2.5 py-1.5" : "text-[13px] px-4 py-2.5"} font-bold rounded-lg transition disabled:opacity-25 disabled:pointer-events-none ${className}`}>
+      {children}
+    </button>
+  );
+}
+
+function Input(props) {
+  return <input {...props} className={`w-full bg-[#080B0E] border border-[#1F2733] rounded-lg px-3 py-2 text-sm text-[#E7EAEE] outline-none focus:border-[#C9A24F] font-mono placeholder:text-[#4A5362] ${props.className || ""}`} />;
+}
+function Select(props) {
+  return <select {...props} className={`w-full bg-[#080B0E] border border-[#1F2733] rounded-lg px-3 py-2 text-sm text-[#E7EAEE] outline-none focus:border-[#C9A24F] ${props.className || ""}`}>{props.children}</select>;
+}
+
+/* ================= ROOT APP ================= */
+function App() {
+  const [screen, setScreen] = useState("setup");
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+  const [tvCodeInput, setTvCodeInput] = useState("");
+  const [playerCodeInput, setPlayerCodeInput] = useState(() => {
+    try { return (new URLSearchParams(window.location.search).get("room") || "").toUpperCase().slice(0, 5); }
+    catch (e) { return ""; }
+  });
+  const [nameInput, setNameInput] = useState("");
+  const [setupError, setSetupError] = useState("");
+  const [restoring, setRestoring] = useState(true);
+  const { room, mutate, mutateFor, connected, lastSync, pull } = useRoom(code || null);
+
+  useEffect(() => {
+    const session = loadSession();
+    const qr = (() => { try { return new URLSearchParams(window.location.search).get("room"); } catch (e) { return null; } })();
+    if (session.code && session.name && (!qr || qr.toUpperCase() === session.code)) {
+      setCode(session.code); setName(session.name); setScreen("player");
+    }
+    setRestoring(false);
+  }, []);
+
+  function leaveRoom() {
+    clearSession();
+    setCode(""); setName(""); setScreen("setup"); setSetupError("");
+  }
+
+  if (CONFIG_MISSING) return <div className="p-10 text-center">Firebase Config Missing</div>;
+  if (restoring) return <div className="min-h-screen bg-[#07090C]" />;
+
+  if (screen === "setup") {
+    return (
+      <div dir="rtl" className="min-h-screen bg-gradient-to-b from-[#07090C] via-[#0B0F14] to-[#12161F] flex items-center justify-center p-4">
+        <div className="w-full max-w-sm">
+          <div className="text-center mb-6">
+            <span className="text-[10px] tracking-[0.3em] font-mono text-[#5FB4C9]">CYBER FINANCIAL WARFARE</span>
+            <h1 className="text-3xl font-black mt-1">أسياد <span className="text-[#C9A24F]">السوق 3.0</span></h1>
+          </div>
+
+          <Panel title="شاشة العرض (TV / الماستر)" icon="radio" tone="#C9A24F" className="mb-4 glow-gold">
+            <p className="text-[11px] text-[#7A8699] mb-3">للشاشة الكبيرة أو التابلت — عرض لحظي للأسعار والأخبار.</p>
+            <div className="flex gap-2">
+              <Input value={tvCodeInput} onChange={(e) => setTvCodeInput(e.target.value.toUpperCase().slice(0, 5))} placeholder="رمز الغرفة (اتركه لإنشاء جديد)" />
+              <Btn onClick={async () => {
+                sfx.cash(); setSetupError("");
+                const c = tvCodeInput || uid().slice(0, 4).toUpperCase();
+                try { await mutateFor(c, (r) => (r.round ? r : freshRoom(c))); setCode(c); setScreen("tv"); }
+                catch (e) { setSetupError(`فشل الاتصال: ${e.message || e}`); }
+              }}>فتح</Btn>
+            </div>
+          </Panel>
+
+          <Panel title="تيرمينال اللاعب (الجوال)" icon="users" tone="#5FB4C9">
+            <p className="text-[11px] text-[#7A8699] mb-3">انضم للتداول، المهام السرية، والتفاوض.</p>
+            <div className="space-y-2 mb-3">
+              <Input value={playerCodeInput} onChange={(e) => setPlayerCodeInput(e.target.value.toUpperCase().slice(0, 5))} placeholder="رمز الغرفة (مثال: K796)" />
+              <Input value={nameInput} onChange={(e) => setNameInput(e.target.value.slice(0, 16))} placeholder="اسم التكتل / الشركة" />
+            </div>
+            <Btn tone="cyan" className="w-full" disabled={!playerCodeInput || !nameInput} onClick={async () => {
+              sfx.cash(); setSetupError("");
+              const c = playerCodeInput; const safeName = sanitizeKey(nameInput);
+              try {
+                await mutateFor(c, (r) => {
+                  const rm = r.round ? r : freshRoom(c);
+                  if (!rm.players[safeName]) rm.players[safeName] = freshPlayer();
+                  if (!rm.leader) rm.leader = safeName;
+                  return rm;
+                });
+                saveSession(c, safeName);
+                setCode(c); setName(safeName); setScreen("player");
+              } catch (e) { setSetupError(`تعذر الدخول: ${e.message || e}`); }
+            }}>دخول السوق ›</Btn>
+          </Panel>
+
+          {setupError && <p className="text-center text-xs text-[#F0A6A5] mt-3">{setupError}</p>}
+        </div>
+      </div>
+    );
+  }
+
+  if (!room) {
+    return (
+      <div dir="rtl" className="min-h-screen bg-[#07090C] flex items-center justify-center p-6 text-center">
+        <div>
+          <div className="animate-spin text-3xl mb-3">⚙️</div>
+          <p className="text-sm font-bold mb-3">جارٍ مزامنة بيانات السوق...</p>
+          <Btn small tone="ghost" onClick={leaveRoom}>إلغاء والعودة</Btn>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "tv") return <TVView room={room} mutate={mutate} connected={connected} lastSync={lastSync} pull={pull} />;
+  if (screen === "player") return <PlayerView room={room} mutate={mutate} name={name} connected={connected} onLeave={leaveRoom} />;
+  return null;
+}
+
+/* ================= TV VIEW ================= */
+function TVView({ room, mutate, connected, lastSync, pull }) {
+  const [timeLeft, setTimeLeft] = useState(0);
+  const players = Object.entries(room.players);
+  const slots = players.slice(0, MAX_TV_SLOTS);
+  const mercenaries = players.filter(([, p]) => p.mercenaryOf);
+  const phaseLabel = { lobby: "الردهة (انتظار اللاعبين)", planning: "التخطيط والتداول السري", execution: "تنفيذ الصفقات والفخاخ", events: "قرارات المجلس والمداهمات", ended: "انتهت اللعبة" }[room.phase];
+  const joinUrl = (() => { try { return window.location.origin + window.location.pathname + "?room=" + room.code; } catch (e) { return ""; } })();
+  const qrSrc = joinUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=180x180&bgcolor=0E1217&color=E7EAEE&data=${encodeURIComponent(joinUrl)}` : "";
+  const events = sortedEvents(room).slice(0, 10);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (room.timerEnds && room.phase !== "lobby" && room.phase !== "ended") {
+        const rem = Math.max(0, Math.round((room.timerEnds - Date.now()) / 1000));
+        setTimeLeft(rem);
+        if (rem === 0 && room.phase !== "ended") {
+          mutate(r => { nextPhase(r); return r; });
+        }
+      } else {
+        setTimeLeft(0);
+      }
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [room.timerEnds, room.phase, mutate]);
+
+  return (
+    <div dir="rtl" className="min-h-screen bg-[#07090C] text-[#E7EAEE] flex flex-col justify-between overflow-hidden select-none">
+      {/* شريط المرتزقة */}
+      {mercenaries.length > 0 && (
+        <div className="bg-[#351014] border-b border-[#C9605F] flash-red py-1.5 text-center text-xs font-black text-[#F0A6A5]">
+          🚨 تكتلات ساقطة تحت الوصاية (مرتزقة): {mercenaries.map(([n]) => n).join(" · ")}
+        </div>
+      )}
+
+      {/* الأخبار العاجلة */}
+      {room.currentNews && (
+        <div className="bg-[#2B1B0E] border-b border-[#C9A24F] py-2 px-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Stamp tone="gold">خبر عاجل</Stamp>
+            <span className="font-bold text-sm text-[#F3DB94]">{room.currentNews.title}: {room.currentNews.desc}</span>
+          </div>
+          <Ico name="alert" size={16} className="text-[#C9A24F] animate-bounce" />
+        </div>
+      )}
+
+      {/* شريط الأسعار الحي */}
+      <div className="bg-[#0B0F15] border-b border-[#1C232D] py-2 overflow-hidden whitespace-nowrap">
+        <div className="inline-flex gap-12 px-4 ticker-track">
+          {[...RESOURCES, ...RESOURCES].map((r, i) => {
+            const hist = room.marketHistory[r.key] || [room.market[r.key]];
+            const diff = hist.length > 1 ? room.market[r.key] - hist[hist.length - 2] : 0;
+            return (
+              <div key={i} className="flex items-center gap-2 text-sm font-bold">
+                <span style={{ color: r.color }}>{r.icon} {r.label}:</span>
+                <span className="font-mono text-[#E7EAEE]">{fmt(room.market[r.key])}¥</span>
+                <span className={`text-[10px] font-mono px-1 rounded ${diff >= 0 ? "text-[#7FC98A] bg-[#7FC98A]/10" : "text-[#D98685] bg-[#D98685]/10"}`}>
+                  {diff >= 0 ? `▲ +${diff}` : `▼ ${diff}`}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* المحتوى الرئيسي */}
+      <div className="p-6 flex-1 flex flex-col gap-4 max-w-7xl mx-auto w-full">
+        <div className="flex items-center justify-between border-b border-[#1C232D] pb-3">
+          <div>
+            <div className="text-[11px] font-mono tracking-[0.2em] text-[#5A6475]">ROOM: {room.code}</div>
+            <h1 className="text-3xl font-black text-[#E7EAEE]">أسياد السوق <span className="text-[#C9A24F] font-mono">3.0</span></h1>
+          </div>
+          <div className="flex items-center gap-6">
+            {timeLeft > 0 && (
+              <div className="text-center px-4 py-1.5 rounded-xl bg-[#141A24] border border-[#243040] glow-gold">
+                <div className="text-[10px] text-[#7A8699]">الوقت المتبقي</div>
+                <div className="text-2xl font-black font-mono text-[#C9A24F]">{timeLeft}s</div>
+              </div>
+            )}
+            <div className="text-left">
+              <div className="text-xs text-[#7A8699]">جولة {room.round} / {MAX_ROUNDS}</div>
+              <div className="text-lg font-bold text-[#5FB4C9]">{phaseLabel}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1">
+          <div className="space-y-4 md:col-span-1">
+            <Panel title="انضمام فوري عبر الجوال" icon="qr">
+              <div className="flex flex-col items-center gap-2">
+                {qrSrc && <img src={qrSrc} alt="QR" className="rounded-xl border border-[#1C232D]" width={140} height={140} />}
+                <div className="text-2xl font-black font-mono tracking-widest text-[#C9A24F]">{room.code}</div>
+              </div>
+            </Panel>
+
+            {room.vote && (
+              <Panel title="تصويت مجلس الإدارة" icon="vote" tone="#A888DB">
+                <p className="text-xs font-bold mb-1">📜 {room.vote.title}</p>
+                <p className="text-[11px] text-[#CAD2DC] mb-2">{room.vote.desc}</p>
+                <p className="text-[10px] text-[#7A8699]">الأصوات: {Object.keys(room.vote.votes || {}).length} / {players.length}</p>
+              </Panel>
+            )}
+          </div>
+
+          <div className="md:col-span-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 h-full">
+              {Array.from({ length: MAX_TV_SLOTS }).map((_, i) => {
+                const entry = slots[i];
+                if (!entry) return (
+                  <div key={i} className="rounded-xl border border-dashed border-[#1A222C] flex items-center justify-center text-[#364150] text-xs">
+                    شاغر
+                  </div>
+                );
+                const [pname, p] = entry;
+                const isMerc = !!p.mercenaryOf;
+                return (
+                  <div key={pname} className={`rounded-xl p-3.5 flex flex-col justify-between border ${isMerc ? "bg-[#251014] border-[#C9605F]" : "cyber-panel"}`}>
+                    <div>
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-sm truncate">{pname}</span>
+                        {pname === room.leader && <Ico name="crown" size={14} />}
+                      </div>
+                      <div className="text-xl font-black font-mono text-[#C9A24F] mt-1">{fmt(p.cash)}¥</div>
+                    </div>
+
+                    <div className="space-y-1.5 mt-3 pt-2 border-t border-[#1C232D] text-[10px]">
+                      <div className="flex justify-between text-[#8A96A6]">
+                        <span>أسهم: {p.shares}</span>
+                        <span>أصول نظيفة: {fmt(p.legalAssets)}¥</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {p.frozenUntil >= room.round && <span className="px-1.5 py-0.5 rounded bg-[#5FB4C9]/20 text-[#5FB4C9] font-bold">🧊 مجمّد</span>}
+                        {p.immuneUntil >= room.round && <span className="px-1.5 py-0.5 rounded bg-[#7FC98A]/20 text-[#7FC98A] font-bold">🛡️ محصّن</span>}
+                        {isMerc && <span className="px-1.5 py-0.5 rounded bg-[#C9605F] text-white font-bold">مرتزق</span>}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {room.phase === "ended" && <EndScreen room={room} />}
+      </div>
+
+      <div className="bg-[#0B0F15] border-t border-[#1C232D] py-2">
+        <div className="inline-flex gap-10 px-4 text-xs text-[#828E9E] ticker-track">
+          {[...events, ...events].map((e, i) => <span key={i}>ج{e.round} · {e.text}</span>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EndScreen({ room }) {
+  const scores = Object.entries(room.players).map(([n, p]) => {
+    const shareVal = p.shares * room.sharePrice;
+    const debtPenalty = p.debt ? p.debt.principal * 1.5 : 0;
+    const independence = p.mercenaryOf ? -200 : 200;
+    const missionBonus = (p.mission && p.mission.check && p.mission.check(p)) ? p.mission.bonus : 0;
+    return { n, score: Math.round(p.legalAssets + shareVal + independence + missionBonus - debtPenalty), missionCompleted: missionBonus > 0 };
+  }).sort((a, b) => b.score - a.score);
+
+  return (
+    <div className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4">
+      <div className="cyber-panel rounded-2xl max-w-lg w-full p-6 glow-gold">
+        <h2 className="text-2xl font-black text-center mb-4 text-[#C9A24F]">🏆 الترتيب النهائي لأسياد السوق</h2>
+        <div className="space-y-2 mb-6">
+          {scores.map((s, i) => (
+            <div key={s.n} className={`flex justify-between items-center p-3 rounded-xl ${i === 0 ? "bg-[#C9A24F]/15 border border-[#C9A24F]" : "bg-[#12161E]"}`}>
+              <div>
+                <div className="font-bold flex items-center gap-2">
+                  {i === 0 ? "👑" : `#${i + 1}`} {s.n}
+                </div>
+                {s.missionCompleted && <span className="text-[10px] text-[#7FC98A]">🎯 أنجز المهمة السرية (+بونص)</span>}
+              </div>
+              <div className="font-mono font-black text-[#C9A24F]">{fmt(s.score)} نقطة نفوذ</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ================= PLAYER VIEW ================= */
+function PlayerView({ room, mutate, name, connected, onLeave }) {
+  const p = room.players[name];
+  const isLeader = room.leader === name;
+  const [tab, setTab] = useState(isLeader ? "dashboard" : "market");
+
+  if (!p) {
+    return (
+      <div dir="rtl" className="min-h-screen bg-[#07090C] p-6 flex flex-col items-center justify-center text-center gap-3">
+        <p className="text-sm text-[#8A96A6]">تم استبعادك أو لم تنضم للغرفة بعد.</p>
+        <Btn small tone="ghost" onClick={onLeave}>العودة للرئيسية</Btn>
+      </div>
+    );
+  }
+
+  const tabs = [
+    ...(isLeader ? [{ id: "dashboard", label: "القيادة", icon: "dashboard" }] : []),
+    { id: "market", label: "التداول", icon: "trending" },
+    { id: "quests", label: "المهام والقمار", icon: "gamble" },
+    { id: "contracts", label: "عقود وبنك", icon: "contract" },
+    { id: "vote", label: "المجلس", icon: "vote" },
+    { id: "social", label: "تحالفات", icon: "handshake" },
+    { id: "black", label: "السوداء", icon: "blackmarket" },
+  ];
+
+  return (
+    <div dir="rtl" className="min-h-screen bg-[#07090C] text-[#E7EAEE] pb-20 select-none">
+      {/* Header */}
+      <div className="sticky top-0 z-20 bg-[#0B0F15]/95 backdrop-blur border-b border-[#1C232D] p-3">
+        <div className="flex justify-between items-center">
+          <div>
+            <div className="text-[10px] text-[#7A8699] flex items-center gap-1.5">
+              <span className="font-bold text-[#E7EAEE]">{name}</span>
+              {isLeader && <Ico name="crown" size={12} />}
+              {p.mercenaryOf && <Stamp tone="danger">مرتزق</Stamp>}
+            </div>
+            <div className="text-xl font-black font-mono text-[#C9A24F]">{fmt(p.cash)}¥</div>
+          </div>
+
+          <div className="text-left">
+            <div className="flex items-center gap-2 justify-end">
+              <span className="text-[10px] text-[#7A8699]">جولة {room.round}</span>
+              <button onClick={onLeave} className="text-[#7A8699] hover:text-[#C9605F]"><Ico name="leave" size={14} /></button>
+            </div>
+            <div className="text-[11px] font-bold text-[#5FB4C9]">
+              {room.phase === "planning" ? "مرحلة التخطيط" : room.phase === "execution" ? "مرحلة التنفيذ" : "المجلس"}
+            </div>
+          </div>
+        </div>
+
+        {/* مخزون الموارد */}
+        <div className="flex justify-between mt-2 pt-2 border-t border-[#161D26] text-[11px] font-mono">
+          {RESOURCES.map(r => (
+            <span key={r.key} style={{ color: r.color }} className="flex items-center gap-1">
+              {r.icon} {p[r.key]}
+            </span>
+          ))}
+          <span className="text-[#CAD2DC]">🏛️ أصول: {fmt(p.legalAssets)}¥</span>
+        </div>
+      </div>
+
+      {/* Tabs Content */}
+      <div className="p-3">
+        {tab === "dashboard" && isLeader && <LeaderDashboard room={room} mutate={mutate} name={name} />}
+        {tab === "market" && <MarketTab room={room} mutate={mutate} name={name} />}
+        {tab === "quests" && <QuestsTab room={room} mutate={mutate} name={name} />}
+        {tab === "contracts" && <ContractsTab room={room} mutate={mutate} name={name} />}
+        {tab === "vote" && <VoteTab room={room} mutate={mutate} name={name} />}
+        {tab === "social" && <SocialTab room={room} mutate={mutate} name={name} />}
+        {tab === "black" && <BlackMarketTab room={room} mutate={mutate} name={name} />}
+      </div>
+
+      {/* Navigation Footer */}
+      <div className="fixed bottom-0 inset-x-0 bg-[#0B0F15] border-t border-[#1C232D] flex justify-around p-1 z-30">
+        {tabs.map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)}
+            className={`flex flex-col items-center gap-0.5 px-2 py-1.5 text-[9px] font-bold rounded-lg transition shrink-0 ${tab === t.id ? "text-[#C9A24F] bg-[#141A24]" : "text-[#7A8699]"}`}>
+            <Ico name={t.icon} size={16} />{t.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ================= TAB 1: MARKET ================= */
+function MarketTab({ room, mutate, name }) {
+  const [qty, setQty] = useState(1);
+  const p = room.players[name];
+  const frozen = p.frozenUntil >= room.round;
+
+  const handleTrade = (res, side) => {
+    mutate(rm => {
+      const player = rm.players[name];
+      const q = posInt(qty, 1);
+      const price = rm.market[res];
+      const cost = price * q;
+
+      if (side === "buy") {
+        if (player.cash >= cost) {
+          player.cash -= cost;
+          player[res] += q;
+          player.roundLog.bought[res] = (player.roundLog.bought[res] || 0) + q;
+          rm.market[res] = clampPrice(price * (1 + 0.04 * q));
+          sfx.buy();
+        }
+      } else {
+        if (player[res] >= q) {
+          player[res] -= q;
+          player.cash += cost;
+          rm.market[res] = clampPrice(price * (1 - 0.04 * q));
+          sfx.sell();
+        }
+      }
+      return rm;
+    });
+  };
+
+  return (
+    <div className="space-y-3">
+      {frozen && <div className="p-2.5 rounded-xl bg-[#351417] border border-[#C9605F] text-xs text-[#F0A6A5] text-center">🧊 حسابك مجمد لهذه الجولة بسبب عملية تخريبية.</div>}
+
+      <Panel title="سوق الموارد المباشر" icon="trending">
+        <div className="flex items-center justify-between mb-3 bg-[#080B0E] p-2 rounded-lg border border-[#1A222C]">
+          <span className="text-xs text-[#8A96A6]">الكمية:</span>
+          <div className="flex gap-1.5">
+            {[1, 2, 5, 10].map(n => (
+              <button key={n} onClick={() => setQty(n)} className={`px-2.5 py-0.5 text-xs font-mono rounded ${qty === n ? "bg-[#C9A24F] text-[#07090C] font-bold" : "bg-[#141A22] text-[#CAD2DC]"}`}>{n}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-2.5">
+          {RESOURCES.map(r => (
+            <div key={r.key} className="bg-[#080B0E] border border-[#1C232D] rounded-xl p-3">
+              <div className="flex justify-between items-center mb-2">
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span>{r.icon}</span>
+                    <span className="font-bold text-sm" style={{ color: r.color }}>{r.label}</span>
+                  </div>
+                  <div className="text-[10px] text-[#636F80]">{r.desc}</div>
+                </div>
+                <div className="text-sm font-mono font-bold text-[#C9A24F]">{fmt(room.market[r.key])}¥</div>
+              </div>
+
+              <div className="flex gap-2">
+                <Btn small tone="cyan" className="flex-1" disabled={frozen || p.cash < room.market[r.key] * qty} onClick={() => handleTrade(r.key, "buy")}>
+                  شراء {qty} ({fmt(room.market[r.key] * qty)}¥)
+                </Btn>
+                <Btn small tone="ghost" className="flex-1" disabled={frozen || p[r.key] < qty} onClick={() => handleTrade(r.key, "sell")}>
+                  بيع {qty} (+{fmt(room.market[r.key] * qty)}¥)
+                </Btn>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Panel>
+
+      <Panel title="تأمين الثروة والأسهم" icon="bank">
+        <div className="space-y-2">
+          <div className="flex justify-between items-center p-2.5 bg-[#080B0E] rounded-xl border border-[#1C232D]">
+            <div>
+              <div className="text-xs font-bold">شراء سهم (+{DIVIDEND_PER_SHARE}¥ دخل كل جولة)</div>
+              <div className="text-[10px] text-[#7A8699]">السعر: {fmt(room.sharePrice)}¥</div>
+            </div>
+            <Btn small disabled={p.cash < room.sharePrice} onClick={() => mutate(r => {
+              const pl = r.players[name];
+              if (pl.cash >= r.sharePrice) { pl.cash -= r.sharePrice; pl.shares += 1; r.sharePrice = clampPrice(r.sharePrice * 1.08); sfx.cash(); }
+              return r;
+            })}>شراء</Btn>
+          </div>
+
+          <div className="flex justify-between items-center p-2.5 bg-[#080B0E] rounded-xl border border-[#1C232D]">
+            <div>
+              <div className="text-xs font-bold">غسيل أموال (أصول نظيفة للفوز)</div>
+              <div className="text-[10px] text-[#7A8699]">حوّل 100¥ كاش إلى 80¥ أصول مضمونة</div>
+            </div>
+            <Btn small tone="danger" disabled={p.cash < 100} onClick={() => mutate(r => {
+              const pl = r.players[name];
+              if (pl.cash >= 100) { pl.cash -= 100; pl.legalAssets += 80; sfx.cash(); pushEvent(r, `🧺 عملية غسيل أموال تمت في الظلام...`); }
+              return r;
+            })}>غسيل 100¥</Btn>
+          </div>
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+/* ================= TAB 2: QUESTS & HIGH STAKES GAMBLE ================= */
+function QuestsTab({ room, mutate, name }) {
+  const p = room.players[name];
+  const [gambleAmt, setGambleAmt] = useState(100);
+  const [gambleResult, setGambleResult] = useState(null);
+
+  const playGamble = (choice) => {
+    mutate(r => {
+      const pl = r.players[name];
+      const amt = posInt(gambleAmt, 50);
+      if (pl.cash < amt) return r;
+
+      const outcome = Math.random() < 0.5 ? "up" : "down";
+      if (outcome === choice) {
+        pl.cash += amt;
+        setGambleResult({ won: true, amt });
+        sfx.win();
+        pushEvent(r, `🎲 ربح ${name} رهان المضاربة السريعة وحصل على +${fmt(amt)}¥!`);
+      } else {
+        pl.cash -= amt;
+        setGambleResult({ won: false, amt });
+        sfx.lose();
+        pushEvent(r, `🎲 خسر ${name} في المضاربة السريعة بقيمة ${fmt(amt)}¥.`);
+      }
+      return r;
+    });
+  };
+
+  return (
+    <div className="space-y-3">
+      {/* المهمة السرية */}
+      <Panel title="مهمتي السرية (بونص نهاية اللعبة)" icon="mission" tone="#C9A24F">
+        {p.mission ? (
+          <div className="p-3 bg-[#080B0E] rounded-xl border border-[#1C232D]">
+            <div className="flex justify-between items-center mb-1">
+              <span className="font-bold text-sm text-[#F3DB94]">{p.mission.title}</span>
+              <Stamp tone="gold">+{p.mission.bonus} نقطة</Stamp>
+            </div>
+            <p className="text-xs text-[#CAD2DC]">{p.mission.desc}</p>
+          </div>
+        ) : (
+          <p className="text-xs text-[#7A8699]">لا توجد مهمة محددة.</p>
+        )}
+      </Panel>
+
+      {/* المضاربة السريعة */}
+      <Panel title="مضاربة سريعة (Double or Nothing)" icon="gamble" tone="#5FB4C9">
+        <p className="text-xs text-[#8A96A6] mb-3">اختر اتجاه السوق وضاعف أموالك بنسبة 50/50:</p>
+        <div className="flex gap-2 mb-3">
+          {[50, 100, 200].map(amt => (
+            <button key={amt} onClick={() => setGambleAmt(amt)} className={`flex-1 py-1.5 text-xs font-mono rounded-lg border ${gambleAmt === amt ? "bg-[#5FB4C9] text-[#07090C] font-bold border-[#5FB4C9]" : "bg-[#141A22] border-[#262F3D]"}`}>
+              {amt}¥
+            </button>
+          ))}
+        </div>
+
+        <div className="flex gap-2">
+          <Btn tone="cyan" className="flex-1" disabled={p.cash < gambleAmt} onClick={() => playGamble("up")}>
+            🟢 صعود (▲)
+          </Btn>
+          <Btn tone="danger" className="flex-1" disabled={p.cash < gambleAmt} onClick={() => playGamble("down")}>
+            🔴 هبوط (▼)
+          </Btn>
+        </div>
+
+        {gambleResult && (
+          <div className={`mt-3 p-2.5 rounded-xl text-center text-xs font-bold ${gambleResult.won ? "bg-[#7FC98A]/20 text-[#7FC98A]" : "bg-[#C9605F]/20 text-[#F0A6A5]"}`}>
+            {gambleResult.won ? `🎉 فوز! كسبت ${fmt(gambleResult.amt)}¥ إضافية!` : `💀 خسارة! راحت عليك ${fmt(gambleResult.amt)}¥.`}
+          </div>
+        )}
+      </Panel>
+    </div>
+  );
+}
+
+/* ================= TAB 3: CONTRACTS & INSTANT LOANS ================= */
+function ContractsTab({ room, mutate, name }) {
+  const p = room.players[name];
+
+  const takeContract = (c) => {
+    mutate(r => {
+      const pl = r.players[name];
+      if (pl.contractUsed) return r;
+      if (c.costRes && pl[c.costRes] < c.costAmt) return r;
+
+      if (c.costRes) pl[c.costRes] -= c.costAmt;
+      if (c.rewardCash) pl.cash += c.rewardCash;
+      if (c.rewardRes) pl[c.rewardRes] += c.rewardResAmt;
+
+      pl.contractUsed = true;
+      sfx.cash();
+      pushEvent(r, `📜 نفّذ ${name} عقداً سريعاً واستلم أرباحه.`);
+      return r;
+    });
+  };
+
+  const takeBankLoan = () => {
+    mutate(r => {
+      const pl = r.players[name];
+      if (pl.debt) return r;
+      pl.cash += 300;
+      pl.debt = { lender: "بنك السوق المركزي", principal: 300, due: r.round + 2 };
+      sfx.cash();
+      pushEvent(r, `🏦 اقترض ${name} مبلغ 300¥ من بنك السوق.`);
+      return r;
+    });
+  };
+
+  return (
+    <div className="space-y-3">
+      {/* عقود سريعة */}
+      <Panel title="عقود فورية (مرة كل جولة)" icon="contract" tone="#5FB4C9">
+        {p.contractUsed ? (
+          <div className="p-3 bg-[#080B0E] rounded-xl border border-[#1C232D] text-center">
+            <span className="text-xl mb-1 block">⏳</span>
+            <p className="text-xs text-[#CAD2DC]">أنجزت عقدك لهذه الجولة بنجاح.</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {QUICK_CONTRACTS.map(c => {
+              const canAfford = !c.costRes || p[c.costRes] >= c.costAmt;
+              return (
+                <div key={c.id} className="p-2.5 bg-[#080B0E] border border-[#1C232D] rounded-xl flex justify-between items-center">
+                  <div>
+                    <div className="text-xs font-bold text-[#E7EAEE]">{c.label}</div>
+                    <div className="text-[10px] text-[#7A8699]">{c.desc}</div>
+                  </div>
+                  <Btn small tone="cyan" disabled={!canAfford} onClick={() => takeContract(c)}>تنفيذ</Btn>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </Panel>
+
+      {/* بنك القروض السريعة */}
+      <Panel title="بنك السوق (قروض طارئة)" icon="bank" tone="#C9605F">
+        {p.debt ? (
+          <div className="p-3 bg-[#2A1014] border border-[#C9605F] rounded-xl">
+            <div className="text-xs font-bold text-[#F0A6A5]">مدين لـ: {p.debt.lender}</div>
+            <div className="text-lg font-black font-mono text-[#C9A24F] mt-1">{fmt(p.debt.principal * 1.2)}¥</div>
+            <div className="text-[10px] text-[#7A8699] mb-2">الاستحقاق: نهاية جولة {p.debt.due}</div>
+            <Btn small tone="cyan" disabled={p.cash < p.debt.principal * 1.2} onClick={() => mutate(r => {
+              const pl = r.players[name];
+              const total = Math.round(pl.debt.principal * 1.2);
+              if (pl.cash >= total) {
+                pl.cash -= total;
+                pl.debt = null;
+                sfx.cash();
+                pushEvent(r, `🏦 سدد ${name} قرضه بالكامل.`);
+              }
+              return r;
+            })}>سداد القرض بالكامل</Btn>
+          </div>
+        ) : (
+          <div className="p-3 bg-[#080B0E] rounded-xl border border-[#1C232D] flex justify-between items-center">
+            <div>
+              <div className="text-xs font-bold">سلفة بنكية فورية (300¥)</div>
+              <div className="text-[10px] text-[#7A8699]">السداد: 360¥ خلال جولتين</div>
+            </div>
+            <Btn small tone="gold" onClick={takeBankLoan}>اقتراض 300¥</Btn>
+          </div>
+        )}
+      </Panel>
+    </div>
+  );
+}
+
+/* ================= TAB 4: COUNCIL & VOTING ================= */
+function VoteTab({ room, mutate, name }) {
+  const v = room.vote;
+  const myVote = v && v.votes && v.votes[name];
+
+  return (
+    <div className="space-y-3">
+      <Panel title="مجلس الإدارة — القرارات العامة" icon="vote" tone="#A888DB">
+        {!v ? (
+          <div className="text-center py-6">
+            <div className="text-2xl mb-2">🏛️</div>
+            <p className="text-xs text-[#8A96A6]">لا يوجد قرار معروض للتصويت حالياً.</p>
+            <p className="text-[10px] text-[#5A6475] mt-1">يطرح القائد القرارات خلال الجولة.</p>
+          </div>
+        ) : (
+          <div>
+            <div className="p-3 bg-[#080B0E] border border-[#1C232D] rounded-xl mb-3">
+              <div className="text-xs font-mono text-[#A888DB] mb-1">القرار المعروض:</div>
+              <div className="text-sm font-black text-[#E7EAEE] mb-1">{v.title}</div>
+              <div className="text-xs text-[#CAD2DC]">{v.desc}</div>
+            </div>
+
+            {myVote ? (
+              <div className="text-center py-2">
+                <Stamp tone="gold">صوّتَّ بـ ({myVote}) — صوتك بقوة {room.players[name].shares} أسهم</Stamp>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Btn tone="cyan" className="flex-1" onClick={() => mutate(r => {
+                  if(!r.vote.votes) r.vote.votes={};
+                  r.vote.votes[name] = "موافق";
+                  sfx.buy();
+                  return r;
+                })}>موافق (أؤيد)</Btn>
+                
+                <Btn tone="danger" className="flex-1" onClick={() => mutate(r => {
+                  if(!r.vote.votes) r.vote.votes={};
+                  r.vote.votes[name] = "رفض";
+                  sfx.alert();
+                  return r;
+                })}>رفض (أعارض)</Btn>
+              </div>
+            )}
+          </div>
+        )}
+      </Panel>
+    </div>
+  );
+}
+
+/* ================= TAB 5: SOCIAL, BRIBE & CHAT ================= */
+function SocialTab({ room, mutate, name }) {
+  const [target, setTarget] = useState("");
+  const [text, setText] = useState("");
+  const [bribeAmt, setBribeAmt] = useState(50);
+  const others = Object.keys(room.players).filter(n => n !== name);
+  const msgs = Object.values(room.messages || {}).filter(m => m.from === name || m.to === name).sort((a, b) => a.ts - b.ts);
+
+  const sendMsg = () => {
+    if (!target || !text) return;
+    mutate(r => {
+      if (!r.messages) r.messages = {};
+      r.messages[uid()] = { from: name, to: target, text, ts: Date.now() };
+      return r;
+    });
+    sfx.msg();
+    setText("");
+  };
+
+  const sendBribe = () => {
+    mutate(r => {
+      const pl = r.players[name];
+      const rec = r.players[target];
+      if (!rec || pl.cash < bribeAmt) return r;
+      pl.cash -= bribeAmt;
+      rec.cash += bribeAmt;
+      sfx.cash();
+      pushEvent(r, `💸 حوّل ${name} إكرامية بقيمة ${bribeAmt}¥ إلى ${target}.`);
+      return r;
+    });
+  };
+
+  return (
+    <div className="space-y-3">
+      {/* إكرامية ورشوة سريعة */}
+      <Panel title="إكرامية / رشوة سريعة (Quick Bribe)" icon="gift" tone="#C9A24F">
+        <div className="space-y-2 mb-2">
+          <Select value={target} onChange={e => setTarget(e.target.value)}>
+            <option value="">اختر التكتل المستهدف...</option>
+            {others.map(o => <option key={o} value={o}>{o}</option>)}
+          </Select>
+          <div className="flex gap-2">
+            {[50, 100].map(amt => (
+              <button key={amt} onClick={() => setBribeAmt(amt)} className={`flex-1 py-1 text-xs font-mono rounded ${bribeAmt === amt ? "bg-[#C9A24F] text-[#07090C] font-bold" : "bg-[#141A22]"}`}>
+                {amt}¥
+              </button>
+            ))}
+          </div>
+        </div>
+        <Btn small tone="gold" className="w-full" disabled={!target || room.players[name].cash < bribeAmt} onClick={sendBribe}>
+          إرسال {bribeAmt}¥ إكرامية فورية
+        </Btn>
+      </Panel>
+
+      {/* شات وهمس سري */}
+      <Panel title="همس وتفاوض مشفر" icon="msg" tone="#5FB4C9">
+        <div className="flex gap-2 mb-3">
+          <Input value={text} onChange={e => setText(e.target.value)} placeholder="اكتب رسالتك السرية..." />
+          <Btn tone="cyan" small disabled={!target || !text} onClick={sendMsg}>إرسال</Btn>
+        </div>
+
+        <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
+          {msgs.length === 0 && <p className="text-center text-xs text-[#5A6475] py-3">لا توجد رسائل بعد.</p>}
+          {msgs.map((m, i) => {
+            const isMe = m.from === name;
+            return (
+              <div key={i} className={`p-2 rounded-xl text-xs max-w-[85%] ${isMe ? "mr-auto bg-[#1C2636] border border-[#2B3B54]" : "ml-auto bg-[#12161D] border border-[#1C232D]"}`}>
+                <div className="text-[9px] text-[#7A8699] font-bold">{isMe ? `إلى: ${m.to}` : `من: ${m.from}`}</div>
+                <div className="text-[#E7EAEE]">{m.text}</div>
+              </div>
+            );
+          })}
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+/* ================= TAB 6: BLACK MARKET & TRAPS ================= */
+function BlackMarketTab({ room, mutate, name }) {
+  const [target, setTarget] = useState("");
+  const [trapRes, setTrapRes] = useState("data");
+  const others = Object.keys(room.players).filter(n => n !== name);
+
+  return (
+    <div className="space-y-3">
+      {/* السوق السوداء */}
+      <Panel title="السوق السوداء" icon="blackmarket" tone="#C9605F">
+        {!room.blackMarketOpen ? (
+          <p className="text-xs text-[#7A8699] text-center py-4">السوق السوداء مغلقة حالياً. ستفتح لاحقاً.</p>
+        ) : (
+          <div className="space-y-2">
+            {BLACK_MARKET_ITEMS.map(item => (
+              <div key={item.id} className="p-2.5 bg-[#080B0E] border border-[#1C232D] rounded-xl flex justify-between items-center">
+                <div>
+                  <div className="text-xs font-bold text-[#E7EAEE]">{item.label} ({fmt(item.cost)}¥)</div>
+                  <div className="text-[10px] text-[#7A8699]">{item.desc}</div>
+                </div>
+                <Btn small tone="danger" disabled={room.players[name].cash < item.cost || (item.targeted && !target)} onClick={() => {
+                  mutate(r => {
+                    const pl = r.players[name];
+                    if (pl.cash < item.cost) return r;
+                    pl.cash -= item.cost;
+                    if (item.id === "freeze" && target) {
+                      r.players[target].frozenUntil = r.round + 1;
+                      pushEvent(r, `🥷 هجوم سيبراني عطّل حسابات أحد التكتلات!`);
+                      sfx.hack();
+                    } else if (item.id === "immune") {
+                      pl.immuneUntil = r.round + 1;
+                      pushEvent(r, `🛡️ تكتل اشترى حصانة سيادية.`);
+                      sfx.cash();
+                    } else if (item.id === "hack" && target) {
+                      const victim = r.players[target];
+                      const stolen = Math.round(victim.cash * 0.2);
+                      victim.cash -= stolen;
+                      pl.cash += stolen;
+                      pushEvent(r, `💻 اختراق إلكتروني ناجح! تم سحب ${fmt(stolen)}¥ من محفظة مستهدفة.`);
+                      sfx.hack();
+                    }
+                    return r;
+                  });
+                }}>شراء</Btn>
+              </div>
+            ))}
+          </div>
+        )}
+      </Panel>
+
+      {/* زرع الفخاخ */}
+      <Panel title="زرع فخ مالي (Trap)" icon="zap" tone="#C9605F">
+        <div className="space-y-2">
+          <Select value={target} onChange={e => setTarget(e.target.value)}>
+            <option value="">اختر التكتل المستهدف...</option>
+            {others.map(o => <option key={o} value={o}>{o}</option>)}
+          </Select>
+          <div className="flex gap-2">
+            <Select value={trapRes} onChange={e => setTrapRes(e.target.value)}>
+              {RESOURCES.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
+            </Select>
+            <Btn small tone="danger" disabled={!target || room.players[name].cash < 100} onClick={() => {
+              mutate(r => {
+                const pl = r.players[name];
+                if (pl.cash >= 100) {
+                  pl.cash -= 100;
+                  r.traps[uid()] = { owner: name, target, resource: trapRes, threshold: 2, cutPercent: 25, round: r.round, resolved: false, triggered: false };
+                  sfx.cash();
+                  pushEvent(r, `⚡ تم زرع فخ مالي في السوق.`);
+                }
+                return r;
+              });
+            }}>زرع الفخ (100¥)</Btn>
+          </div>
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+/* ================= LEADER DASHBOARD ================= */
+function LeaderDashboard({ room, mutate, name }) {
+  const [selectedDec, setSelectedDec] = useState(COUNCIL_DECISIONS[0].id);
+
+  const startVote = () => {
+    const dec = COUNCIL_DECISIONS.find(d => d.id === selectedDec);
+    if (!dec) return;
+    mutate(r => {
+      r.vote = { id: uid(), decId: dec.id, title: dec.title, desc: dec.desc, votes: {} };
+      pushEvent(r, `🏛️ طرح القائد قراراً للتصويت: "${dec.title}"`);
+      sfx.cash();
+      return r;
+    });
+  };
+
+  const closeVote = () => {
+    mutate(r => {
+      if (!r.vote) return r;
+      let yes = 0, no = 0;
+      Object.entries(r.vote.votes || {}).forEach(([pName, choice]) => {
+        const weight = (r.players[pName] && r.players[pName].shares) || 1;
+        if (choice === "موافق") yes += weight; else no += weight;
+      });
+
+      const passed = yes >= no;
+      if (passed) {
+        const dec = COUNCIL_DECISIONS.find(d => d.id === r.vote.decId);
+        if (dec && dec.apply) dec.apply(r);
+        pushEvent(r, `✅ تم تمرير وتطبيق القرار: "${r.vote.title}"!`);
+        sfx.cash();
+      } else {
+        pushEvent(r, `❌ تم رفض القرار: "${r.vote.title}".`);
+        sfx.alert();
+      }
+      r.vote = null;
+      return r;
+    });
+  };
+
+  return (
+    <div className="space-y-3">
+      <Panel title="التحكم بالجولة والمراحل" icon="timer" tone="#C9605F">
+        <Btn tone="danger" className="w-full" onClick={() => mutate(r => { nextPhase(r); sfx.cash(); return r; })}>
+          {room.phase === "lobby" ? "🚀 إطلاق الجولة الأولى" : "الانتقال للمرحلة التالية ◀"}
+        </Btn>
+      </Panel>
+
+      <Panel title="إدارة قرارات المجلس والتأثير المباشر" icon="vote" tone="#A888DB">
+        {room.vote ? (
+          <div>
+            <div className="text-xs font-bold mb-2">📜 القرار النشط: {room.vote.title}</div>
+            <Btn tone="gold" className="w-full" onClick={closeVote}>حسم التصويت وتطبيق النتيجة فوراً</Btn>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <Select value={selectedDec} onChange={e => setSelectedDec(e.target.value)}>
+              {COUNCIL_DECISIONS.map(d => <option key={d.id} value={d.id}>{d.title}</option>)}
+            </Select>
+            <div className="text-[10px] text-[#7A8699]">{COUNCIL_DECISIONS.find(d => d.id === selectedDec)?.desc}</div>
+            <Btn tone="cyan" className="w-full" onClick={startVote}>طرح القرار لتصويت التكتلات</Btn>
+          </div>
+        )}
+      </Panel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
