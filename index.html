@@ -196,7 +196,7 @@ function freshPlayer() {
     shares: 1, legalAssets: 0,
     debt: null, mercenaryOf: null,
     contractUsed: false,
-    mission: randMission,
+    mission: { id: randMission.id, title: randMission.title, desc: randMission.desc },
     frozenUntil: null, immuneUntil: null,
     roundLog: { bought: { data: 0, tech: 0, influence: 0 } },
   };
