@@ -160,18 +160,15 @@
 
         .stat-pill .val { font-family: 'Changa', sans-serif; font-weight: 800; }
 
-        .timer-badge {
+        .btn-logout {
             background: rgba(239, 68, 68, 0.15);
             border: 1px solid var(--red);
             color: #f87171;
-            padding: 4px 10px;
+            padding: 4px 8px;
             border-radius: var(--radius-sm);
-            font-family: 'Changa', sans-serif;
-            font-weight: 800;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         .round-stage-bar {
@@ -224,6 +221,22 @@
             flex-direction: column;
             align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        /* Live News Ticker */
+        .tv-news-ticker {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid var(--red);
+            color: #f87171;
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            font-weight: 800;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
         .tv-hero-grid {
@@ -568,6 +581,7 @@
                     <i class="fa-solid fa-tower-broadcast" style="color: #c084fc;"></i>
                     <span>الغرفة: <strong class="val" style="color: #c084fc;" id="hdr-room-code">---</strong></span>
                 </div>
+                <button class="btn-logout" onclick="logoutSession()"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
             </div>
         </div>
     </header>
@@ -586,6 +600,12 @@
 
     <!-- TV LIVE DISPLAY MODE WITH QR CODE -->
     <div id="host-tv-dashboard">
+        <!-- Live Newsfeed Ticker -->
+        <div class="tv-news-ticker" id="tv-news-ticker">
+            <i class="fa-solid fa-bullhorn"></i>
+            <span id="tv-news-text">أهلاً بكم في جلسة الاستراحة! ابدأوا التداول في البورصة لتشتعل المنافسة...</span>
+        </div>
+
         <!-- Live Auction Box on TV (ROUND 5) -->
         <div id="tv-auction-box">
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -606,7 +626,7 @@
             <div>
                 <h1 style="font-family: 'Changa'; font-size: 22px; color: var(--gold); margin-bottom: 4px;"><i class="fa-solid fa-crown"></i> شاشة بث الاستراحة المباشرة</h1>
                 <p style="color: var(--text-muted); font-size: 13px;">امسح الباركود بجوالك أو ادخل برمز الغرفة: <strong style="color:#60a5fa; font-size: 18px;" id="tv-room-banner">---</strong></p>
-                <div style="color: var(--green); font-weight: 800; font-size: 13px; margin-top: 6px;">● بث لحظي وتحديث مباشر للأسعار</div>
+                <div style="color: var(--green); font-weight: 800; font-size: 13px; margin-top: 6px;">● بث لحظي وتحديث مباشر للأسعار والألقاب</div>
             </div>
             
             <div class="qr-wrapper">
@@ -617,14 +637,15 @@
 
         <div class="tv-hero-grid">
             <div class="tv-card">
-                <div style="font-family: 'Changa'; font-size: 18px; font-weight: 800; color: var(--gold); margin-bottom: 12px;">
-                    <i class="fa-solid fa-trophy"></i> صدارة هوامير الاستراحة
+                <div style="font-family: 'Changa'; font-size: 18px; font-weight: 800; color: var(--gold); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <span><i class="fa-solid fa-trophy"></i> صدارة هوامير الاستراحة</span>
+                    <button class="bank-preset-btn" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: var(--red);" onclick="triggerAntiMonopolyVote()"><i class="fa-solid fa-gavel"></i> تصويت عزل المتصدر</button>
                 </div>
                 <table class="tv-leaderboard-table">
                     <thead>
                         <tr>
                             <th>المرتبة</th>
-                            <th>التاجر</th>
+                            <th>التاجر واللقب</th>
                             <th>الكاش</th>
                             <th>قيمة الأصول</th>
                             <th>صافي الثروة</th>
@@ -767,6 +788,19 @@
         </div>
     </div>
 
+    <!-- Anti-Monopoly Vote Modal -->
+    <div id="monopoly-vote-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:11500; display:none; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:var(--bg-nav); border:2px solid var(--red); border-radius:var(--radius-lg); padding:24px; max-width:380px; width:100%; text-align:center;">
+            <div style="font-size:36px; margin-bottom:6px;">⚖️</div>
+            <h3 style="font-size:18px; color:var(--red); margin-bottom:6px;">تصويت طارئ: عزل المتصدر!</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;" id="monopoly-vote-desc">هل توافقون على فرض ضريبة احتكار 25% على المتصدر؟ (قوة صوتك مستندة لحجم أصولك!)</p>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-trade-buy" style="flex:1; padding:12px;" onclick="castMonopolyVote('yes')">نعم (موافق)</button>
+                <button class="btn-trade-sell" style="flex:1; padding:12px;" onclick="castMonopolyVote('no')">لا (رافض)</button>
+            </div>
+        </div>
+    </div>
+
     <nav class="bottom-nav" id="player-bottom-nav">
         <button class="nav-item active" onclick="switchPlayerTab('trading')">
             <i class="fa-solid fa-chart-line"></i>
@@ -835,7 +869,7 @@
         const FATE_CARDS = [
             { type: "disaster", title: "مصيبة مالية!", icon: "💸", text: "مصلحة الضرائب دهمتك وخصمت 15% من كاشك الحالي!", effect: (p) => { p.cash = Math.max(0, Math.round(p.cash * 0.85)); } },
             { type: "fortune", title: "حظ وفير!", icon: "🎁", text: "لقيت محفظة استثمارية منسية فيها أرباح 2,000 ¥ كاش أضيفت لحسابك!", effect: (p) => { p.cash += 2000; } },
-            { type: "fortune", title: "طفرة سوقية!", icon: "📈", text: "طفرة في قطاع الذكاء والتقنية رفعت قيمة أصولك 40%!", effect: (p) => { let a = p.assets.find(i=>i.id==='tech'); if(a) a.price = Math.round(a.price*1.4); } },
+            { type: "fortune", title: "طفرة سوقية!", icon: "📈", text: "طفرة في قطاع الذكاء والتقنية رفعت قيمة أصولك 40%!", effect: (p) => { let a = p.assets.find(i=>i.id==='tech'); if(a) a.price = Math.min(40000, Math.round(a.price*1.4)); } },
             { type: "disaster", title: "مخالفة تجارية!", icon: "⚠️", text: "غرامة بلدية وسوء تخزين: خسرت حبة واحدة من كل أصل تملكه بالمستودع!", effect: (p) => { p.assets.forEach(i => { if(i.owned>0) i.owned--; }); } },
             { type: "fortune", title: "منحة استثمارية!", icon: "👑", text: "منحة ملكية للمستثمرين النشطين: حصلت على 1,500 ¥ كاش فوراً!", effect: (p) => { p.cash += 1500; } }
         ];
@@ -851,7 +885,7 @@
             playerName: "محمد",
             roomCode: "LODGE",
             round: 1,
-            phaseTimeLeft: 300, // 5 MINUTES PER ROUND
+            phaseTimeLeft: 300,
             currentPhase: "trading",
             cash: 10000,
             bankSavings: 0,
@@ -864,18 +898,67 @@
             assets: JSON.parse(JSON.stringify(INITIAL_ASSETS)),
             currentAuction: null,
             isTradingBlocked: false,
-            lastTradeTimestamp: 0
+            voteTallies: { yes: 0, no: 0 }
         };
 
         function calculateAssetsValue() {
-            return App.assets.reduce((sum, item) => sum + (item.owned * item.price), 0);
+            return App.assets.reduce((sum, item) => sum + (Math.max(0, item.owned) * item.price), 0);
         }
 
         function calculateNetWorth() {
-            return (App.cash + App.bankSavings + calculateAssetsValue()) - App.bankDebt;
+            let total = (App.cash + App.bankSavings + calculateAssetsValue()) - App.bankDebt;
+            return Math.max(0, total);
+        }
+
+        // تحديد الألقاب التلقائية حسب المحفظة والتخريب
+        function getPlayerTitle(netWorth, isHighest) {
+            if (isHighest) return "👑 الهامور";
+            if (netWorth < 8000) return "📉 المنكوب";
+            return "💼 المضارب";
+        }
+
+        function saveSession() {
+            try {
+                const session = {
+                    isHost: App.isHost,
+                    playerName: App.playerName,
+                    roomCode: App.roomCode,
+                    cash: App.cash,
+                    bankSavings: App.bankSavings,
+                    bankDebt: App.bankDebt,
+                    assets: App.assets
+                };
+                localStorage.setItem('asyad_active_session', JSON.stringify(session));
+            } catch(e){}
+        }
+
+        function logoutSession() {
+            localStorage.removeItem('asyad_active_session');
+            location.reload();
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('asyad_active_session');
+            if (saved) {
+                try {
+                    const session = JSON.parse(saved);
+                    if (session.isHost) {
+                        document.getElementById('room-code-input').value = session.roomCode;
+                        startAsHostTV();
+                        return;
+                    } else if (session.playerName && session.roomCode) {
+                        document.getElementById('player-name-input').value = session.playerName;
+                        document.getElementById('room-code-input').value = session.roomCode;
+                        App.cash = Number(session.cash) || 10000;
+                        App.bankSavings = Number(session.bankSavings) || 0;
+                        App.bankDebt = Number(session.bankDebt) || 0;
+                        if (Array.isArray(session.assets)) App.assets = session.assets;
+                        joinAsPlayer();
+                        return;
+                    }
+                } catch(e){}
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             const roomParam = urlParams.get('room');
             if (roomParam) {
@@ -901,6 +984,7 @@
             document.getElementById('hdr-name').innerText = App.playerName;
             document.getElementById('hdr-avatar').innerText = App.playerName.charAt(0);
 
+            saveSession();
             setupPlayerPeer();
             updateAllUI();
             showToast(`أهلاً بك يا ${App.playerName}! تم الدخول بنجاح`, "success");
@@ -931,6 +1015,7 @@
                 correctLevel : QRCode.CorrectLevel.M
             });
 
+            saveSession();
             setupHostPeer();
             startHostPhasesEngine();
             updateHostTVDisplay();
@@ -973,9 +1058,9 @@
         function handleHostIncoming(data, conn) {
             if (data.type === "PLAYER_STATE") {
                 App.connectedPlayers[data.name] = {
-                    cash: data.cash,
-                    assetsVal: data.assetsVal,
-                    netWorth: data.netWorth
+                    cash: Math.max(0, Number(data.cash) || 0),
+                    assetsVal: Math.max(0, Number(data.assetsVal) || 0),
+                    netWorth: Math.max(0, Number(data.netWorth) || 0)
                 };
                 updateHostTVDisplay();
                 broadcastPlayerList();
@@ -984,15 +1069,18 @@
                 if (item) {
                     item.prevPrice = item.price;
                     if (data.action === 'BUY') {
-                        item.price += Math.round(item.price * (0.03 * data.qty));
+                        let hike = Math.round(item.price * Math.min(0.25, (0.02 * (Number(data.qty)||1))));
+                        item.price = Math.min(40000, item.price + hike);
                     } else if (data.action === 'SELL') {
-                        item.price = Math.max(Math.round(item.basePrice * 0.35), item.price - Math.round(item.price * (0.025 * data.qty)));
+                        let drop = Math.round(item.price * Math.min(0.25, (0.02 * (Number(data.qty)||1))));
+                        item.price = Math.max(100, item.price - drop);
                     }
                 }
                 updateHostTVDisplay();
                 broadcastAll({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
             } else if (data.type === "TARGETED_SABOTAGE") {
                 broadcastAll({ type: "RECEIVE_SABOTAGE", target: data.target, from: data.from, sabotageType: data.sabotageType });
+                pushNewsTicker(`🚨 تخريب: التاجر (${data.from}) استهدف (${data.target}) بضربة اقتصادية قوية!`);
             } else if (data.type === "AUCTION_BID") {
                 if (App.currentAuction) {
                     App.currentAuction.currentBid += data.amount;
@@ -1002,6 +1090,10 @@
                 }
             } else if (data.type === "REQUEST_SKIP_PHASE") {
                 advancePhaseHost();
+            } else if (data.type === "CAST_MONOPOLY_VOTE") {
+                let weight = Math.max(1, Math.floor(data.netWorth / 1000)); // الوزن مستند لحجم الأصول
+                if (data.vote === 'yes') App.voteTallies.yes += weight;
+                else App.voteTallies.no += weight;
             }
         }
 
@@ -1011,7 +1103,7 @@
                     const local = App.assets.find(a => a.id === serverAsset.id);
                     if (local) {
                         local.prevPrice = serverAsset.prevPrice;
-                        local.price = serverAsset.price;
+                        local.price = Math.max(100, Math.min(40000, serverAsset.price));
                     }
                 });
                 if (data.round) {
@@ -1051,12 +1143,17 @@
             } else if (data.type === "END_AUCTION") {
                 closePlayerAuctionModal();
                 if (data.winner === App.playerName) {
-                    App.cash -= data.finalBid;
-                    showToast(`🏆 مبروك! فزت بالمزاد في الجولة الخامسة وتضاعفت ثروتك!`, "success");
+                    App.cash = Math.max(0, App.cash - data.finalBid);
+                    showToast(`🏆 مبروك! فزت بالمزاد وتضاعفت ثروتك!`, "success");
                     confetti({ particleCount: 100 });
                 }
                 syncMyPlayerData();
                 updateAllUI();
+            } else if (data.type === "TRIGGER_MONOPOLY_VOTE") {
+                document.getElementById('monopoly-vote-modal').style.display = 'flex';
+                SoundFX.playGong();
+            } else if (data.type === "NEWS_TICKER") {
+                pushNewsTicker(data.text);
             }
         }
 
@@ -1064,7 +1161,14 @@
             App.connections.forEach(c => { if(c.open) c.send(msg); });
         }
 
+        function pushNewsTicker(text) {
+            const ticker = document.getElementById('tv-news-text');
+            if (ticker) ticker.innerText = text;
+            broadcastAll({ type: "NEWS_TICKER", text: text });
+        }
+
         function syncMyPlayerData() {
+            saveSession();
             const payload = {
                 type: "PLAYER_STATE",
                 name: App.playerName,
@@ -1100,11 +1204,10 @@
 
                 App.assets.forEach(a => {
                     a.prevPrice = a.price;
-                    let factor = 0.85 + (Math.random() * 0.35);
-                    a.price = Math.max(Math.round(a.basePrice * 0.4), Math.round(a.price * factor));
+                    let factor = 0.85 + (Math.random() * 0.30);
+                    a.price = Math.max(100, Math.min(40000, Math.round(a.price * factor)));
                 });
 
-                // Trigger Rare Auction exclusively on Round 5
                 if (App.round === 5) {
                     setTimeout(() => triggerHostAuction(), 3000);
                 }
@@ -1141,94 +1244,97 @@
             }, 1000);
         }
 
+        /* --- BULLETPROOF ATOMIC MATH TRADING ENGINE --- */
         function tradeAsset(assetId, action, qtyMode = 1) {
-            const now = Date.now();
-            if (App.isTradingBlocked || (now - App.lastTradeTimestamp < 350)) {
-                return;
-            }
-            App.isTradingBlocked = true;
-            App.lastTradeTimestamp = now;
+            if (App.isTradingLocked) return;
+            App.isTradingLocked = true;
+
+            document.querySelectorAll('.btn-trade-buy, .btn-trade-sell').forEach(b => b.disabled = true);
 
             if (App.isFrozen) {
                 showToast("حسابك مجمد حالياً بسبب عقوبة موجهة لك!", "danger");
-                App.isTradingBlocked = false;
+                unlockTrading();
                 return;
             }
 
             const item = App.assets.find(a => a.id === assetId);
-            if (!item) { App.isTradingBlocked = false; return; }
-
-            let qty = qtyMode;
+            if (!item || item.price <= 0 || !isFinite(item.price)) {
+                unlockTrading();
+                return;
+            }
 
             if (action === 'BUY') {
-                if (qtyMode === 'max') qty = Math.max(0, Math.floor(App.cash / item.price));
-                if (qty <= 0) {
-                    showToast("الكاش المتوفر لا يكفي لشراء أي حبة!", "danger");
-                    App.isTradingBlocked = false;
-                    return;
-                }
+                let maxAffordable = Math.floor(App.cash / item.price);
+                let qty = qtyMode === 'max' ? maxAffordable : Number(qtyMode);
 
-                let totalCost = item.price * qty;
-                if (App.cash < totalCost) {
+                if (qty <= 0 || !isFinite(qty) || App.cash < (qty * item.price)) {
                     showToast("الكاش المتوفر لا يكفي!", "danger");
-                    App.isTradingBlocked = false;
+                    unlockTrading();
                     return;
                 }
 
-                App.cash -= totalCost;
-                let oldVal = item.owned * item.avgCost;
-                item.owned += qty;
-                item.avgCost = (oldVal + totalCost) / item.owned;
+                let totalCost = qty * item.price;
+                App.cash = Math.max(0, Math.round(App.cash - totalCost));
+                item.owned = (Number(item.owned) || 0) + qty;
 
                 item.prevPrice = item.price;
-                item.price += Math.round(item.price * (0.03 * qty));
+                let priceRise = Math.round(item.price * Math.min(0.25, (0.02 * qty)));
+                item.price = Math.min(40000, item.price + priceRise);
+
                 SoundFX.playCoin();
                 showToast(`تم شراء ${qty} × ${item.name}`, "success");
             } else if (action === 'SELL') {
-                if (qtyMode === 'all') qty = item.owned;
-                if (qty <= 0 || item.owned < qty) {
+                let currentOwned = Number(item.owned) || 0;
+                let qty = qtyMode === 'all' ? currentOwned : Number(qtyMode);
+
+                if (qty <= 0 || currentOwned < qty || !isFinite(qty)) {
                     showToast("لا تملك أصولاً كافية للبيع!", "danger");
-                    App.isTradingBlocked = false;
+                    unlockTrading();
                     return;
                 }
 
-                let revenue = item.price * qty;
-                item.owned -= qty;
-                if (item.owned === 0) item.avgCost = 0;
-                App.cash += revenue;
+                let revenue = qty * item.price;
+                item.owned = Math.max(0, currentOwned - qty);
+                App.cash = Math.round(App.cash + revenue);
 
                 item.prevPrice = item.price;
-                item.price = Math.max(Math.round(item.basePrice * 0.35), item.price - Math.round(item.price * (0.025 * qty)));
+                let priceDrop = Math.round(item.price * Math.min(0.25, (0.02 * qty)));
+                item.price = Math.max(100, item.price - priceDrop);
+
                 SoundFX.playCoin();
                 showToast(`تم بيع ${qty} × ${item.name}`, "info");
             }
 
             App.connections.forEach(c => {
-                if(c.open) c.send({ type: "MARKET_TRADE", assetId: assetId, action: action, qty: qty });
+                if(c.open) c.send({ type: "MARKET_TRADE", assetId: assetId, action: action, qty: qtyMode === 'max' || qtyMode === 'all' ? 5 : 1 });
             });
 
             syncMyPlayerData();
             updateAllUI();
-            setTimeout(() => { App.isTradingBlocked = false; }, 150);
+            setTimeout(() => { unlockTrading(); }, 120);
+        }
+
+        function unlockTrading() {
+            App.isTradingLocked = false;
+            updateAllUI();
         }
 
         function sellAllPlayerInventory() {
-            if (App.isTradingBlocked) return;
-            App.isTradingBlocked = true;
+            if (App.isTradingLocked) return;
+            App.isTradingLocked = true;
 
             let totalRev = 0;
             let count = 0;
             App.assets.forEach(a => {
-                if (a.owned > 0) {
-                    totalRev += a.price * a.owned;
-                    count += a.owned;
+                let owned = Number(a.owned) || 0;
+                if (owned > 0 && a.price > 0) {
+                    totalRev += (owned * a.price);
                     a.owned = 0;
-                    a.avgCost = 0;
                 }
             });
 
             if (count > 0) {
-                App.cash += totalRev;
+                App.cash = Math.round(App.cash + totalRev);
                 SoundFX.playCoin();
                 showToast(`تمت تصفية المخزون بالكامل (+${totalRev.toLocaleString()} ¥)`, "success");
                 syncMyPlayerData();
@@ -1237,7 +1343,7 @@
                 showToast("المخزون فارغ!", "danger");
             }
 
-            setTimeout(() => { App.isTradingBlocked = false; }, 200);
+            setTimeout(() => { unlockTrading(); }, 150);
         }
 
         function updateDropdownTargets(playersList) {
@@ -1293,11 +1399,11 @@
                 showToast(`⚠️ تم تجميد حساباتك من قبل التاجر: ${from}!`, "danger");
                 setTimeout(() => { App.isFrozen = false; showToast("تم فك التجميد عن حسابك", "info"); }, 30000);
             } else if (type === 'rumor') {
-                App.assets.forEach(a => { a.price = Math.round(a.price * 0.8); });
+                App.assets.forEach(a => { a.price = Math.max(100, Math.round(a.price * 0.8)); });
                 showToast(`📉 شائعة موجهة من ${from} خسرتك 20% من قيمة أصولك!`, "danger");
             } else if (type === 'heist') {
                 let stolen = Math.min(App.cash, 1500);
-                App.cash -= stolen;
+                App.cash = Math.max(0, App.cash - stolen);
                 showToast(`🥷 عملية سطو من ${from} نهبت منك ${stolen} ¥!`, "danger");
             }
             syncMyPlayerData();
@@ -1321,11 +1427,13 @@
                 </div>
             `;
             showToast(`تم توقيع عقد الشراكة مع ${partner}!`, "success");
+            pushNewsTicker(`🤝 تحالف تجاري جديد تم توقيعه بين (${App.playerName}) و(${partner})!`);
         }
 
         function breakAlliance() {
             App.cash += 1500;
             showToast(`فسخت العقد وسرقت 1,500 ¥ من أموال الشراكة!`, "danger");
+            pushNewsTicker(`⚡ غدر وخيانة: (${App.playerName}) فض التحالف وغدر بشريكه!`);
             App.alliancePartner = null;
             document.getElementById('alliance-box-content').innerHTML = `
                 <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -1371,11 +1479,13 @@
             document.getElementById('tv-auction-leader').innerText = `السومة عند: ${App.currentAuction.leader}`;
 
             broadcastAll({ type: "START_AUCTION", auction: App.currentAuction });
+            pushNewsTicker(`🔔 تنبيه مزاد الجولة الخامسة: بدأ المزاد العلني على الأصل النادر!`);
 
             setTimeout(() => {
                 document.getElementById('tv-auction-box').style.display = 'none';
                 broadcastAll({ type: "END_AUCTION", winner: App.currentAuction.leader, finalBid: App.currentAuction.currentBid });
                 showToast(`انتهى مزاد الجولة الخامسة بفوز: ${App.currentAuction.leader}!`, "success");
+                pushNewsTicker(`🏆 فاز التاجر (${App.currentAuction.leader}) بالمزاد العلني للجولة الخامسة!`);
                 App.currentAuction = null;
             }, 30000);
         }
@@ -1407,6 +1517,42 @@
                 if(c.open) c.send({ type: "AUCTION_BID", amount: amount, name: App.playerName });
             });
             SoundFX.playCoin();
+        }
+
+        /* --- ANTI-MONOPOLY VOTE (WITH ASSET WEIGHT) --- */
+        function triggerAntiMonopolyVote() {
+            App.voteTallies = { yes: 0, no: 0 };
+            broadcastAll({ type: "TRIGGER_MONOPOLY_VOTE" });
+            document.getElementById('monopoly-vote-modal').style.display = 'flex';
+            SoundFX.playGong();
+        }
+
+        function castMonopolyVote(choice) {
+            document.getElementById('monopoly-vote-modal').style.display = 'none';
+            let netWorth = calculateNetWorth();
+            
+            App.connections.forEach(c => {
+                if(c.open) c.send({ type: "CAST_MONOPOLY_VOTE", vote: choice, netWorth: netWorth });
+            });
+
+            // Local vote
+            let weight = Math.max(1, Math.floor(netWorth / 1000));
+            if (choice === 'yes') App.voteTallies.yes += weight;
+            else App.voteTallies.no += weight;
+
+            showToast("تم تسجيل صوتك بقوة أصولك المالية!", "success");
+
+            setTimeout(() => {
+                if (App.voteTallies.yes > App.voteTallies.no) {
+                    App.cash = Math.max(0, Math.round(App.cash * 0.75));
+                    showToast("⚖️ نجح التصويت! تم خصم ضريبة احتكار 25% من رصيدك بناءً على قوة أصولك.", "danger");
+                    pushNewsTicker(`⚖️ قرار مجلس الاستراحة: تم فرض ضريبة احتكار على المتصدر!`);
+                } else {
+                    showToast("⚖️ فشل التصويت، نجا المتصدر من الضريبة!", "info");
+                }
+                syncMyPlayerData();
+                updateAllUI();
+            }, 6000);
         }
 
         function setBankAmount(ratio) {
@@ -1484,6 +1630,9 @@
             App.assets.forEach(item => {
                 let diff = item.price - item.prevPrice;
                 let chgClass = diff >= 0 ? 'change-up' : 'change-down';
+                let ownedCount = Number(item.owned) || 0;
+                let canBuy = App.cash >= item.price && !App.isTradingLocked;
+
                 const card = document.createElement('div');
                 card.className = 'stock-card';
                 card.innerHTML = `
@@ -1492,7 +1641,7 @@
                             <div class="stock-icon">${item.icon}</div>
                             <div>
                                 <div style="font-weight:800; font-size:15px;">${item.name}</div>
-                                <div style="font-size:12px; color:var(--text-muted);">محفظتك: <strong>${item.owned}</strong></div>
+                                <div style="font-size:12px; color:var(--text-muted);">محفظتك: <strong>${ownedCount}</strong></div>
                             </div>
                         </div>
                         <div style="text-align:left;">
@@ -1501,12 +1650,12 @@
                         </div>
                     </div>
                     <div class="action-grid">
-                        <button class="btn-trade-buy" onclick="tradeAsset('${item.id}', 'BUY', 1)" ${App.cash < item.price ? 'disabled' : ''}>شراء 1</button>
-                        <button class="btn-trade-sell" onclick="tradeAsset('${item.id}', 'SELL', 1)" ${item.owned === 0 ? 'disabled' : ''}>بيع 1</button>
+                        <button class="btn-trade-buy" onclick="tradeAsset('${item.id}', 'BUY', 1)" ${!canBuy ? 'disabled' : ''}>شراء 1</button>
+                        <button class="btn-trade-sell" onclick="tradeAsset('${item.id}', 'SELL', 1)" ${ownedCount <= 0 || App.isTradingLocked ? 'disabled' : ''}>بيع 1</button>
                     </div>
                     <div class="action-grid">
-                        <button class="btn-trade-buy" style="font-size:11.5px; padding:5px;" onclick="tradeAsset('${item.id}', 'BUY', 'max')" ${App.cash < item.price ? 'disabled' : ''}>أقصى كمية</button>
-                        <button class="btn-trade-sell" style="font-size:11.5px; padding:5px;" onclick="tradeAsset('${item.id}', 'SELL', 'all')" ${item.owned === 0 ? 'disabled' : ''}>بيع الكل (${item.owned})</button>
+                        <button class="btn-trade-buy" style="font-size:11.5px; padding:5px;" onclick="tradeAsset('${item.id}', 'BUY', 'max')" ${!canBuy ? 'disabled' : ''}>أقصى كمية</button>
+                        <button class="btn-trade-sell" style="font-size:11.5px; padding:5px;" onclick="tradeAsset('${item.id}', 'SELL', 'all')" ${ownedCount <= 0 || App.isTradingLocked ? 'disabled' : ''}>بيع الكل (${ownedCount})</button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -1516,13 +1665,14 @@
         function renderPlayerInventory() {
             const container = document.getElementById('player-inventory-list');
             container.innerHTML = '';
-            let owned = App.assets.filter(a => a.owned > 0);
+            let owned = App.assets.filter(a => (Number(a.owned) || 0) > 0);
             if (owned.length === 0) {
                 container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); grid-column:1/-1;">لا تملك أي أصول حالياً! توجه للبورصة للشراء.</div>`;
                 return;
             }
             owned.forEach(item => {
-                let val = item.owned * item.price;
+                let count = Number(item.owned) || 0;
+                let val = count * item.price;
                 const card = document.createElement('div');
                 card.className = 'stock-card';
                 card.innerHTML = `
@@ -1531,7 +1681,7 @@
                             <div class="stock-icon">${item.icon}</div>
                             <div>
                                 <div style="font-weight:800;">${item.name}</div>
-                                <div style="font-size:12px; color:var(--text-muted);">الكمية: <strong>${item.owned}</strong> | التكلفة: ${Math.round(item.avgCost)} ¥</div>
+                                <div style="font-size:12px; color:var(--text-muted);">الكمية: <strong>${count}</strong></div>
                             </div>
                         </div>
                         <div style="text-align:left;">
@@ -1550,17 +1700,21 @@
         function updateHostTVDisplay() {
             const tbody = document.getElementById('tv-leaderboard-rows');
             tbody.innerHTML = '';
-            let players = Object.entries(App.connectedPlayers).sort((a,b) => b[1].netWorth - a[1].netWorth);
+            let playersArray = Object.entries(App.connectedPlayers);
+            
+            // ترتيب حسب الثروة لاكتشاف الهامور
+            playersArray.sort((a,b) => b[1].netWorth - a[1].netWorth);
 
-            if (players.length === 0) {
+            if (playersArray.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">بانتظار مسح الباركود ودخول اللاعبين...</td></tr>`;
             } else {
-                players.forEach(([name, data], idx) => {
+                playersArray.forEach(([name, data], idx) => {
                     let rClass = idx === 0 ? 'rank-1' : (idx === 1 ? 'rank-2' : (idx === 2 ? 'rank-3' : ''));
+                    let titleTag = getPlayerTitle(data.netWorth, idx === 0);
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td><span class="rank-badge ${rClass}">${idx + 1}</span></td>
-                        <td><strong>${name}</strong></td>
+                        <td><strong>${name}</strong> <span style="font-size:11px; color:var(--gold); margin-right:6px;">(${titleTag})</span></td>
                         <td style="color:#10b981;">${data.cash.toLocaleString()} ¥</td>
                         <td style="color:var(--gold);">${data.assetsVal.toLocaleString()} ¥</td>
                         <td style="font-family:'Changa'; font-size:17px; font-weight:800; color:#60a5fa;">${data.netWorth.toLocaleString()} ¥</td>
