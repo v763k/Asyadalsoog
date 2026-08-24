@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- مكتبة توليد الباركود السريع -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
         :root {
@@ -159,7 +161,6 @@
 
         .stat-pill .val { font-family: 'Changa', sans-serif; font-weight: 800; }
 
-        /* Timer Badge */
         .timer-badge {
             background: rgba(239, 68, 68, 0.15);
             border: 1px solid var(--red);
@@ -183,6 +184,28 @@
             padding: 0 16px;
             flex-direction: column;
             gap: 16px;
+        }
+
+        .tv-banner-card {
+            border: 2px solid var(--gold);
+            background: linear-gradient(135deg, #151f30, #1c2a40);
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .qr-wrapper {
+            background: #fff;
+            padding: 8px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         .tv-hero-grid {
@@ -247,7 +270,6 @@
             gap: 4px;
         }
 
-        /* Live TV Auction Banner */
         #tv-auction-box {
             display: none;
             background: linear-gradient(135deg, #2b1810, #3f1a0a);
@@ -334,13 +356,7 @@
         .btn-trade-sell { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; }
         .btn-trade-buy:disabled, .btn-trade-sell:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        /* Bank Inputs */
-        .bank-input-group {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
+        .bank-input-group { display: flex; gap: 8px; margin-bottom: 10px; }
         .bank-input {
             flex: 1;
             background: var(--bg-card);
@@ -363,7 +379,6 @@
             cursor: pointer;
         }
 
-        /* Sabotage & Alliance Cards */
         .sabotage-card {
             background: var(--bg-nav);
             border: 1px solid var(--border-color);
@@ -376,7 +391,6 @@
             gap: 10px;
         }
 
-        /* Active Auction Modal for Players */
         #player-auction-modal {
             position: fixed;
             inset: 0;
@@ -398,7 +412,6 @@
             text-align: center;
         }
 
-        /* Fate Card Alert Modal */
         #fate-card-modal {
             position: fixed;
             inset: 0;
@@ -494,7 +507,7 @@
             <input type="text" id="room-code-input" class="entry-input" placeholder="رمز الغرفة (للتلفزيون والربع)">
 
             <button class="btn-main btn-gold" onclick="joinAsPlayer()"><i class="fa-solid fa-mobile-screen-button"></i> دخول كلاعب من الجوال</button>
-            <button class="btn-main btn-purple" onclick="startAsHostTV()"><i class="fa-solid fa-tv"></i> تشغيل شاشة العرض (للتلفزيون فقط)</button>
+            <button class="btn-main btn-purple" onclick="startAsHostTV()"><i class="fa-solid fa-tv"></i> تشغيل شاشة العرض (للتلفزيون مع باركود)</button>
         </div>
     </div>
 
@@ -530,7 +543,7 @@
         </div>
     </header>
 
-    <!-- TV LIVE DISPLAY MODE -->
+    <!-- TV LIVE DISPLAY MODE WITH QR CODE -->
     <div id="host-tv-dashboard">
         <!-- Live Auction Box on TV -->
         <div id="tv-auction-box">
@@ -548,13 +561,16 @@
             </div>
         </div>
 
-        <div class="tv-card" style="border-color: var(--gold); background: linear-gradient(135deg, #151f30, #1c2a40); padding: 14px 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h1 style="font-family: 'Changa'; font-size: 22px; color: var(--gold);"><i class="fa-solid fa-crown"></i> شاشة بث الاستراحة المباشرة</h1>
-                    <p style="color: var(--text-muted); font-size: 12.5px;">ادخلوا بنفس رمز الغرفة: <strong style="color:#60a5fa; font-size: 16px;" id="tv-room-banner">---</strong></p>
-                </div>
-                <div style="color: var(--green); font-weight: 800; font-size: 13px;">● بث لحظي مباشر</div>
+        <div class="tv-banner-card">
+            <div>
+                <h1 style="font-family: 'Changa'; font-size: 22px; color: var(--gold); margin-bottom: 4px;"><i class="fa-solid fa-crown"></i> شاشة بث الاستراحة المباشرة</h1>
+                <p style="color: var(--text-muted); font-size: 13px;">امسح الباركود بجوالك أو ادخل برمز الغرفة: <strong style="color:#60a5fa; font-size: 18px;" id="tv-room-banner">---</strong></p>
+                <div style="color: var(--green); font-weight: 800; font-size: 13px; margin-top: 6px;">● بث لحظي وتحديث مباشر للأسعار</div>
+            </div>
+            
+            <div class="qr-wrapper">
+                <div id="qrcode-tv"></div>
+                <span style="font-size: 10.5px; color: #333; font-weight: 800; margin-top: 4px;">امسح للدخول 📷</span>
             </div>
         </div>
 
@@ -737,7 +753,6 @@
     <div id="toast-box"></div>
 
     <script>
-        /* --- Audio FX Synth --- */
         const SoundFX = {
             ctx: null,
             init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
@@ -815,7 +830,7 @@
             playerName: "محمد",
             roomCode: "LODGE",
             round: 1,
-            timeLeft: 720, // 12 minutes in seconds
+            timeLeft: 720,
             cash: 10000,
             bankSavings: 0,
             bankDebt: 0,
@@ -836,6 +851,15 @@
         function calculateNetWorth() {
             return (App.cash + App.bankSavings + calculateAssetsValue()) - App.bankDebt;
         }
+
+        // قراءة الرابط إذا دخل اللاعب من الباركود ووضع رمز الغرفة تلقائياً
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const roomParam = urlParams.get('room');
+            if (roomParam) {
+                document.getElementById('room-code-input').value = roomParam.toUpperCase();
+            }
+        });
 
         function joinAsPlayer() {
             const name = document.getElementById('player-name-input').value.trim();
@@ -874,6 +898,18 @@
             document.getElementById('tv-room-banner').innerText = App.roomCode;
             document.getElementById('hdr-name').innerText = "شاشة التلفزيون";
             document.getElementById('hdr-role').innerText = "بث مباشر 📺";
+
+            // توليد رابط الباركود السريع المباشر للغرفة
+            const joinUrl = `${window.location.origin}${window.location.pathname}?room=${App.roomCode}`;
+            document.getElementById('qrcode-tv').innerHTML = '';
+            new QRCode(document.getElementById("qrcode-tv"), {
+                text: joinUrl,
+                width: 90,
+                height: 90,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.M
+            });
 
             setupHostPeer();
             startTimerLoop();
@@ -995,7 +1031,6 @@
             App.connections.forEach(c => { if(c.open) c.send(payload); });
         }
 
-        /* --- HARD TRANSACTION LOCK ENGINE --- */
         function tradeAsset(assetId, action, qtyMode = 1) {
             if (App.tradeLock) return;
             App.tradeLock = true;
@@ -1082,7 +1117,6 @@
             setTimeout(() => { App.tradeLock = false; }, 100);
         }
 
-        /* --- FATE CARDS (FROM ROUND 3+) --- */
         function checkFateCardTrigger() {
             if (App.round >= 3 && Math.random() < 0.65) {
                 const card = FATE_CARDS[Math.floor(Math.random() * FATE_CARDS.length)];
@@ -1098,7 +1132,6 @@
             updateAllUI();
         }
 
-        /* --- AUCTION ENGINE (TV & PLAYER) --- */
         function triggerHostAuction() {
             const raw = AUCTION_ITEMS[Math.floor(Math.random() * AUCTION_ITEMS.length)];
             App.currentAuction = {
@@ -1117,7 +1150,6 @@
 
             broadcastAll({ type: "START_AUCTION", auction: App.currentAuction });
 
-            // 30 seconds timer
             setTimeout(() => {
                 document.getElementById('tv-auction-box').style.display = 'none';
                 broadcastAll({ type: "END_AUCTION", winner: App.currentAuction.leader, finalBid: App.currentAuction.currentBid });
@@ -1155,7 +1187,6 @@
             SoundFX.playCoin();
         }
 
-        /* --- ALLIANCES SYSTEM --- */
         function requestAlliance() {
             const partner = document.getElementById('alliance-partner-input').value.trim();
             if (!partner || partner === App.playerName) {
@@ -1174,7 +1205,7 @@
         }
 
         function breakAlliance() {
-            App.cash += 1500; // Betrayal bonus
+            App.cash += 1500;
             showToast(`فسخت العقد وسرقت 1,500 ¥ من أموال الشراكة!`, "danger");
             App.alliancePartner = null;
             document.getElementById('alliance-box-content').innerHTML = `
@@ -1187,7 +1218,6 @@
             updateAllUI();
         }
 
-        /* --- BANK OPERATIONS --- */
         function setBankAmount(ratio) {
             document.getElementById('bank-custom-amount').value = Math.floor(App.cash * ratio);
         }
@@ -1238,7 +1268,6 @@
             updateAllUI();
         }
 
-        /* --- SABOTAGE OPERATIONS --- */
         function executeSabotage(type) {
             let cost = type === 'freeze' ? 1000 : (type === 'rumor' ? 750 : 1500);
             if (App.cash < cost) { showToast("الكاش لا يكفي لتنفيذ العملية!", "danger"); return; }
@@ -1261,7 +1290,6 @@
             updateAllUI();
         }
 
-        /* --- TIMERS & HEARTBEAT EFFECTS --- */
         function startTimerLoop() {
             setInterval(() => {
                 if (App.timeLeft > 0) {
@@ -1270,7 +1298,6 @@
                     let s = App.timeLeft % 60;
                     document.getElementById('game-timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
 
-                    // Heartbeat on last 60 seconds
                     if (App.timeLeft <= 60 && App.timeLeft > 0) {
                         SoundFX.playHeartbeat();
                     }
@@ -1283,7 +1310,6 @@
         }
 
         function startHostGameEvents() {
-            // Auto advance round every 90 seconds + trigger auctions
             setInterval(() => {
                 App.round++;
                 App.assets.forEach(a => {
@@ -1294,7 +1320,6 @@
                 broadcastAll({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
                 updateHostTVDisplay();
 
-                // Trigger Auction on round 3 and 5
                 if (App.round === 3 || App.round === 5) {
                     setTimeout(() => triggerHostAuction(), 5000);
                 }
@@ -1402,7 +1427,7 @@
             let players = Object.entries(App.connectedPlayers).sort((a,b) => b[1].netWorth - a[1].netWorth);
 
             if (players.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">بانتظار دخول اللاعبين بنفس رمز الغرفة...</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">بانتظار مسح الباركود ودخول اللاعبين...</td></tr>`;
             } else {
                 players.forEach(([name, data], idx) => {
                     let rClass = idx === 0 ? 'rank-1' : (idx === 1 ? 'rank-2' : (idx === 2 ? 'rank-3' : ''));
