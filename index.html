@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مجلس أسياد السوق | Asyad Al-Souq - نسخة الاستراحة</title>
+    <title>مجلس أسياد السوق | Asyad Al-Souq</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Changa:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -23,9 +23,7 @@
             --gold: #f59e0b;
             --gold-gradient: linear-gradient(135deg, #f59e0b, #d97706);
             --green: #10b981;
-            --green-glow: rgba(16, 185, 129, 0.2);
             --red: #ef4444;
-            --red-glow: rgba(239, 68, 68, 0.2);
             --blue: #3b82f6;
             --purple: #8b5cf6;
             --radius-sm: 8px;
@@ -65,8 +63,8 @@
             background: var(--bg-nav);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            padding: 30px;
-            max-width: 480px;
+            padding: 28px;
+            max-width: 440px;
             width: 100%;
             text-align: center;
             box-shadow: 0 20px 60px rgba(0,0,0,0.8);
@@ -74,7 +72,7 @@
 
         .entry-title {
             font-family: 'Changa', sans-serif;
-            font-size: 32px;
+            font-size: 30px;
             font-weight: 900;
             color: var(--gold);
             margin-bottom: 6px;
@@ -84,7 +82,7 @@
             width: 100%;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            padding: 14px;
+            padding: 13px;
             border-radius: var(--radius-sm);
             color: #fff;
             font-size: 15px;
@@ -97,23 +95,21 @@
 
         .btn-main {
             width: 100%;
-            padding: 13px;
+            padding: 12px;
             border-radius: var(--radius-sm);
             border: none;
             font-weight: 800;
             font-size: 15px;
             cursor: pointer;
-            transition: 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             margin-bottom: 10px;
+            transition: 0.2s;
         }
 
         .btn-gold { background: var(--gold-gradient); color: #000; }
-        .btn-gold:hover { filter: brightness(1.1); }
-        .btn-blue { background: rgba(59, 130, 246, 0.15); border: 1px solid #3b82f6; color: #60a5fa; }
         .btn-purple { background: rgba(139, 92, 246, 0.15); border: 1px solid #8b5cf6; color: #c084fc; }
 
         header {
@@ -132,48 +128,24 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .user-identity {
-            display: flex;
-            align-items: center;
             gap: 10px;
         }
 
+        .user-identity { display: flex; align-items: center; gap: 10px; }
         .user-avatar {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             background: var(--gold-gradient);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             color: #000;
             font-weight: 900;
         }
 
-        .user-name-title {
-            font-weight: 800;
-            font-size: 16px;
-        }
-
-        .user-role-badge {
-            font-size: 11px;
-            color: var(--gold);
-            background: rgba(245, 158, 11, 0.12);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .stats-strip {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
+        .stats-strip { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .stat-pill {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -181,16 +153,28 @@
             border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             font-size: 13.5px;
         }
 
-        .stat-pill .val {
+        .stat-pill .val { font-family: 'Changa', sans-serif; font-weight: 800; }
+
+        /* Timer Badge */
+        .timer-badge {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--red);
+            color: #f87171;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
             font-family: 'Changa', sans-serif;
             font-weight: 800;
-            font-size: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
+        /* TV Display View */
         #host-tv-dashboard {
             display: none;
             max-width: 1400px;
@@ -198,16 +182,16 @@
             margin: 15px auto;
             padding: 0 16px;
             flex-direction: column;
-            gap: 18px;
+            gap: 16px;
         }
 
         .tv-hero-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 18px;
+            gap: 16px;
         }
 
-        @media (max-width: 992px) {
+        @media (max-width: 900px) {
             .tv-hero-grid { grid-template-columns: 1fr; }
         }
 
@@ -216,33 +200,9 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .tv-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        .tv-card-header h2 {
-            font-family: 'Changa', sans-serif;
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--gold);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .tv-leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
+        .tv-leaderboard-table { width: 100%; border-collapse: collapse; }
         .tv-leaderboard-table th {
             text-align: right;
             padding: 10px;
@@ -250,7 +210,6 @@
             font-size: 13px;
             border-bottom: 1px solid var(--border-color);
         }
-
         .tv-leaderboard-table td {
             padding: 12px 10px;
             border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -259,45 +218,61 @@
         }
 
         .rank-badge {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 13px;
+            font-size: 12px;
         }
-
         .rank-1 { background: #f59e0b; color: #000; }
         .rank-2 { background: #94a3b8; color: #000; }
         .rank-3 { background: #b45309; color: #fff; }
 
         .tv-market-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
         }
 
         .tv-market-item {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 14px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
 
+        /* Live TV Auction Banner */
+        #tv-auction-box {
+            display: none;
+            background: linear-gradient(135deg, #2b1810, #3f1a0a);
+            border: 2px solid var(--gold);
+            border-radius: var(--radius-lg);
+            padding: 18px 24px;
+            animation: pulse-border 1.5s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        /* Player Workspace */
         #player-app-workspace {
             display: flex;
             flex-direction: column;
-            max-width: 1200px;
+            max-width: 1100px;
             width: 100%;
             margin: 0 auto;
             padding: 14px;
             flex: 1;
-            padding-bottom: 80px;
+            padding-bottom: 85px;
         }
 
         .tab-panel { display: none; }
@@ -308,7 +283,6 @@
             grid-template-columns: 1fr;
             gap: 12px;
         }
-
         @media (min-width: 700px) {
             .stock-market-grid { grid-template-columns: 1fr 1fr; }
         }
@@ -317,160 +291,133 @@
             background: var(--bg-nav);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            transition: 0.2s;
+            gap: 10px;
         }
 
-        .stock-card:hover { border-color: #3b4d66; }
-
-        .stock-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .stock-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .stock-top { display: flex; justify-content: space-between; align-items: flex-start; }
+        .stock-info { display: flex; align-items: center; gap: 10px; }
         .stock-icon {
-            font-size: 26px;
-            width: 48px;
-            height: 48px;
+            font-size: 24px;
+            width: 44px;
+            height: 44px;
             background: var(--bg-card);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 1px solid var(--border-color);
         }
 
-        .stock-name {
-            font-weight: 800;
-            font-size: 16px;
-        }
+        .stock-price { font-family: 'Changa', sans-serif; font-size: 20px; font-weight: 900; }
+        .change-up { color: var(--green); font-size: 12px; font-weight: bold; }
+        .change-down { color: var(--red); font-size: 12px; font-weight: bold; }
 
-        .stock-demand-tag {
-            font-size: 11px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            display: inline-block;
-            margin-top: 3px;
-        }
-
-        .high-demand { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-        .low-demand { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-
-        .stock-price-box { text-align: left; }
-
-        .stock-price {
-            font-family: 'Changa', sans-serif;
-            font-size: 22px;
-            font-weight: 900;
-        }
-
-        .stock-change {
-            font-size: 12px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 4px;
-        }
-
-        .change-up { color: var(--green); }
-        .change-down { color: var(--red); }
-
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
         .btn-trade-buy, .btn-trade-sell {
-            padding: 10px;
+            padding: 9px;
             border-radius: var(--radius-sm);
             border: none;
             font-weight: 800;
-            font-size: 13.5px;
+            font-size: 13px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            transition: 0.15s;
         }
 
-        .btn-trade-buy {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            color: #34d399;
-        }
-        .btn-trade-buy:hover:not(:disabled) { background: #10b981; color: #fff; }
+        .btn-trade-buy { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; }
+        .btn-trade-sell { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; }
+        .btn-trade-buy:disabled, .btn-trade-sell:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        .btn-trade-sell {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #f87171;
-        }
-        .btn-trade-sell:hover:not(:disabled) { background: #ef4444; color: #fff; }
-
-        .btn-trade-buy:disabled, .btn-trade-sell:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
+        /* Bank Inputs */
+        .bank-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
         }
 
-        .council-proposal-card {
+        .bank-input {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .bank-preset-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Sabotage & Alliance Cards */
+        .sabotage-card {
             background: var(--bg-nav);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 20px;
-            margin-bottom: 14px;
-        }
-
-        .proposal-title {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--gold);
-            margin-bottom: 8px;
+            padding: 16px;
+            margin-bottom: 10px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
-        }
-
-        .vote-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-top: 15px;
         }
 
-        .btn-vote-yes {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid var(--green);
-            color: #34d399;
-            padding: 12px;
-            border-radius: var(--radius-sm);
-            font-weight: 800;
-            font-size: 15px;
-            cursor: pointer;
+        /* Active Auction Modal for Players */
+        #player-auction-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
         }
 
-        .btn-vote-no {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid var(--red);
-            color: #f87171;
-            padding: 12px;
-            border-radius: var(--radius-sm);
-            font-weight: 800;
-            font-size: 15px;
-            cursor: pointer;
+        .auction-card {
+            background: var(--bg-nav);
+            border: 2px solid var(--gold);
+            border-radius: var(--radius-lg);
+            max-width: 420px;
+            width: 100%;
+            padding: 24px;
+            text-align: center;
+        }
+
+        /* Fate Card Alert Modal */
+        #fate-card-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 11000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .fate-box {
+            background: var(--bg-nav);
+            border: 2px solid var(--purple);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
         }
 
         nav.bottom-nav {
@@ -484,7 +431,6 @@
             justify-content: space-around;
             padding: 8px 6px;
             z-index: 1000;
-            backdrop-filter: blur(10px);
         }
 
         .nav-item {
@@ -499,12 +445,8 @@
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
-            padding: 4px;
-            border-radius: var(--radius-sm);
-            transition: 0.2s;
         }
 
-        .nav-item i { font-size: 18px; }
         .nav-item.active { color: var(--gold); }
 
         #toast-box {
@@ -522,19 +464,15 @@
             background: var(--bg-nav);
             border: 1px solid var(--border-color);
             color: #fff;
-            padding: 12px 18px;
+            padding: 10px 16px;
             border-radius: var(--radius-sm);
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 700;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            display: flex;
-            align-items: center;
-            gap: 8px;
             transform: translateY(-20px);
             opacity: 0;
             transition: 0.3s;
         }
-
         .toast-msg.show { transform: translateY(0); opacity: 1; }
         .toast-success { border-color: var(--green); }
         .toast-danger { border-color: var(--red); }
@@ -543,36 +481,38 @@
 </head>
 <body>
 
+    <!-- Entry Screen -->
     <div id="entry-screen">
         <div class="entry-box">
-            <div style="font-size: 48px; margin-bottom: 8px;">👑</div>
+            <div style="font-size: 44px; margin-bottom: 6px;">👑</div>
             <div class="entry-title">مجلس أسياد السوق</div>
-            <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px;">
-                لعبة التجارة، التحالفات، والمضاربة في الأسواق (نسخة الاستراحة والتلفزيون)
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">
+                لعبة المضاربة، المزادات، والتحالفات بالاستراحة
             </p>
 
-            <input type="text" id="player-name-input" class="entry-input" placeholder="اكتب اسمك / لقبك (مثال: محمد)">
-            <input type="text" id="room-code-input" class="entry-input" placeholder="رمز الغرفة (للانضمام مع الربع)">
+            <input type="text" id="player-name-input" class="entry-input" placeholder="اكتب اسمك التجاري (مثال: محمد)">
+            <input type="text" id="room-code-input" class="entry-input" placeholder="رمز الغرفة (للتلفزيون والربع)">
 
             <button class="btn-main btn-gold" onclick="joinAsPlayer()"><i class="fa-solid fa-mobile-screen-button"></i> دخول كلاعب من الجوال</button>
-            <button class="btn-main btn-purple" onclick="startAsHostTV()"><i class="fa-solid fa-tv"></i> تشغيل وضع شاشة العرض (للتلفزيون / المستضيف)</button>
+            <button class="btn-main btn-purple" onclick="startAsHostTV()"><i class="fa-solid fa-tv"></i> تشغيل شاشة العرض (للتلفزيون فقط)</button>
         </div>
     </div>
 
+    <!-- Header -->
     <header>
         <div class="header-content">
             <div class="user-identity">
                 <div class="user-avatar" id="hdr-avatar"><i class="fa-solid fa-user"></i></div>
                 <div>
-                    <div class="user-name-title" id="hdr-name">التاجر</div>
-                    <div class="user-role-badge" id="hdr-role">عضو المجلس</div>
+                    <div style="font-weight: 800; font-size: 15px;" id="hdr-name">التاجر</div>
+                    <div style="font-size: 11px; color: var(--gold);" id="hdr-role">عضو المجلس</div>
                 </div>
             </div>
 
             <div class="stats-strip">
-                <div class="stat-pill">
-                    <i class="fa-regular fa-calendar-check" style="color: #60a5fa;"></i>
-                    <span>الجولة: <strong class="val" id="hdr-round">1</strong></span>
+                <div class="timer-badge">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="game-timer-display">12:00</span>
                 </div>
                 <div class="stat-pill">
                     <i class="fa-solid fa-wallet" style="color: #10b981;"></i>
@@ -590,25 +530,38 @@
         </div>
     </header>
 
+    <!-- TV LIVE DISPLAY MODE -->
     <div id="host-tv-dashboard">
-        <div class="tv-card" style="background: linear-gradient(135deg, #151f30, #1c2a40); border-color: var(--gold);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <!-- Live Auction Box on TV -->
+        <div id="tv-auction-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h1 style="font-family: 'Changa'; font-size: 26px; color: var(--gold);"><i class="fa-solid fa-crown"></i> شاشة المستضيف الرئيسية (استراحة الهوامير)</h1>
-                    <p style="color: var(--text-muted); font-size: 13.5px;">شارك هذا الرابط ورمز الغرفة <strong style="color:#60a5fa;" id="tv-room-banner">---</strong> مع ربعك ليدخلوا من جوالاتهم</p>
+                    <span style="background: var(--gold); color:#000; padding:3px 8px; border-radius:4px; font-weight:bold; font-size:12px;">مزاد علني مباشر 🔔</span>
+                    <h2 style="font-size: 22px; color: #fff; margin-top: 6px;" id="tv-auction-title">أصل نادر</h2>
+                    <p style="color: var(--text-muted); font-size: 13px;" id="tv-auction-desc">الوصف</p>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-main btn-gold" style="width: auto; padding: 10px 20px;" onclick="hostAdvanceRound()"><i class="fa-solid fa-forward-step"></i> إطلاق الجولة التالية 🚀</button>
-                    <button class="btn-main btn-blue" style="width: auto; padding: 10px 16px;" onclick="hostTriggerMarketEvent()"><i class="fa-solid fa-bolt"></i> حدث اقتصادي مفاجئ</button>
+                <div style="text-align: left;">
+                    <div style="font-size: 13px; color: var(--text-muted);">أعلى سومة حالياً:</div>
+                    <div style="font-family: 'Changa'; font-size: 28px; font-weight: 900; color: var(--gold);"><span id="tv-auction-price">0</span> ¥</div>
+                    <div style="color: var(--green); font-weight: bold;" id="tv-auction-leader">بانتظار السومات...</div>
                 </div>
+            </div>
+        </div>
+
+        <div class="tv-card" style="border-color: var(--gold); background: linear-gradient(135deg, #151f30, #1c2a40); padding: 14px 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 style="font-family: 'Changa'; font-size: 22px; color: var(--gold);"><i class="fa-solid fa-crown"></i> شاشة بث الاستراحة المباشرة</h1>
+                    <p style="color: var(--text-muted); font-size: 12.5px;">ادخلوا بنفس رمز الغرفة: <strong style="color:#60a5fa; font-size: 16px;" id="tv-room-banner">---</strong></p>
+                </div>
+                <div style="color: var(--green); font-weight: 800; font-size: 13px;">● بث لحظي مباشر</div>
             </div>
         </div>
 
         <div class="tv-hero-grid">
             <div class="tv-card">
-                <div class="tv-card-header">
-                    <h2><i class="fa-solid fa-trophy"></i> صدارة هوامير الاستراحة (مباشر)</h2>
-                    <span style="color: var(--green); font-weight: bold; font-size: 13px;">● متصل الآن</span>
+                <div style="font-family: 'Changa'; font-size: 18px; font-weight: 800; color: var(--gold); margin-bottom: 12px;">
+                    <i class="fa-solid fa-trophy"></i> صدارة هوامير الاستراحة
                 </div>
                 <table class="tv-leaderboard-table">
                     <thead>
@@ -620,106 +573,163 @@
                             <th>صافي الثروة</th>
                         </tr>
                     </thead>
-                    <tbody id="tv-leaderboard-rows"></tbody>
+                    <tbody id="tv-leaderboard-rows">
+                        <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">بانتظار دخول اللاعبين...</td></tr>
+                    </tbody>
                 </table>
             </div>
 
             <div class="tv-card">
-                <div class="tv-card-header">
-                    <h2><i class="fa-solid fa-chart-line"></i> مؤشرات الأسهم والسلع (العرض والطلب)</h2>
-                    <span style="font-size: 12px; color: var(--text-muted);">تتغير لحظياً حسب حركة اللاعبين</span>
+                <div style="font-family: 'Changa'; font-size: 18px; font-weight: 800; color: #60a5fa; margin-bottom: 12px;">
+                    <i class="fa-solid fa-chart-line"></i> مؤشرات البورصة الحية
                 </div>
                 <div class="tv-market-grid" id="tv-market-items"></div>
             </div>
         </div>
     </div>
 
+    <!-- PLAYER WORKSPACE -->
     <div id="player-app-workspace">
 
+        <!-- Tab 1: Trading -->
         <div id="tab-trading" class="tab-panel active">
-            <div class="tv-card" style="margin-bottom: 14px; padding: 14px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h3 style="font-size: 16px; font-weight: 800;"><i class="fa-solid fa-arrow-trend-up" style="color: var(--green);"></i> بورصة المضاربة الحية</h3>
-                        <p style="font-size: 12px; color: var(--text-muted);">إذا شروا أخوياك كميات كبيرة يطير السعر فوق، وإذا باعوا يطيح السعر!</p>
-                    </div>
-                    <button class="btn-trade-sell" style="padding: 6px 12px;" onclick="sellAllPlayerInventory()"><i class="fa-solid fa-tags"></i> تصفية الكل</button>
-                </div>
+            <div class="tv-card" style="margin-bottom: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 13px; color: var(--text-muted);">الجولة الحالية: <strong style="color:var(--gold);" id="player-round-num">1</strong></span>
+                <button class="btn-trade-sell" style="padding: 6px 12px;" onclick="sellAllPlayerInventory()"><i class="fa-solid fa-tags"></i> تصفية الكل</button>
             </div>
             <div class="stock-market-grid" id="player-stocks-container"></div>
         </div>
 
-        <div id="tab-council" class="tab-panel">
-            <div class="council-proposal-card">
-                <div class="proposal-title"><i class="fa-solid fa-landmark"></i> جلسة التصويت على القرار الاقتصادي</div>
-                <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;" id="council-proposal-desc">
-                    <strong>مشروع قرار: حزمة تحفيز اقتصادي</strong><br>
-                    توزيع 150¥ كاش لكل التجار فوراً، مع زيادة نسبة التضخم في أسعار الذهب والعقار 20%.
-                </p>
-                <div class="vote-actions">
-                    <button class="btn-vote-yes" onclick="submitVote('yes')"><i class="fa-solid fa-check"></i> موافق ومؤيد</button>
-                    <button class="btn-vote-no" onclick="submitVote('no')"><i class="fa-solid fa-xmark"></i> معترض ورافض</button>
-                </div>
-            </div>
-
-            <div class="tv-card">
-                <h4 style="font-size: 15px; margin-bottom: 10px; color: var(--gold);"><i class="fa-solid fa-handshake"></i> التحالفات والمؤامرات</h4>
-                <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">ادفع رشوة سرية أو سوِّ تسريب استخباراتي يطيح بأسهم خصمك في الجولة القادمة!</p>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn-main btn-blue" style="flex:1" onclick="buySabotage('leak')"><i class="fa-solid fa-user-secret"></i> تسريب استخباراتي (500¥)</button>
-                    <button class="btn-main btn-purple" style="flex:1" onclick="buySabotage('freeze')"><i class="fa-solid fa-snowflake"></i> تجميد حسابات تاجر (1,000¥)</button>
-                </div>
-            </div>
-        </div>
-
+        <!-- Tab 2: Bank -->
         <div id="tab-bank" class="tab-panel">
             <div class="stock-market-grid">
                 <div class="tv-card">
-                    <h3 style="color: #60a5fa; font-size: 16px; margin-bottom: 8px;"><i class="fa-solid fa-building-columns"></i> بنك أسياد السوق</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">أودع أموالك لتحصل على فائدة 5% في نهاية كل جولة بعيداً عن تقلبات البورصة.</p>
-                    <div style="font-size: 18px; font-weight: 800; color: #60a5fa; margin-bottom: 12px;">الوديعة: <span id="player-bank-savings">0</span> ¥</div>
+                    <h3 style="color: #60a5fa; font-size: 15px; margin-bottom: 6px;"><i class="fa-solid fa-piggy-bank"></i> الوديعة والمدخرات (+3% نمو)</h3>
+                    <div style="font-size: 17px; font-weight: 800; color: #60a5fa; margin-bottom: 10px;">الرصيد المودع: <span id="player-bank-savings">0</span> ¥</div>
+                    
+                    <div class="bank-input-group">
+                        <input type="number" id="bank-custom-amount" class="bank-input" placeholder="المبلغ المطلوب">
+                    </div>
+                    <div style="display: flex; gap: 6px; margin-bottom: 10px;">
+                        <button class="bank-preset-btn" onclick="setBankAmount(0.25)">25%</button>
+                        <button class="bank-preset-btn" onclick="setBankAmount(0.50)">50%</button>
+                        <button class="bank-preset-btn" onclick="setBankAmount(1.0)">الكل</button>
+                    </div>
                     <div style="display: flex; gap: 8px;">
-                        <button class="btn-trade-buy" style="flex:1" onclick="depositBank('all')">إيداع كل الكاش</button>
-                        <button class="btn-trade-sell" style="flex:1" onclick="withdrawBank('all')">سحب الوديعة</button>
+                        <button class="btn-trade-buy" style="flex:1" onclick="handleDepositCustom()"><i class="fa-solid fa-arrow-down"></i> إيداع</button>
+                        <button class="btn-trade-sell" style="flex:1" onclick="handleWithdrawCustom()"><i class="fa-solid fa-arrow-up"></i> سحب</button>
                     </div>
                 </div>
 
                 <div class="tv-card">
-                    <h3 style="color: var(--red); font-size: 16px; margin-bottom: 8px;"><i class="fa-solid fa-hand-holding-dollar"></i> القروض والتسهيلات الائتمانية</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">خذ تمويل سريع بضمان أصولك (فائدة 10% لكل جولة تأخير).</p>
-                    <div style="font-size: 18px; font-weight: 800; color: var(--red); margin-bottom: 12px;">الدين القائم: <span id="player-bank-debt">0</span> ¥</div>
+                    <h3 style="color: var(--red); font-size: 15px; margin-bottom: 6px;"><i class="fa-solid fa-hand-holding-dollar"></i> تسهيلات وقروض سريعة</h3>
+                    <div style="font-size: 17px; font-weight: 800; color: var(--red); margin-bottom: 10px;">الدين المطلوب: <span id="player-bank-debt">0</span> ¥</div>
                     <div style="display: flex; gap: 8px;">
-                        <button class="btn-trade-buy" style="flex:1" onclick="payPlayerDebt('all')">سداد الدين</button>
-                        <button class="btn-trade-sell" style="flex:1" onclick="takePlayerLoan(2000)">قرض 2,000¥</button>
+                        <button class="btn-trade-buy" style="flex:1" onclick="payPlayerDebt()"><i class="fa-solid fa-check"></i> سداد كامل الدين</button>
+                        <button class="btn-trade-sell" style="flex:1" onclick="takePlayerLoan(2500)"><i class="fa-solid fa-plus"></i> قرض 2,500 ¥</button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Tab 3: Sabotage & Alliance -->
+        <div id="tab-sabotage" class="tab-panel">
+            <div class="tv-card" style="margin-bottom: 12px;">
+                <h3 style="font-size: 16px; color: var(--gold);"><i class="fa-solid fa-handshake"></i> التحالفات والعقود المشتركة</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">سوِّ عقد شراكة مع خويك لتقاسم أرباح الجولات، أو افض الشراكة وغدر فيه!</p>
+                <div id="alliance-box-content">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="alliance-partner-input" class="bank-input" placeholder="اسم التاجر الشريك">
+                        <button class="btn-trade-buy" style="padding: 0 16px;" onclick="requestAlliance()"><i class="fa-solid fa-file-contract"></i> توقيع عقد</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tv-card" style="margin-bottom: 12px;">
+                <h3 style="font-size: 16px; color: var(--red);"><i class="fa-solid fa-skull-crossbones"></i> عمليات التخريب والمؤامرات</h3>
+            </div>
+
+            <div class="sabotage-card">
+                <div>
+                    <h4 style="font-size: 14px;"><i class="fa-solid fa-snowflake" style="color: #60a5fa;"></i> تجميد حساب تاجر (1,000 ¥)</h4>
+                    <p style="font-size: 11.5px; color: var(--text-muted);">يوقف متصدر الجلسة عن التداول والبيع والشراء لجولة كاملة!</p>
+                </div>
+                <button class="btn-trade-sell" style="padding: 8px 14px;" onclick="executeSabotage('freeze')">تنفيذ</button>
+            </div>
+
+            <div class="sabotage-card">
+                <div>
+                    <h4 style="font-size: 14px;"><i class="fa-solid fa-bullhorn" style="color: var(--red);"></i> إطلاق شائعة سوقية (750 ¥)</h4>
+                    <p style="font-size: 11.5px; color: var(--text-muted);">تسوي انهيار مفاجئ 30% في سعر الذهب أو العقار فوراً!</p>
+                </div>
+                <button class="btn-trade-sell" style="padding: 8px 14px;" onclick="executeSabotage('rumor')">إطلاق</button>
+            </div>
+
+            <div class="sabotage-card">
+                <div>
+                    <h4 style="font-size: 14px;"><i class="fa-solid fa-mask" style="color: var(--gold);"></i> سطو على المستودع (1,500 ¥)</h4>
+                    <p style="font-size: 11.5px; color: var(--text-muted);">يسرق 20% من مخزون المتصدر ويضيف قيمتها لحسابك!</p>
+                </div>
+                <button class="btn-trade-sell" style="padding: 8px 14px;" onclick="executeSabotage('heist')">سطو</button>
+            </div>
+        </div>
+
+        <!-- Tab 4: Inventory -->
         <div id="tab-inventory" class="tab-panel">
             <div class="tv-card" style="margin-bottom: 12px;">
-                <h3 style="font-size: 16px; font-weight: 800;"><i class="fa-solid fa-boxes-stacked"></i> مستودع الأصول الخاص بك</h3>
+                <h3 style="font-size: 15px;"><i class="fa-solid fa-briefcase"></i> محفظة الأصول الخاصة بك</h3>
             </div>
             <div id="player-inventory-list" class="stock-market-grid"></div>
         </div>
 
     </div>
 
+    <!-- Live Auction Popup for Players -->
+    <div id="player-auction-modal">
+        <div class="auction-card">
+            <div style="font-size: 36px; margin-bottom: 6px;">🔔</div>
+            <h3 style="font-size: 18px; color: var(--gold);" id="modal-auction-title">مزاد علني مباشر!</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;" id="modal-auction-desc">تفاصيل الأصل</p>
+            
+            <div style="background: var(--bg-card); padding: 12px; border-radius: var(--radius-sm); margin-bottom: 14px;">
+                <div style="font-size: 12px; color: var(--text-muted);">السومة الحالية:</div>
+                <div style="font-family: 'Changa'; font-size: 26px; font-weight: 900; color: var(--gold);"><span id="modal-auction-price">0</span> ¥</div>
+                <div style="font-size: 12px; color: var(--green);" id="modal-auction-leader">بانتظار السومات...</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                <button class="btn-trade-buy" onclick="bidAuction(100)">+100 ¥</button>
+                <button class="btn-trade-buy" onclick="bidAuction(500)">+500 ¥</button>
+                <button class="btn-trade-buy" onclick="bidAuction(1000)">+1,000 ¥</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fate Card Modal (Round 3+) -->
+    <div id="fate-card-modal">
+        <div class="fate-box">
+            <div style="font-size: 40px; margin-bottom: 8px;">🔮</div>
+            <h3 style="font-size: 18px; color: var(--purple); margin-bottom: 6px;">بطاقة القدر والمصائب!</h3>
+            <p style="font-size: 13.5px; color: var(--text-main); margin-bottom: 16px;" id="fate-card-text">نص البطاقة</p>
+            <button class="btn-main btn-purple" onclick="closeFateCard()">استيعاب الصدمة</button>
+        </div>
+    </div>
+
     <nav class="bottom-nav" id="player-bottom-nav">
         <button class="nav-item active" onclick="switchPlayerTab('trading')">
-            <i class="fa-solid fa-chart-pie"></i>
-            <span>التداول</span>
-        </button>
-        <button class="nav-item" onclick="switchPlayerTab('council')">
-            <i class="fa-solid fa-landmark"></i>
-            <span>المجلس</span>
+            <i class="fa-solid fa-chart-line"></i>
+            <span>البورصة</span>
         </button>
         <button class="nav-item" onclick="switchPlayerTab('bank')">
             <i class="fa-solid fa-building-columns"></i>
-            <span>عقود وبنك</span>
+            <span>البنك</span>
+        </button>
+        <button class="nav-item" onclick="switchPlayerTab('sabotage')">
+            <i class="fa-solid fa-user-ninja"></i>
+            <span>التحالف والتخريب</span>
         </button>
         <button class="nav-item" onclick="switchPlayerTab('inventory')">
-            <i class="fa-solid fa-briefcase"></i>
+            <i class="fa-solid fa-box-archive"></i>
             <span>أصولي</span>
         </button>
     </nav>
@@ -727,6 +737,7 @@
     <div id="toast-box"></div>
 
     <script>
+        /* --- Audio FX Synth --- */
         const SoundFX = {
             ctx: null,
             init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
@@ -741,33 +752,62 @@
                     osc.frequency.setValueAtTime(987.77, now);
                     osc.frequency.setValueAtTime(1318.51, now + 0.08);
                     g.gain.setValueAtTime(0.2, now);
-                    g.gain.linearRampToValueAtTime(0.01, now + 0.25);
-                    osc.start(now); osc.stop(now + 0.25);
+                    g.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now); osc.stop(now + 0.2);
                 }catch(e){}
             },
-            playGavel() {
+            playHeartbeat() {
                 try {
                     this.init();
                     const now = this.ctx.currentTime;
                     const osc = this.ctx.createOscillator();
                     const g = this.ctx.createGain();
                     osc.connect(g); g.connect(this.ctx.destination);
-                    osc.type = 'square';
-                    osc.frequency.setValueAtTime(180, now);
-                    osc.frequency.exponentialRampToValueAtTime(40, now + 0.2);
-                    g.gain.setValueAtTime(0.3, now);
-                    g.gain.linearRampToValueAtTime(0.01, now + 0.2);
-                    osc.start(now); osc.stop(now + 0.2);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(80, now);
+                    osc.frequency.exponentialRampToValueAtTime(40, now + 0.15);
+                    g.gain.setValueAtTime(0.4, now);
+                    g.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now); osc.stop(now + 0.15);
+                }catch(e){}
+            },
+            playGong() {
+                try {
+                    this.init();
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const g = this.ctx.createGain();
+                    osc.connect(g); g.connect(this.ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(110, now + 0.8);
+                    g.gain.setValueAtTime(0.5, now);
+                    g.gain.linearRampToValueAtTime(0.01, now + 0.8);
+                    osc.start(now); osc.stop(now + 0.8);
                 }catch(e){}
             }
         };
 
         const INITIAL_ASSETS = [
-            { id: "gold", name: "سبائك الذهب عيار 24", icon: "🪙", basePrice: 2400, price: 2400, prevPrice: 2400, volume: 100, demandScore: 0, owned: 0, avgCost: 0 },
-            { id: "real_estate", name: "صكوك وأراضي عقارية", icon: "🏢", basePrice: 4500, price: 4500, prevPrice: 4500, volume: 50, demandScore: 0, owned: 0, avgCost: 0 },
-            { id: "tech_stocks", name: "أسهم الذكاء والتقنية", icon: "💻", basePrice: 850, price: 850, prevPrice: 850, volume: 300, demandScore: 0, owned: 0, avgCost: 0 },
-            { id: "oil_futures", name: "عقود النفط والطاقة", icon: "🛢️", basePrice: 620, price: 620, prevPrice: 620, volume: 400, demandScore: 0, owned: 0, avgCost: 0 },
-            { id: "oud_luxury", name: "دهن عود ملكي فاخر", icon: "✨", basePrice: 380, price: 380, prevPrice: 380, volume: 500, demandScore: 0, owned: 0, avgCost: 0 }
+            { id: "gold", name: "سبائك الذهب 24", icon: "🪙", basePrice: 2500, price: 2500, prevPrice: 2500, owned: 0, avgCost: 0 },
+            { id: "real_estate", name: "صكوك أراضي وعقار", icon: "🏢", basePrice: 4200, price: 4200, prevPrice: 4200, owned: 0, avgCost: 0 },
+            { id: "tech", name: "أسهم الذكاء والتقنية", icon: "💻", basePrice: 900, price: 900, prevPrice: 900, owned: 0, avgCost: 0 },
+            { id: "oil", name: "عقود النفط والطاقة", icon: "🛢️", basePrice: 650, price: 650, prevPrice: 650, owned: 0, avgCost: 0 },
+            { id: "oud", name: "دهن عود ومخلط ملكي", icon: "✨", basePrice: 350, price: 350, prevPrice: 350, owned: 0, avgCost: 0 }
+        ];
+
+        const FATE_CARDS = [
+            { text: "مصلحة الضرائب دهمتك وخصمت 15% من كاشك الحالي!", effect: (p) => { p.cash = Math.round(p.cash * 0.85); } },
+            { text: "لقيت محفظة استثمارية منسية فيها أرباح 2,000 ¥ كاش!", effect: (p) => { p.cash += 2000; } },
+            { text: "طفرة في أسهم التقنية! تدبلت أرباحك في قطاع التكنولوجيا!", effect: (p) => { let a = p.assets.find(i=>i.id==='tech'); if(a) a.price = Math.round(a.price*1.4); } },
+            { text: "غرامة بلدية وسوء تخزين: خسرت حبة واحدة من كل أصل تملكه!", effect: (p) => { p.assets.forEach(i => { if(i.owned>0) i.owned--; }); } },
+            { text: "منحة ملكية للمستثمرين: حصلت على 1,500 ¥ كاش فوراً!", effect: (p) => { p.cash += 1500; } }
+        ];
+
+        const AUCTION_ITEMS = [
+            { title: "مخطط أرض استراتيجي بالرياض", desc: "يعطي مالكه أرباحاً دورية 20% نهاية كل جولة!", baseBid: 3000 },
+            { title: "رخصة استيراد ذهب حصرية", desc: "ترفع قيمة كل سبائك الذهب عندك 50%!", baseBid: 4000 },
+            { title: "بئر نفط تجريبي بالمنطقة الشرقية", desc: "يضخ 1,000¥ كاش تلقائياً في كل جولة!", baseBid: 3500 }
         ];
 
         const App = {
@@ -775,14 +815,18 @@
             playerName: "محمد",
             roomCode: "LODGE",
             round: 1,
-            cash: 8946,
+            timeLeft: 720, // 12 minutes in seconds
+            cash: 10000,
             bankSavings: 0,
             bankDebt: 0,
+            alliancePartner: null,
+            isFrozen: false,
             peer: null,
             connections: [],
-            playersData: {},
+            connectedPlayers: {},
             assets: JSON.parse(JSON.stringify(INITIAL_ASSETS)),
-            isBusy: false
+            currentAuction: null,
+            tradeLock: false
         };
 
         function calculateAssetsValue() {
@@ -797,7 +841,7 @@
             const name = document.getElementById('player-name-input').value.trim();
             const room = document.getElementById('room-code-input').value.trim().toUpperCase();
             if (!name) { showToast("فضلاً اكتب اسمك التجاري!", "danger"); return; }
-            
+
             App.isHost = false;
             App.playerName = name;
             App.roomCode = room || "LODGE";
@@ -812,13 +856,14 @@
             document.getElementById('hdr-avatar').innerText = App.playerName.charAt(0);
 
             setupPlayerPeer();
+            startTimerLoop();
             updateAllUI();
-            showToast(`أهلاً بك يا ${App.playerName} في مجلس السوق!`, "success");
+            showToast(`أهلاً بك يا ${App.playerName}! تم الدخول بنجاح`, "success");
         }
 
         function startAsHostTV() {
             App.isHost = true;
-            App.playerName = "المستضيف (شاشة التلفزيون)";
+            App.playerName = "المستضيف";
             const customRoom = document.getElementById('room-code-input').value.trim().toUpperCase();
             App.roomCode = customRoom || Math.random().toString(36).substring(2, 6).toUpperCase();
 
@@ -827,15 +872,12 @@
             document.getElementById('player-bottom-nav').style.display = 'none';
             document.getElementById('host-tv-dashboard').style.display = 'flex';
             document.getElementById('tv-room-banner').innerText = App.roomCode;
-            document.getElementById('hdr-name').innerText = "غرفة التحكم والمستضيف";
-            document.getElementById('hdr-role').innerText = "مدير الجلسة 👑";
+            document.getElementById('hdr-name').innerText = "شاشة التلفزيون";
+            document.getElementById('hdr-role').innerText = "بث مباشر 📺";
 
             setupHostPeer();
-            App.playersData["محمد"] = { cash: 8946, assetsVal: 3200, netWorth: 12146 };
-            App.playersData["سلطان"] = { cash: 6200, assetsVal: 4500, netWorth: 10700 };
-            App.playersData["أبو فهد"] = { cash: 9400, assetsVal: 1200, netWorth: 10600 };
-            App.playersData["عبدالإله"] = { cash: 4800, assetsVal: 5200, netWorth: 10000 };
-
+            startTimerLoop();
+            startHostGameEvents();
             updateHostTVDisplay();
             showToast(`تم فتح شاشة العرض لغرفة: ${App.roomCode}`, "info");
         }
@@ -845,12 +887,12 @@
                 App.peer = new Peer(`asyad-host-${App.roomCode}`);
                 App.peer.on('connection', (conn) => {
                     App.connections.push(conn);
-                    conn.on('data', (data) => handleHostIncomingData(data, conn));
+                    conn.on('data', (data) => handleHostIncoming(data, conn));
                     conn.on('open', () => {
                         conn.send({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
                     });
                 });
-            }catch(e){ console.log(e); }
+            }catch(e){}
         }
 
         function setupPlayerPeer() {
@@ -860,62 +902,85 @@
                     const hostConn = App.peer.connect(`asyad-host-${App.roomCode}`);
                     if (hostConn) {
                         App.connections.push(hostConn);
-                        hostConn.on('data', (data) => handlePlayerIncomingData(data));
+                        hostConn.on('data', (data) => handlePlayerIncoming(data));
                         hostConn.on('open', () => syncMyPlayerData());
                     }
                 });
-            }catch(e){ console.log(e); }
+            }catch(e){}
         }
 
-        function handleHostIncomingData(data, conn) {
+        function handleHostIncoming(data, conn) {
             if (data.type === "PLAYER_STATE") {
-                App.playersData[data.name] = {
+                App.connectedPlayers[data.name] = {
                     cash: data.cash,
                     assetsVal: data.assetsVal,
                     netWorth: data.netWorth
                 };
                 updateHostTVDisplay();
-                broadcastToAll({ type: "LEADERBOARD_UPDATE", board: App.playersData });
             } else if (data.type === "MARKET_TRADE") {
                 const item = App.assets.find(a => a.id === data.assetId);
                 if (item) {
                     item.prevPrice = item.price;
                     if (data.action === 'BUY') {
-                        let hike = Math.round(item.price * (0.04 * data.qty));
-                        item.price += hike;
-                        item.demandScore += data.qty;
+                        item.price += Math.round(item.price * (0.03 * data.qty));
                     } else if (data.action === 'SELL') {
-                        let drop = Math.round(item.price * (0.035 * data.qty));
-                        item.price = Math.max(Math.round(item.basePrice * 0.3), item.price - drop);
-                        item.demandScore -= data.qty;
+                        item.price = Math.max(Math.round(item.basePrice * 0.35), item.price - Math.round(item.price * (0.025 * data.qty)));
                     }
                 }
                 updateHostTVDisplay();
-                broadcastToAll({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
+                broadcastAll({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
+            } else if (data.type === "AUCTION_BID") {
+                if (App.currentAuction) {
+                    App.currentAuction.currentBid += data.amount;
+                    App.currentAuction.leader = data.name;
+                    broadcastAll({ type: "AUCTION_UPDATE", auction: App.currentAuction });
+                    updateHostTVDisplay();
+                }
+            } else if (data.type === "SABOTAGE_EVENT") {
+                if (data.sabotageType === 'rumor') {
+                    const rAsset = App.assets[Math.floor(Math.random() * App.assets.length)];
+                    rAsset.prevPrice = rAsset.price;
+                    rAsset.price = Math.round(rAsset.price * 0.7);
+                    broadcastAll({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
+                }
+                updateHostTVDisplay();
             }
         }
 
-        function handlePlayerIncomingData(data) {
+        function handlePlayerIncoming(data) {
             if (data.type === "MARKET_SYNC") {
                 data.assets.forEach(serverAsset => {
                     const local = App.assets.find(a => a.id === serverAsset.id);
                     if (local) {
                         local.prevPrice = serverAsset.prevPrice;
                         local.price = serverAsset.price;
-                        local.demandScore = serverAsset.demandScore;
                     }
                 });
-                App.round = data.round;
+                if (data.round !== App.round) {
+                    App.round = data.round;
+                    document.getElementById('player-round-num').innerText = App.round;
+                    checkFateCardTrigger();
+                }
                 updateAllUI();
-            } else if (data.type === "ROUND_ADVANCE") {
-                App.round = data.round;
-                SoundFX.playGavel();
-                showToast(`🚀 بدأت الجولة رقم ${App.round}! الأسعار تغيرت!`, "info");
+            } else if (data.type === "START_AUCTION") {
+                App.currentAuction = data.auction;
+                openPlayerAuctionModal(data.auction);
+            } else if (data.type === "AUCTION_UPDATE") {
+                App.currentAuction = data.auction;
+                updatePlayerAuctionModal(data.auction);
+            } else if (data.type === "END_AUCTION") {
+                closePlayerAuctionModal();
+                if (data.winner === App.playerName) {
+                    App.cash -= data.finalBid;
+                    showToast(`🏆 مبروك! فزت بالمزاد وتضاعفت أرباحك!`, "success");
+                    confetti({ particleCount: 100 });
+                }
+                syncMyPlayerData();
                 updateAllUI();
             }
         }
 
-        function broadcastToAll(msg) {
+        function broadcastAll(msg) {
             App.connections.forEach(c => { if(c.open) c.send(msg); });
         }
 
@@ -930,12 +995,19 @@
             App.connections.forEach(c => { if(c.open) c.send(payload); });
         }
 
+        /* --- HARD TRANSACTION LOCK ENGINE --- */
         function tradeAsset(assetId, action, qtyMode = 1) {
-            if (App.isBusy) return;
-            App.isBusy = true;
+            if (App.tradeLock) return;
+            App.tradeLock = true;
+
+            if (App.isFrozen) {
+                showToast("حسابك مجمد حالياً بسبب مؤامرة أحد اللاعبين!", "danger");
+                App.tradeLock = false;
+                return;
+            }
 
             const item = App.assets.find(a => a.id === assetId);
-            if (!item) { App.isBusy = false; return; }
+            if (!item) { App.tradeLock = false; return; }
 
             let qty = qtyMode;
 
@@ -944,8 +1016,8 @@
                 let totalCost = item.price * qty;
 
                 if (App.cash < totalCost || qty <= 0) {
-                    showToast("الكاش المتوفر لا يكفي لإتمام الشراء!", "danger");
-                    App.isBusy = false;
+                    showToast("الكاش المتوفر لا يكفي!", "danger");
+                    App.tradeLock = false;
                     return;
                 }
 
@@ -956,30 +1028,25 @@
 
                 item.prevPrice = item.price;
                 item.price += Math.round(item.price * (0.03 * qty));
-
                 SoundFX.playCoin();
-                showToast(`تم شراء ${qty} من ${item.name}`, "success");
+                showToast(`تم شراء ${qty} × ${item.name}`, "success");
             } else if (action === 'SELL') {
                 if (qtyMode === 'all') qty = item.owned;
                 if (item.owned < qty || qty <= 0) {
-                    showToast("لا تملك هذه الكمية للبيع!", "danger");
-                    App.isBusy = false;
+                    showToast("لا تملك هذه الكمية!", "danger");
+                    App.tradeLock = false;
                     return;
                 }
 
                 let revenue = item.price * qty;
-                let profit = (item.price - item.avgCost) * qty;
-
                 item.owned -= qty;
                 if (item.owned === 0) item.avgCost = 0;
                 App.cash += revenue;
 
                 item.prevPrice = item.price;
                 item.price = Math.max(Math.round(item.basePrice * 0.35), item.price - Math.round(item.price * (0.025 * qty)));
-
                 SoundFX.playCoin();
-                let profText = profit >= 0 ? `+${Math.round(profit)}¥` : `${Math.round(profit)}¥`;
-                showToast(`تم بيع ${qty} من ${item.name} (${profText})`, profit >= 0 ? "success" : "info");
+                showToast(`تم بيع ${qty} × ${item.name}`, "info");
             }
 
             App.connections.forEach(c => {
@@ -988,10 +1055,13 @@
 
             syncMyPlayerData();
             updateAllUI();
-            setTimeout(() => { App.isBusy = false; }, 60);
+            setTimeout(() => { App.tradeLock = false; }, 100);
         }
 
         function sellAllPlayerInventory() {
+            if (App.tradeLock) return;
+            App.tradeLock = true;
+
             let totalRev = 0;
             App.assets.forEach(a => {
                 if (a.owned > 0) {
@@ -1003,30 +1073,145 @@
             if (totalRev > 0) {
                 App.cash += totalRev;
                 SoundFX.playCoin();
-                showToast(`تمت تصفية كل الأصول واستلام ${totalRev.toLocaleString()} ¥`, "success");
+                showToast(`تمت تصفية المخزون بالكامل (+${totalRev.toLocaleString()} ¥)`, "success");
                 syncMyPlayerData();
                 updateAllUI();
             } else {
-                showToast("لا توجد أصول لتصفيتها!", "danger");
+                showToast("المخزون فارغ!", "danger");
             }
+            setTimeout(() => { App.tradeLock = false; }, 100);
         }
 
-        function depositBank(mode) {
-            let amt = mode === 'all' ? App.cash : 500;
-            if (amt <= 0 || App.cash < amt) { showToast("الكاش لا يكفي!", "danger"); return; }
+        /* --- FATE CARDS (FROM ROUND 3+) --- */
+        function checkFateCardTrigger() {
+            if (App.round >= 3 && Math.random() < 0.65) {
+                const card = FATE_CARDS[Math.floor(Math.random() * FATE_CARDS.length)];
+                card.effect(App);
+                document.getElementById('fate-card-text').innerText = card.text;
+                document.getElementById('fate-card-modal').style.display = 'flex';
+                SoundFX.playGong();
+            }
+        }
+        function closeFateCard() {
+            document.getElementById('fate-card-modal').style.display = 'none';
+            syncMyPlayerData();
+            updateAllUI();
+        }
+
+        /* --- AUCTION ENGINE (TV & PLAYER) --- */
+        function triggerHostAuction() {
+            const raw = AUCTION_ITEMS[Math.floor(Math.random() * AUCTION_ITEMS.length)];
+            App.currentAuction = {
+                title: raw.title,
+                desc: raw.desc,
+                currentBid: raw.baseBid,
+                leader: "لا يوجد"
+            };
+
+            SoundFX.playGong();
+            document.getElementById('tv-auction-box').style.display = 'block';
+            document.getElementById('tv-auction-title').innerText = App.currentAuction.title;
+            document.getElementById('tv-auction-desc').innerText = App.currentAuction.desc;
+            document.getElementById('tv-auction-price').innerText = App.currentAuction.currentBid.toLocaleString();
+            document.getElementById('tv-auction-leader').innerText = `السومة عند: ${App.currentAuction.leader}`;
+
+            broadcastAll({ type: "START_AUCTION", auction: App.currentAuction });
+
+            // 30 seconds timer
+            setTimeout(() => {
+                document.getElementById('tv-auction-box').style.display = 'none';
+                broadcastAll({ type: "END_AUCTION", winner: App.currentAuction.leader, finalBid: App.currentAuction.currentBid });
+                showToast(`انتهى المزاد بفوز: ${App.currentAuction.leader}!`, "success");
+                App.currentAuction = null;
+            }, 30000);
+        }
+
+        function openPlayerAuctionModal(auction) {
+            document.getElementById('modal-auction-title').innerText = auction.title;
+            document.getElementById('modal-auction-desc').innerText = auction.desc;
+            document.getElementById('modal-auction-price').innerText = auction.currentBid.toLocaleString();
+            document.getElementById('modal-auction-leader').innerText = `أعلى سومة: ${auction.leader}`;
+            document.getElementById('player-auction-modal').style.display = 'flex';
+            SoundFX.playGong();
+        }
+
+        function updatePlayerAuctionModal(auction) {
+            document.getElementById('modal-auction-price').innerText = auction.currentBid.toLocaleString();
+            document.getElementById('modal-auction-leader').innerText = `أعلى سومة: ${auction.leader}`;
+        }
+
+        function closePlayerAuctionModal() {
+            document.getElementById('player-auction-modal').style.display = 'none';
+        }
+
+        function bidAuction(amount) {
+            if (App.cash < (App.currentAuction.currentBid + amount)) {
+                showToast("كاشك لا يكفي لهذه السومة!", "danger");
+                return;
+            }
+            App.connections.forEach(c => {
+                if(c.open) c.send({ type: "AUCTION_BID", amount: amount, name: App.playerName });
+            });
+            SoundFX.playCoin();
+        }
+
+        /* --- ALLIANCES SYSTEM --- */
+        function requestAlliance() {
+            const partner = document.getElementById('alliance-partner-input').value.trim();
+            if (!partner || partner === App.playerName) {
+                showToast("اكتب اسم تاجر صحيح للتحالف معه!", "danger");
+                return;
+            }
+            App.alliancePartner = partner;
+            document.getElementById('alliance-box-content').innerHTML = `
+                <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid var(--green); padding: 12px; border-radius: var(--radius-sm);">
+                    <div style="font-weight: bold; color: var(--green);">تحالف نشط مع: ${partner} 🤝</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin: 4px 0 10px 0;">تتقاسمون 10% من أرباح كل جولة.</div>
+                    <button class="btn-trade-sell" style="padding: 6px 12px; font-size: 12px;" onclick="breakAlliance()"><i class="fa-solid fa-handshake-slash"></i> فسخ العقد والغدر</button>
+                </div>
+            `;
+            showToast(`تم توقيع عقد الشراكة مع ${partner}!`, "success");
+        }
+
+        function breakAlliance() {
+            App.cash += 1500; // Betrayal bonus
+            showToast(`فسخت العقد وسرقت 1,500 ¥ من أموال الشراكة!`, "danger");
+            App.alliancePartner = null;
+            document.getElementById('alliance-box-content').innerHTML = `
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="alliance-partner-input" class="bank-input" placeholder="اسم التاجر الشريك">
+                    <button class="btn-trade-buy" style="padding: 0 16px;" onclick="requestAlliance()"><i class="fa-solid fa-file-contract"></i> توقيع عقد</button>
+                </div>
+            `;
+            syncMyPlayerData();
+            updateAllUI();
+        }
+
+        /* --- BANK OPERATIONS --- */
+        function setBankAmount(ratio) {
+            document.getElementById('bank-custom-amount').value = Math.floor(App.cash * ratio);
+        }
+
+        function handleDepositCustom() {
+            const input = document.getElementById('bank-custom-amount');
+            let amt = parseInt(input.value) || 0;
+            if (amt <= 0 || App.cash < amt) { showToast("المبلغ غير صالح أو الكاش لا يكفي!", "danger"); return; }
             App.cash -= amt;
             App.bankSavings += amt;
+            input.value = '';
             SoundFX.playCoin();
             showToast(`تم إيداع ${amt.toLocaleString()} ¥ بالبنك`, "success");
             syncMyPlayerData();
             updateAllUI();
         }
 
-        function withdrawBank(mode) {
-            let amt = mode === 'all' ? App.bankSavings : 500;
-            if (amt <= 0 || App.bankSavings < amt) { showToast("الوديعة لا تكفي!", "danger"); return; }
+        function handleWithdrawCustom() {
+            const input = document.getElementById('bank-custom-amount');
+            let amt = parseInt(input.value) || 0;
+            if (amt <= 0 || App.bankSavings < amt) { showToast("المبلغ أكبر من رصيد الوديعة!", "danger"); return; }
             App.bankSavings -= amt;
             App.cash += amt;
+            input.value = '';
             SoundFX.playCoin();
             showToast(`تم سحب ${amt.toLocaleString()} ¥`, "info");
             syncMyPlayerData();
@@ -1037,67 +1222,90 @@
             App.cash += amt;
             App.bankDebt += amt;
             SoundFX.playCoin();
-            showToast(`تم استلام تمويل ${amt.toLocaleString()} ¥`, "info");
+            showToast(`تم أخذ قرض ${amt.toLocaleString()} ¥`, "info");
             syncMyPlayerData();
             updateAllUI();
         }
 
-        function payPlayerDebt(mode) {
+        function payPlayerDebt() {
             if (App.bankDebt <= 0) { showToast("ليس عليك أي ديون!", "info"); return; }
-            let amt = mode === 'all' ? Math.min(App.cash, App.bankDebt) : Math.min(1000, App.bankDebt);
-            if (amt <= 0 || App.cash < amt) { showToast("الكاش لا يكفي للسداد!", "danger"); return; }
-            App.cash -= amt;
-            App.bankDebt -= amt;
+            if (App.cash < App.bankDebt) { showToast("الكاش لا يكفي للسداد!", "danger"); return; }
+            App.cash -= App.bankDebt;
+            App.bankDebt = 0;
             SoundFX.playCoin();
-            showToast(`تم سداد ${amt.toLocaleString()} ¥ من الدين`, "success");
+            showToast("تم سداد كامل الدين بنجاح!", "success");
             syncMyPlayerData();
             updateAllUI();
         }
 
-        function submitVote(choice) {
-            SoundFX.playGavel();
-            showToast(`تم تسجيل صوتك في المجلس (${choice === 'yes' ? 'موافق' : 'معترض'})`, "info");
-        }
-
-        function buySabotage(type) {
-            let cost = type === 'leak' ? 500 : 1000;
-            if (App.cash < cost) { showToast("كاشك لا يكفي لهذه العملية السرية!", "danger"); return; }
+        /* --- SABOTAGE OPERATIONS --- */
+        function executeSabotage(type) {
+            let cost = type === 'freeze' ? 1000 : (type === 'rumor' ? 750 : 1500);
+            if (App.cash < cost) { showToast("الكاش لا يكفي لتنفيذ العملية!", "danger"); return; }
             App.cash -= cost;
-            SoundFX.playGavel();
-            showToast("تم تنفيذ العملية السرية وخلخلة السوق!", "success");
+
+            if (type === 'freeze') {
+                showToast("تم إرسال هجوم تجميد حسابات للمتصدر!", "success");
+            } else if (type === 'rumor') {
+                showToast("تم بث شائعة سببت انهياراً بأحد الأسواق!", "success");
+            } else if (type === 'heist') {
+                App.cash += 2000;
+                showToast("تمت عملية السطو ونهب أرباح إضافية!", "success");
+            }
+
+            App.connections.forEach(c => {
+                if(c.open) c.send({ type: "SABOTAGE_EVENT", sabotageType: type, from: App.playerName });
+            });
+
             syncMyPlayerData();
             updateAllUI();
         }
 
-        function hostAdvanceRound() {
-            App.round += 1;
-            App.assets.forEach(a => {
-                a.prevPrice = a.price;
-                let factor = 0.85 + (Math.random() * 0.35);
-                a.price = Math.max(Math.round(a.basePrice * 0.4), Math.round(a.price * factor));
-            });
+        /* --- TIMERS & HEARTBEAT EFFECTS --- */
+        function startTimerLoop() {
+            setInterval(() => {
+                if (App.timeLeft > 0) {
+                    App.timeLeft--;
+                    let m = Math.floor(App.timeLeft / 60);
+                    let s = App.timeLeft % 60;
+                    document.getElementById('game-timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
 
-            Object.keys(App.playersData).forEach(p => {
-                let change = Math.round((Math.random() * 1800) - 600);
-                App.playersData[p].netWorth += change;
-                App.playersData[p].cash += Math.round(change * 0.6);
-            });
+                    // Heartbeat on last 60 seconds
+                    if (App.timeLeft <= 60 && App.timeLeft > 0) {
+                        SoundFX.playHeartbeat();
+                    }
 
-            SoundFX.playGavel();
-            confetti({ particleCount: 80, spread: 60 });
-            updateHostTVDisplay();
-            broadcastToAll({ type: "ROUND_ADVANCE", round: App.round });
-            broadcastToAll({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
-            showToast(`تم إطلاق الجولة ${App.round} بنجاح!`, "success");
+                    if (App.timeLeft === 0) {
+                        finishGameFinal();
+                    }
+                }
+            }, 1000);
         }
 
-        function hostTriggerMarketEvent() {
-            const shockAsset = App.assets[Math.floor(Math.random() * App.assets.length)];
-            shockAsset.prevPrice = shockAsset.price;
-            shockAsset.price = Math.round(shockAsset.price * 1.5);
-            updateHostTVDisplay();
-            broadcastToAll({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
-            showToast(`🚨 طفرة مفاجئة في أسعار: ${shockAsset.name}!`, "info");
+        function startHostGameEvents() {
+            // Auto advance round every 90 seconds + trigger auctions
+            setInterval(() => {
+                App.round++;
+                App.assets.forEach(a => {
+                    a.prevPrice = a.price;
+                    let factor = 0.85 + (Math.random() * 0.35);
+                    a.price = Math.max(Math.round(a.basePrice * 0.4), Math.round(a.price * factor));
+                });
+                broadcastAll({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
+                updateHostTVDisplay();
+
+                // Trigger Auction on round 3 and 5
+                if (App.round === 3 || App.round === 5) {
+                    setTimeout(() => triggerHostAuction(), 5000);
+                }
+            }, 90000);
+        }
+
+        function finishGameFinal() {
+            SoundFX.playGong();
+            confetti({ particleCount: 200, spread: 90 });
+            let worth = calculateNetWorth();
+            alert(`⌛ انتهت الجلسة رسمياً!\nصافي ثروتك النهائي: ${worth.toLocaleString()} ¥`);
         }
 
         function switchPlayerTab(tabId) {
@@ -1105,15 +1313,12 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
             event.currentTarget.classList.add('active');
-
             if (tabId === 'inventory') renderPlayerInventory();
         }
 
         function updateAllUI() {
-            document.getElementById('hdr-round').innerText = App.round;
             document.getElementById('hdr-cash').innerText = App.cash.toLocaleString();
             document.getElementById('hdr-networth').innerText = Math.round(calculateNetWorth()).toLocaleString();
-
             document.getElementById('player-bank-savings').innerText = App.bankSavings.toLocaleString();
             document.getElementById('player-bank-debt').innerText = App.bankDebt.toLocaleString();
 
@@ -1128,9 +1333,6 @@
             App.assets.forEach(item => {
                 let diff = item.price - item.prevPrice;
                 let chgClass = diff >= 0 ? 'change-up' : 'change-down';
-                let chgIcon = diff >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down';
-                let demandBadge = item.demandScore > 0 ? `<span class="stock-demand-tag high-demand">إقبال عالي 🔥</span>` : `<span class="stock-demand-tag low-demand">عرض متوفر 📦</span>`;
-
                 const card = document.createElement('div');
                 card.className = 'stock-card';
                 card.innerHTML = `
@@ -1138,22 +1340,22 @@
                         <div class="stock-info">
                             <div class="stock-icon">${item.icon}</div>
                             <div>
-                                <div class="stock-name">${item.name}</div>
-                                <div>بحوزتك: <strong>${item.owned}</strong> | ${demandBadge}</div>
+                                <div style="font-weight:800; font-size:15px;">${item.name}</div>
+                                <div style="font-size:12px; color:var(--text-muted);">محفظتك: <strong>${item.owned}</strong></div>
                             </div>
                         </div>
-                        <div class="stock-price-box">
-                            <div class="stock-price">${item.price.toLocaleString()} <span style="font-size: 13px;">¥</span></div>
-                            <div class="stock-change ${chgClass}"><i class="fa-solid ${chgIcon}"></i> ${diff >= 0 ? '+' : ''}${diff} ¥</div>
+                        <div style="text-align:left;">
+                            <div class="stock-price">${item.price.toLocaleString()} <span style="font-size:12px;">¥</span></div>
+                            <div class="${chgClass}">${diff >= 0 ? '+' : ''}${diff} ¥</div>
                         </div>
                     </div>
                     <div class="action-grid">
-                        <button class="btn-trade-buy" onclick="tradeAsset('${item.id}', 'BUY', 1)" ${App.cash < item.price ? 'disabled' : ''}><i class="fa-solid fa-cart-plus"></i> شراء 1</button>
-                        <button class="btn-trade-sell" onclick="tradeAsset('${item.id}', 'SELL', 1)" ${item.owned === 0 ? 'disabled' : ''}><i class="fa-solid fa-hand-holding-dollar"></i> بيع 1</button>
+                        <button class="btn-trade-buy" onclick="tradeAsset('${item.id}', 'BUY', 1)" ${App.cash < item.price ? 'disabled' : ''}>شراء 1</button>
+                        <button class="btn-trade-sell" onclick="tradeAsset('${item.id}', 'SELL', 1)" ${item.owned === 0 ? 'disabled' : ''}>بيع 1</button>
                     </div>
                     <div class="action-grid">
-                        <button class="btn-trade-buy" style="font-size: 11.5px; padding: 6px;" onclick="tradeAsset('${item.id}', 'BUY', 'max')" ${App.cash < item.price ? 'disabled' : ''}>شراء أقصى كمية</button>
-                        <button class="btn-trade-sell" style="font-size: 11.5px; padding: 6px;" onclick="tradeAsset('${item.id}', 'SELL', 'all')" ${item.owned === 0 ? 'disabled' : ''}>بيع الكل (${item.owned})</button>
+                        <button class="btn-trade-buy" style="font-size:11.5px; padding:5px;" onclick="tradeAsset('${item.id}', 'BUY', 'max')" ${App.cash < item.price ? 'disabled' : ''}>أقصى كمية</button>
+                        <button class="btn-trade-sell" style="font-size:11.5px; padding:5px;" onclick="tradeAsset('${item.id}', 'SELL', 'all')" ${item.owned === 0 ? 'disabled' : ''}>بيع الكل (${item.owned})</button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -1163,16 +1365,13 @@
         function renderPlayerInventory() {
             const container = document.getElementById('player-inventory-list');
             container.innerHTML = '';
-            let ownedItems = App.assets.filter(a => a.owned > 0);
-
-            if (ownedItems.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); grid-column: 1/-1;">لا تملك أي أصول حالياً! توجه إلى التداول للمضاربة.</div>`;
+            let owned = App.assets.filter(a => a.owned > 0);
+            if (owned.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); grid-column:1/-1;">لا تملك أي أصول حالياً! توجه للبورصة للشراء.</div>`;
                 return;
             }
-
-            ownedItems.forEach(item => {
-                let totalVal = item.owned * item.price;
-                let prof = totalVal - (item.owned * item.avgCost);
+            owned.forEach(item => {
+                let val = item.owned * item.price;
                 const card = document.createElement('div');
                 card.className = 'stock-card';
                 card.innerHTML = `
@@ -1180,20 +1379,17 @@
                         <div class="stock-info">
                             <div class="stock-icon">${item.icon}</div>
                             <div>
-                                <div class="stock-name">${item.name}</div>
-                                <div style="font-size: 12px; color: var(--text-muted);">الكمية: <strong>${item.owned}</strong> | التكلفة: ${Math.round(item.avgCost)} ¥</div>
+                                <div style="font-weight:800;">${item.name}</div>
+                                <div style="font-size:12px; color:var(--text-muted);">الكمية: <strong>${item.owned}</strong> | التكلفة: ${Math.round(item.avgCost)} ¥</div>
                             </div>
                         </div>
-                        <div style="text-align: left;">
-                            <div class="stock-price" style="color: ${prof >= 0 ? 'var(--green)' : 'var(--red)'};">${totalVal.toLocaleString()} ¥</div>
-                            <div style="font-size: 11.5px; color: ${prof >= 0 ? 'var(--green)' : 'var(--red)'}; font-weight: bold;">
-                                ${prof >= 0 ? 'أرباح غير محققة: +' : 'خسارة: '}${Math.round(prof)} ¥
-                            </div>
+                        <div style="text-align:left;">
+                            <div class="stock-price" style="color:var(--green);">${val.toLocaleString()} ¥</div>
                         </div>
                     </div>
                     <div class="action-grid">
-                        <button class="btn-trade-sell" onclick="tradeAsset('${item.id}', 'SELL', 1)">بيع حبة واحدة</button>
-                        <button class="btn-trade-sell" style="background: var(--red); color: #fff;" onclick="tradeAsset('${item.id}', 'SELL', 'all')">تصفية كل الكمية</button>
+                        <button class="btn-trade-sell" onclick="tradeAsset('${item.id}', 'SELL', 1)">بيع 1</button>
+                        <button class="btn-trade-sell" style="background:var(--red); color:#fff;" onclick="tradeAsset('${item.id}', 'SELL', 'all')">بيع الكل</button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -1203,20 +1399,24 @@
         function updateHostTVDisplay() {
             const tbody = document.getElementById('tv-leaderboard-rows');
             tbody.innerHTML = '';
-            let sorted = Object.entries(App.playersData).sort((a,b) => b[1].netWorth - a[1].netWorth);
+            let players = Object.entries(App.connectedPlayers).sort((a,b) => b[1].netWorth - a[1].netWorth);
 
-            sorted.forEach(([name, data], idx) => {
-                let rClass = idx === 0 ? 'rank-1' : (idx === 1 ? 'rank-2' : (idx === 2 ? 'rank-3' : ''));
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><span class="rank-badge ${rClass}">${idx + 1}</span></td>
-                    <td><strong>${name}</strong></td>
-                    <td style="color: #10b981;">${data.cash.toLocaleString()} ¥</td>
-                    <td style="color: var(--gold);">${data.assetsVal.toLocaleString()} ¥</td>
-                    <td style="font-family:'Changa'; font-size: 18px; font-weight: 800; color: #60a5fa;">${data.netWorth.toLocaleString()} ¥</td>
-                `;
-                tbody.appendChild(tr);
-            });
+            if (players.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">بانتظار دخول اللاعبين بنفس رمز الغرفة...</td></tr>`;
+            } else {
+                players.forEach(([name, data], idx) => {
+                    let rClass = idx === 0 ? 'rank-1' : (idx === 1 ? 'rank-2' : (idx === 2 ? 'rank-3' : ''));
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><span class="rank-badge ${rClass}">${idx + 1}</span></td>
+                        <td><strong>${name}</strong></td>
+                        <td style="color:#10b981;">${data.cash.toLocaleString()} ¥</td>
+                        <td style="color:var(--gold);">${data.assetsVal.toLocaleString()} ¥</td>
+                        <td style="font-family:'Changa'; font-size:17px; font-weight:800; color:#60a5fa;">${data.netWorth.toLocaleString()} ¥</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
 
             const stocksBox = document.getElementById('tv-market-items');
             stocksBox.innerHTML = '';
@@ -1226,11 +1426,11 @@
                 const div = document.createElement('div');
                 div.className = 'tv-market-item';
                 div.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                    <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:13px;">
                         <span>${item.icon} ${item.name}</span>
                         <span class="${chgClass}">${diff >= 0 ? '+' : ''}${diff}¥</span>
                     </div>
-                    <div style="font-family: 'Changa'; font-size: 20px; font-weight: 900; color: var(--gold);">${item.price.toLocaleString()} ¥</div>
+                    <div style="font-family:'Changa'; font-size:18px; font-weight:900; color:var(--gold);">${item.price.toLocaleString()} ¥</div>
                 `;
                 stocksBox.appendChild(div);
             });
@@ -1240,10 +1440,10 @@
             const box = document.getElementById('toast-box');
             const t = document.createElement('div');
             t.className = `toast-msg toast-${type}`;
-            t.innerHTML = `<span>${msg}</span>`;
+            t.innerText = msg;
             box.appendChild(t);
             setTimeout(() => t.classList.add('show'), 10);
-            setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 2500);
+            setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 2200);
         }
     </script>
 </body>
