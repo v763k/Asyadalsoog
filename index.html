@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Changa:wght@600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- MQTT Real-time Engine -->
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -173,6 +172,7 @@
         }
         .stat-pill .val { font-family: 'Changa', sans-serif; font-weight: 800; }
 
+        /* TV Display View */
         #host-tv-dashboard {
             display: none;
             max-width: 1400px;
@@ -254,6 +254,7 @@
             gap: 4px;
         }
 
+        /* Player Workspace */
         #player-app-workspace {
             display: flex;
             flex-direction: column;
@@ -404,6 +405,18 @@
             font-size: 13px;
         }
 
+        /* Alliance Proposal Modal */
+        #alliance-proposal-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 12500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
         nav.bottom-nav {
             position: fixed;
             bottom: 0;
@@ -490,7 +503,6 @@
                 رمز الغرفة: <strong style="color: #60a5fa; font-size: 18px;" id="lobby-room-code-badge">---</strong>
             </p>
 
-            <!-- Big QR Code Inside the Lobby -->
             <div class="lobby-qr-container">
                 <div id="qrcode-lobby"></div>
                 <span style="font-size: 10px; color: #333; font-weight: 800; margin-top: 4px;">امسح الباركود لدخول الغرفة 📷</span>
@@ -501,7 +513,6 @@
                 <div class="player-chip">بانتظار دخول اللاعبين...</div>
             </div>
 
-            <!-- Only Leader sees Launch button -->
             <div id="leader-control-box" style="display: none; margin-top: 14px;">
                 <button class="btn-main btn-gold" onclick="launchGameByLeader()"><i class="fa-solid fa-rocket"></i> أنت القائد: إطلاق الجلسة وبدء اللعب 🚀</button>
             </div>
@@ -613,13 +624,13 @@
         <div id="tab-sabotage" class="tab-panel">
             <div class="interactive-action-card">
                 <h3 style="font-size: 16px; color: var(--gold);"><i class="fa-solid fa-handshake"></i> التحالفات والعقود المشتركة</h3>
-                <p style="font-size: 12px; color: var(--text-muted);">اختر شريكك لتقاسم أرباح البورصة، أو اغدر به وافسخ العقد!</p>
+                <p style="font-size: 12px; color: var(--text-muted);">أرسل طلب تحالف لخويك (يتطلب موافقته)، أو افض العقد واغدر به!</p>
                 <div id="alliance-box-content">
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                         <select id="alliance-select-player" class="custom-select">
-                            <option value="">-- اختر التاجر للتحالف معه --</option>
+                            <option value="">-- اختر التاجر لإرسال طلب تحالف --</option>
                         </select>
-                        <button class="btn-trade-buy" style="padding: 10px;" onclick="requestAlliance()"><i class="fa-solid fa-file-contract"></i> توقيع عقد الشراكة</button>
+                        <button class="btn-trade-buy" style="padding: 10px;" onclick="sendAllianceProposal()"><i class="fa-solid fa-paper-plane"></i> إرسال طلب تحالف</button>
                     </div>
                 </div>
             </div>
@@ -646,14 +657,30 @@
             </div>
         </div>
 
-        <!-- Tab 4: Inventory -->
+        <!-- Tab 4: Inventory (المستودع والتخزين المطور) -->
         <div id="tab-inventory" class="tab-panel">
-            <div class="tv-card" style="margin-bottom: 12px;">
-                <h3 style="font-size: 15px;"><i class="fa-solid fa-briefcase"></i> محفظة الأصول الخاصة بك</h3>
+            <div class="tv-card" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="font-size: 15px;"><i class="fa-solid fa-boxes-stacked"></i> مستودع الأصول والتخزين</h3>
+                    <span style="font-size: 11.5px; color: var(--text-muted);">إجمالي قيمة البضاعة المخزنة: <strong style="color:var(--gold);" id="inv-total-value">0</strong> ¥</span>
+                </div>
             </div>
             <div id="player-inventory-list" class="stock-market-grid"></div>
         </div>
 
+    </div>
+
+    <!-- Alliance Request Popup Modal -->
+    <div id="alliance-proposal-modal">
+        <div class="modal-card">
+            <div style="font-size: 38px; margin-bottom: 6px;">🤝</div>
+            <h3 style="font-size: 18px; color: var(--gold); margin-bottom: 6px;">طلب تحالف تجاري وارد!</h3>
+            <p style="font-size: 13.5px; color: var(--text-main); margin-bottom: 16px;" id="alliance-proposal-text">عرض تحالف من تاجر</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-trade-buy" style="flex:1; padding:12px;" onclick="respondAlliance(true)"><i class="fa-solid fa-check"></i> قبول التحالف</button>
+                <button class="btn-trade-sell" style="flex:1; padding:12px;" onclick="respondAlliance(false)"><i class="fa-solid fa-xmark"></i> رفض</button>
+            </div>
+        </div>
     </div>
 
     <!-- Navigation -->
@@ -672,7 +699,7 @@
         </button>
         <button class="nav-item" onclick="switchPlayerTab('inventory')">
             <i class="fa-solid fa-box-archive"></i>
-            <span>أصولي</span>
+            <span>المستودع</span>
         </button>
     </nav>
 
@@ -737,6 +764,7 @@
             bankSavings: 0,
             bankDebt: 0,
             alliancePartner: null,
+            pendingAllianceFrom: null,
             isFrozen: false,
             mqttClient: null,
             connectedPlayers: {},
@@ -810,13 +838,23 @@
             App.roomCode = room || "LODGE";
 
             document.getElementById('entry-screen').style.display = 'none';
-            document.getElementById('waiting-lobby-screen').style.display = 'flex';
-            document.getElementById('lobby-room-code-badge').innerText = App.roomCode;
+
+            if (asHost) {
+                document.getElementById('waiting-lobby-screen').style.display = 'none';
+                document.getElementById('player-app-workspace').style.display = 'none';
+                document.getElementById('player-bottom-nav').style.display = 'none';
+                document.getElementById('host-tv-dashboard').style.display = 'flex';
+                document.getElementById('tv-room-banner').innerText = App.roomCode;
+            } else {
+                document.getElementById('waiting-lobby-screen').style.display = 'flex';
+                document.getElementById('lobby-room-code-badge').innerText = App.roomCode;
+                renderLobbyQRCode();
+            }
+
             document.getElementById('hdr-room-code').innerText = App.roomCode;
             document.getElementById('hdr-name').innerText = App.playerName;
             document.getElementById('hdr-avatar').innerText = App.playerName.charAt(0);
 
-            renderLobbyQRCode();
             saveSession();
             connectMQTT();
         }
@@ -913,16 +951,33 @@
                 if (data.target === App.playerName) {
                     applySabotageToMe(data.sabotageType, data.from);
                 }
+            } else if (data.type === "ALLIANCE_PROPOSAL") {
+                if (data.to === App.playerName) {
+                    App.pendingAllianceFrom = data.from;
+                    document.getElementById('alliance-proposal-text').innerText = `التاجر (${data.from}) يعرض عليك تحالف تجاري لتقاسم الأرباح 10%، هل توافق؟`;
+                    document.getElementById('alliance-proposal-modal').style.display = 'flex';
+                }
+            } else if (data.type === "ALLIANCE_RESPONSE") {
+                if (data.to === App.playerName) {
+                    if (data.accepted) {
+                        App.alliancePartner = data.from;
+                        renderActiveAllianceUI(data.from);
+                        showToast(`🤝 وافق التاجر (${data.from}) على التحالف معك!`, "success");
+                    } else {
+                        showToast(`❌ رفض التاجر (${data.from}) طلب التحالف!`, "danger");
+                    }
+                }
             }
         }
 
         function renderLobbyPlayers() {
             const container = document.getElementById('lobby-players-container');
+            if (!container) return;
             container.innerHTML = '';
             const actualPlayers = Object.keys(App.connectedPlayers).filter(n => n !== "شاشة التلفزيون");
             
             if (actualPlayers.length === 0) {
-                container.innerHTML = `<div class="player-chip">بانتظار مسح الباركود ودخول اللاعبين...</div>`;
+                container.innerHTML = `<div class="player-chip">بانتظار دخول اللاعبين...</div>`;
                 return;
             }
 
@@ -998,7 +1053,6 @@
 
             syncMyState();
             updateAllUI();
-
             setTimeout(() => { App.tradeBusy = false; }, 100);
         }
 
@@ -1012,6 +1066,7 @@
             });
         }
 
+        /* --- Bank Engine --- */
         function depositBankAll() {
             if (App.cash <= 0) { showToast("لا تملك كاش للإيداع!", "danger"); return; }
             App.bankSavings += App.cash;
@@ -1052,19 +1107,76 @@
             updateAllUI();
         }
 
+        /* --- Interactive Alliances System --- */
         function updateDropdownTargets() {
             const allianceSelect = document.getElementById('alliance-select-player');
             const sabotageSelect = document.getElementById('sabotage-select-target');
             if (!allianceSelect || !sabotageSelect) return;
 
             const others = Object.keys(App.connectedPlayers).filter(p => p !== App.playerName && p !== "شاشة التلفزيون");
-            allianceSelect.innerHTML = '<option value="">-- اختر التاجر للتحالف معه --</option>';
+            allianceSelect.innerHTML = '<option value="">-- اختر التاجر لإرسال طلب تحالف --</option>';
             sabotageSelect.innerHTML = '<option value="">-- اختر التاجر المستهدف --</option>';
 
             others.forEach(p => {
                 allianceSelect.innerHTML += `<option value="${p}">${p}</option>`;
                 sabotageSelect.innerHTML += `<option value="${p}">${p}</option>`;
             });
+        }
+
+        function sendAllianceProposal() {
+            const select = document.getElementById('alliance-select-player');
+            const partner = select.value;
+            if (!partner) { showToast("اختر التاجر أولاً!", "danger"); return; }
+
+            sendMQTTPayload("ALLIANCE_PROPOSAL", { from: App.playerName, to: partner });
+            showToast(`تم إرسال طلب التحالف إلى (${partner})، بانتظار رده...`, "info");
+        }
+
+        function respondAlliance(accept) {
+            document.getElementById('alliance-proposal-modal').style.display = 'none';
+            if (!App.pendingAllianceFrom) return;
+
+            sendMQTTPayload("ALLIANCE_RESPONSE", {
+                from: App.playerName,
+                to: App.pendingAllianceFrom,
+                accepted: accept
+            });
+
+            if (accept) {
+                App.alliancePartner = App.pendingAllianceFrom;
+                renderActiveAllianceUI(App.pendingAllianceFrom);
+                showToast(`🤝 تم قبول وتفعيل التحالف مع (${App.pendingAllianceFrom})!`, "success");
+            } else {
+                showToast(`تم رفض طلب التحالف من (${App.pendingAllianceFrom})`, "info");
+            }
+            App.pendingAllianceFrom = null;
+        }
+
+        function renderActiveAllianceUI(partner) {
+            document.getElementById('alliance-box-content').innerHTML = `
+                <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid var(--green); padding: 14px; border-radius: var(--radius-sm);">
+                    <div style="font-weight: bold; color: var(--green); font-size: 15px;">تحالف رسمي نشط مع: ${partner} 🤝</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin: 6px 0 10px 0;">تتقاسمون 10% من أرباح كل جولة.</div>
+                    <button class="btn-trade-sell" style="padding: 8px 14px; font-size: 12.5px;" onclick="breakAlliance()"><i class="fa-solid fa-handshake-slash"></i> فسخ العقد والغدر به (+1,500¥)</button>
+                </div>
+            `;
+        }
+
+        function breakAlliance() {
+            App.cash += 1500;
+            showToast(`فسخت العقد وسرقت 1,500 ¥ من أموال الشراكة!`, "danger");
+            App.alliancePartner = null;
+            document.getElementById('alliance-box-content').innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <select id="alliance-select-player" class="custom-select">
+                        <option value="">-- اختر التاجر لإرسال طلب تحالف --</option>
+                    </select>
+                    <button class="btn-trade-buy" style="padding: 10px;" onclick="sendAllianceProposal()"><i class="fa-solid fa-paper-plane"></i> إرسال طلب تحالف</button>
+                </div>
+            `;
+            updateDropdownTargets();
+            syncMyState();
+            updateAllUI();
         }
 
         function executeSabotage(type) {
@@ -1106,39 +1218,6 @@
             updateAllUI();
         }
 
-        function requestAlliance() {
-            const select = document.getElementById('alliance-select-player');
-            const partner = select.value;
-            if (!partner) { showToast("اختر الشريك أولاً!", "danger"); return; }
-
-            App.alliancePartner = partner;
-            document.getElementById('alliance-box-content').innerHTML = `
-                <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid var(--green); padding: 12px; border-radius: var(--radius-sm);">
-                    <div style="font-weight: bold; color: var(--green);">تحالف نشط مع: ${partner} 🤝</div>
-                    <div style="font-size: 12px; color: var(--text-muted); margin: 4px 0 10px 0;">تتقاسمون 10% من أرباح كل جولة.</div>
-                    <button class="btn-trade-sell" style="padding: 6px 12px; font-size: 12px;" onclick="breakAlliance()"><i class="fa-solid fa-handshake-slash"></i> فسخ العقد والغدر به (+1,500¥)</button>
-                </div>
-            `;
-            SoundFX.playCoin();
-            showToast(`تم توقيع عقد الشراكة مع ${partner}!`, "success");
-        }
-
-        function breakAlliance() {
-            App.cash += 1500;
-            showToast(`فسخت العقد وسرقت 1,500 ¥ من أموال الشراكة!`, "danger");
-            App.alliancePartner = null;
-            document.getElementById('alliance-box-content').innerHTML = `
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <select id="alliance-select-player" class="custom-select">
-                        <option value="">-- اختر التاجر للتحالف معه --</option>
-                    </select>
-                    <button class="btn-trade-buy" style="padding: 10px;" onclick="requestAlliance()"><i class="fa-solid fa-file-contract"></i> توقيع عقد الشراكة</button>
-                </div>
-            `;
-            syncMyState();
-            updateAllUI();
-        }
-
         function switchPlayerTab(tabId) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -1176,7 +1255,7 @@
                             <div class="stock-icon">${item.icon}</div>
                             <div>
                                 <div style="font-weight:800; font-size:15px;">${item.name}</div>
-                                <div style="font-size:12px; color:var(--text-muted);">بحوزتك: <strong>${ownedCount}</strong></div>
+                                <div style="font-size:12px; color:var(--text-muted);">بالمستودع: <strong>${ownedCount}</strong></div>
                             </div>
                         </div>
                         <div style="text-align:left;">
@@ -1203,17 +1282,25 @@
             });
         }
 
+        /* --- المستودع والتخزين المطور --- */
         function renderPlayerInventory() {
             const container = document.getElementById('player-inventory-list');
             container.innerHTML = '';
             let owned = App.assets.filter(a => cleanNum(a.owned) > 0);
+            
+            let totalStorageVal = calculateAssetsValue();
+            const totalLabel = document.getElementById('inv-total-value');
+            if (totalLabel) totalLabel.innerText = totalStorageVal.toLocaleString();
+
             if (owned.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); grid-column:1/-1;">لا تملك أي أصول حالياً! توجه للبورصة للشراء.</div>`;
+                container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); grid-column:1/-1;">مستودعك فارغ حالياً! توجه للبورصة لشراء وتخزين السلع.</div>`;
                 return;
             }
+
             owned.forEach(item => {
                 let count = cleanNum(item.owned);
                 let val = count * item.price;
+                let sellVal = count * Math.floor(item.price * 0.95);
                 const card = document.createElement('div');
                 card.className = 'stock-card';
                 card.innerHTML = `
@@ -1222,16 +1309,38 @@
                             <div class="stock-icon">${item.icon}</div>
                             <div>
                                 <div style="font-weight:800;">${item.name}</div>
-                                <div style="font-size:12px; color:var(--text-muted);">الكمية: <strong>${count}</strong></div>
+                                <div style="font-size:12px; color:var(--text-muted);">الكمية المخزنة: <strong style="color:#fff;">${count}</strong></div>
                             </div>
                         </div>
                         <div style="text-align:left;">
                             <div class="stock-price" style="color:var(--green);">${val.toLocaleString()} ¥</div>
+                            <div style="font-size:11px; color:var(--text-muted);">صافي البيع: ${sellVal.toLocaleString()} ¥</div>
                         </div>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-trade-sell" style="flex:1;" onclick="sellFromStorage('${item.id}', 1)"><i class="fa-solid fa-hand-holding-dollar"></i> بيع حبة واحدة</button>
+                        <button class="btn-trade-sell" style="flex:1; background:var(--red); color:#fff;" onclick="sellFromStorage('${item.id}', ${count})"><i class="fa-solid fa-tags"></i> تصفية المخزون</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
+        }
+
+        function sellFromStorage(assetId, qty) {
+            const item = App.assets.find(a => a.id === assetId);
+            if (!item || item.owned < qty) return;
+
+            let sellPrice = Math.floor(item.price * 0.95);
+            let revenue = qty * sellPrice;
+
+            item.owned -= qty;
+            App.cash += revenue;
+
+            SoundFX.playCoin();
+            showToast(`تم بيع ${qty} من المستودع واستلام ${revenue.toLocaleString()} ¥`, "info");
+            
+            syncMyState();
+            updateAllUI();
         }
 
         function updateHostTVDisplay() {
@@ -1289,4 +1398,3 @@
     </script>
 </body>
 </html>
-
