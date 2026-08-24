@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Changa:wght@600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- MQTT Real-time Engine -->
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -51,7 +50,6 @@
             overflow-x: hidden;
         }
 
-        /* 1. Main Entry Selection Screen */
         #entry-screen, #waiting-lobby-screen {
             position: fixed;
             inset: 0;
@@ -67,8 +65,8 @@
             background: var(--bg-nav);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            padding: 26px;
-            max-width: 450px;
+            padding: 24px;
+            max-width: 440px;
             width: 100%;
             text-align: center;
             box-shadow: 0 20px 60px rgba(0,0,0,0.8);
@@ -128,7 +126,6 @@
             align-items: center;
         }
 
-        /* Header */
         header {
             background: var(--bg-nav);
             border-bottom: 1px solid var(--border-color);
@@ -175,7 +172,6 @@
         }
         .stat-pill .val { font-family: 'Changa', sans-serif; font-weight: 800; }
 
-        /* TV Display View (صفحة الضيافة وشاشة التلفزيون) */
         #host-tv-dashboard {
             display: none;
             max-width: 1400px;
@@ -257,7 +253,6 @@
             gap: 4px;
         }
 
-        /* Player Workspace */
         #player-app-workspace {
             display: flex;
             flex-direction: column;
@@ -408,7 +403,6 @@
             font-size: 13px;
         }
 
-        /* Alliance Proposal Modal */
         #alliance-proposal-modal {
             position: fixed;
             inset: 0;
@@ -480,7 +474,7 @@
 </head>
 <body>
 
-    <!-- 1. Entry Screen (الشاشة الرئيسية لاختيار الدخول) -->
+    <!-- 1. Entry Screen -->
     <div id="entry-screen">
         <div class="modal-card">
             <div style="font-size: 40px; margin-bottom: 6px;">👑</div>
@@ -497,7 +491,7 @@
         </div>
     </div>
 
-    <!-- 2. Waiting Lobby Screen (صالة الانتظار للجوالات) -->
+    <!-- 2. Waiting Lobby Screen -->
     <div id="waiting-lobby-screen" style="display: none;">
         <div class="modal-card">
             <div style="font-size: 32px; margin-bottom: 4px;">⏳</div>
@@ -554,7 +548,7 @@
         </div>
     </header>
 
-    <!-- 4. TV Standalone Display View (شاشة التلفزيون والإحصائيات) -->
+    <!-- 4. TV Standalone Display View -->
     <div id="host-tv-dashboard">
         <div class="tv-banner-card">
             <div>
@@ -635,7 +629,7 @@
                 <p style="font-size: 12px; color: var(--text-muted);">أرسل طلب تحالف لخويك (يتطلب موافقته)، أو افض العقد واغدر به!</p>
                 <div id="alliance-box-content">
                     <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <select id="alliance-select-player" class="custom-select">
+                        <select id="alliance-select-player" class="custom-select" onfocus="updateDropdownTargets()">
                             <option value="">-- اختر التاجر لإرسال طلب تحالف --</option>
                         </select>
                         <button class="btn-trade-buy" style="padding: 10px;" onclick="sendAllianceProposal()"><i class="fa-solid fa-paper-plane"></i> إرسال طلب تحالف</button>
@@ -647,7 +641,7 @@
                 <h3 style="font-size: 16px; color: var(--red);"><i class="fa-solid fa-skull-crossbones"></i> عمليات التخريب والمؤامرات</h3>
                 <p style="font-size: 12px; color: var(--text-muted);">اختر التاجر المستهدف ونفذ الضربة فوراً:</p>
                 
-                <select id="sabotage-select-target" class="custom-select" style="margin-bottom: 8px;">
+                <select id="sabotage-select-target" class="custom-select" onfocus="updateDropdownTargets()" style="margin-bottom: 8px;">
                     <option value="">-- اختر التاجر المستهدف --</option>
                 </select>
 
@@ -792,7 +786,6 @@
         }
 
         function logoutSession() {
-            sessionStorage.clear();
             location.reload();
         }
 
@@ -820,7 +813,6 @@
             document.getElementById('entry-screen').style.display = 'none';
 
             if (asHost) {
-                // وضع شاشة التلفزيون المباشر
                 document.getElementById('waiting-lobby-screen').style.display = 'none';
                 document.getElementById('player-app-workspace').style.display = 'none';
                 document.getElementById('player-bottom-nav').style.display = 'none';
@@ -829,7 +821,6 @@
                 document.getElementById('tv-room-banner').innerText = App.roomCode;
                 renderTVQRCode();
             } else {
-                // وضع اللاعب بالجوال
                 document.getElementById('waiting-lobby-screen').style.display = 'flex';
                 document.getElementById('lobby-room-code-badge').innerText = App.roomCode;
                 document.getElementById('hdr-room-code').innerText = App.roomCode;
@@ -883,6 +874,10 @@
                 const topic = `asyad/rooms/${App.roomCode}/#`;
                 App.mqttClient.subscribe(topic, () => {
                     sendMQTTPayload("JOIN_LOBBY", { name: App.playerName, isHost: App.isHost });
+                    // Heartbeat دوري لتحديث الحضور كل ثانيتين
+                    setInterval(() => {
+                        syncMyState();
+                    }, 2000);
                 });
             });
 
@@ -906,6 +901,7 @@
                 if (!App.connectedPlayers[data.name]) {
                     App.connectedPlayers[data.name] = { cash: 10000, assetsVal: 0, netWorth: 10000 };
                     renderLobbyPlayers();
+                    updateDropdownTargets();
                 }
 
                 const actualPlayers = Object.keys(App.connectedPlayers).filter(n => n !== "شاشة التلفزيون");
@@ -921,6 +917,7 @@
                     document.getElementById('player-app-workspace').style.display = 'flex';
                     document.getElementById('player-bottom-nav').style.display = 'flex';
                     updateAllUI();
+                    updateDropdownTargets();
                 }
                 showToast("🚀 انطلقت الجلسة وبدأ التداول!", "success");
             } else if (data.type === "PLAYER_STATE_SYNC") {
@@ -1105,6 +1102,10 @@
             if (!allianceSelect || !sabotageSelect) return;
 
             const others = Object.keys(App.connectedPlayers).filter(p => p !== App.playerName && p !== "شاشة التلفزيون");
+            
+            const currentAllianceVal = allianceSelect.value;
+            const currentSabotageVal = sabotageSelect.value;
+
             allianceSelect.innerHTML = '<option value="">-- اختر التاجر لإرسال طلب تحالف --</option>';
             sabotageSelect.innerHTML = '<option value="">-- اختر التاجر المستهدف --</option>';
 
@@ -1112,6 +1113,9 @@
                 allianceSelect.innerHTML += `<option value="${p}">${p}</option>`;
                 sabotageSelect.innerHTML += `<option value="${p}">${p}</option>`;
             });
+
+            if (currentAllianceVal && others.includes(currentAllianceVal)) allianceSelect.value = currentAllianceVal;
+            if (currentSabotageVal && others.includes(currentSabotageVal)) sabotageSelect.value = currentSabotageVal;
         }
 
         function sendAllianceProposal() {
@@ -1159,7 +1163,7 @@
             App.alliancePartner = null;
             document.getElementById('alliance-box-content').innerHTML = `
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <select id="alliance-select-player" class="custom-select">
+                    <select id="alliance-select-player" class="custom-select" onfocus="updateDropdownTargets()">
                         <option value="">-- اختر التاجر لإرسال طلب تحالف --</option>
                     </select>
                     <button class="btn-trade-buy" style="padding: 10px;" onclick="sendAllianceProposal()"><i class="fa-solid fa-paper-plane"></i> إرسال طلب تحالف</button>
@@ -1214,7 +1218,9 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
             event.currentTarget.classList.add('active');
+            
             if (tabId === 'inventory') renderPlayerInventory();
+            if (tabId === 'sabotage') updateDropdownTargets();
         }
 
         function updateAllUI() {
