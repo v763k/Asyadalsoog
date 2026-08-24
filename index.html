@@ -171,25 +171,6 @@
             font-weight: bold;
         }
 
-        .round-stage-bar {
-            background: linear-gradient(90deg, #1e293b, #0f172a);
-            border-bottom: 1px solid var(--border-color);
-            padding: 8px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-        }
-
-        .phase-indicator {
-            background: rgba(245, 158, 11, 0.15);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-weight: 800;
-        }
-
         /* TV Display View */
         #host-tv-dashboard {
             display: none;
@@ -223,20 +204,17 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        /* Live News Ticker */
         .tv-news-ticker {
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px solid var(--red);
-            color: #f87171;
-            padding: 10px 16px;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid var(--gold);
+            color: #fbbf24;
+            padding: 12px 18px;
             border-radius: var(--radius-md);
             font-weight: 800;
-            font-size: 14px;
+            font-size: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
-            overflow: hidden;
-            white-space: nowrap;
         }
 
         .tv-hero-grid {
@@ -301,21 +279,6 @@
             gap: 4px;
         }
 
-        #tv-auction-box {
-            display: none;
-            background: linear-gradient(135deg, #2b1810, #3f1a0a);
-            border: 2px solid var(--gold);
-            border-radius: var(--radius-lg);
-            padding: 18px 24px;
-            animation: pulse-border 1.5s infinite;
-        }
-
-        @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-        }
-
         /* Player Workspace */
         #player-app-workspace {
             display: flex;
@@ -344,51 +307,61 @@
             background: var(--bg-nav);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 14px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
         }
+        .stock-card:hover { border-color: var(--gold); }
 
         .stock-top { display: flex; justify-content: space-between; align-items: flex-start; }
         .stock-info { display: flex; align-items: center; gap: 10px; }
         .stock-icon {
-            font-size: 24px;
-            width: 44px;
-            height: 44px;
+            font-size: 26px;
+            width: 48px;
+            height: 48px;
             background: var(--bg-card);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 1px solid var(--border-color);
         }
 
-        .stock-price { font-family: 'Changa', sans-serif; font-size: 20px; font-weight: 900; }
+        .stock-price { font-family: 'Changa', sans-serif; font-size: 22px; font-weight: 900; }
         .change-up { color: var(--green); font-size: 12px; font-weight: bold; }
         .change-down { color: var(--red); font-size: 12px; font-weight: bold; }
 
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-        .btn-trade-buy, .btn-trade-sell {
-            padding: 9px;
-            border-radius: var(--radius-sm);
-            border: none;
-            font-weight: 800;
-            font-size: 13px;
-            cursor: pointer;
-            display: flex;
+        /* Trade Slider Modal */
+        #trade-slider-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 12000;
+            display: none;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            transition: all 0.15s ease;
+            padding: 20px;
         }
 
-        .btn-trade-buy { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; }
-        .btn-trade-buy:hover:not(:disabled) { background: #10b981; color: #fff; }
-        .btn-trade-sell { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; }
-        .btn-trade-sell:hover:not(:disabled) { background: #ef4444; color: #fff; }
-        .btn-trade-buy:disabled, .btn-trade-sell:disabled { opacity: 0.3; cursor: not-allowed; }
+        .trade-slider-box {
+            background: var(--bg-nav);
+            border: 2px solid var(--gold);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .slider-control {
+            width: 100%;
+            margin: 16px 0;
+            accent-color: var(--gold);
+            height: 8px;
+        }
 
         .interactive-action-card {
             background: var(--bg-nav);
@@ -406,77 +379,51 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: #fff;
-            padding: 10px 14px;
+            padding: 12px 14px;
             border-radius: var(--radius-sm);
             font-size: 14px;
             font-weight: 700;
             outline: none;
         }
-        .custom-select:focus { border-color: var(--gold); }
 
-        .bank-input-group { display: flex; gap: 8px; margin-bottom: 10px; }
-        .bank-input {
-            flex: 1;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-            outline: none;
-        }
+        .btn-trade-buy { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; }
+        .btn-trade-sell { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; }
 
-        .bank-preset-btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 6px 10px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        #player-auction-modal {
+        /* Welcome Tutorial Modal */
+        #tutorial-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 10500;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-        }
-
-        .auction-card {
-            background: var(--bg-nav);
-            border: 2px solid var(--gold);
-            border-radius: var(--radius-lg);
-            max-width: 420px;
-            width: 100%;
-            padding: 24px;
-            text-align: center;
-        }
-
-        #fate-card-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 11000;
+            background: rgba(0,0,0,0.9);
+            z-index: 13000;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
 
-        .fate-box {
+        .tutorial-card {
             background: var(--bg-nav);
-            border: 2px solid var(--purple);
+            border: 2px solid var(--gold);
             border-radius: var(--radius-lg);
             padding: 24px;
-            max-width: 380px;
+            max-width: 440px;
             width: 100%;
-            text-align: center;
+            text-align: right;
+        }
+
+        .tutorial-step {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+            align-items: flex-start;
+        }
+
+        .step-icon {
+            font-size: 22px;
+            background: var(--bg-card);
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
 
         nav.bottom-nav {
@@ -546,14 +493,14 @@
             <div style="font-size: 44px; margin-bottom: 6px;">👑</div>
             <div class="entry-title">مجلس أسياد السوق</div>
             <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">
-                لعبة المضاربة، المزادات، والتحالفات بالاستراحة
+                لعبة المضاربة، المزادات، والتخريب بالاستراحة
             </p>
 
             <input type="text" id="player-name-input" class="entry-input" placeholder="اكتب اسمك التجاري (مثال: محمد)">
             <input type="text" id="room-code-input" class="entry-input" placeholder="رمز الغرفة (للتلفزيون والربع)">
 
             <button class="btn-main btn-gold" onclick="joinAsPlayer()"><i class="fa-solid fa-mobile-screen-button"></i> دخول كلاعب من الجوال</button>
-            <button class="btn-main btn-purple" onclick="startAsHostTV()"><i class="fa-solid fa-tv"></i> تشغيل شاشة العرض (للتلفزيون مع باركود)</button>
+            <button class="btn-main btn-purple" onclick="startAsHostTV()"><i class="fa-solid fa-tv"></i> تشغيل شاشة العرض (للتلفزيون)</button>
         </div>
     </div>
 
@@ -586,47 +533,17 @@
         </div>
     </header>
 
-    <!-- Round Phase Progress Bar -->
-    <div class="round-stage-bar">
-        <div>
-            <span>الجولة: <strong style="color:var(--gold);" id="bar-round-num">1</strong></span>
-        </div>
-        <div class="phase-indicator" id="current-phase-name">مرحلة التداول والمضاربة 📈</div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <span>مؤقت المرحلة: <strong style="color:#60a5fa;" id="phase-timer-display">5:00</strong></span>
-            <button id="skip-round-btn" class="bank-preset-btn" style="background: rgba(245, 158, 11, 0.2); color: var(--gold); border-color: var(--gold);" onclick="manualSkipPhase()"><i class="fa-solid fa-forward-step"></i> تخطي</button>
-        </div>
-    </div>
-
-    <!-- TV LIVE DISPLAY MODE WITH QR CODE -->
+    <!-- TV LIVE DISPLAY MODE -->
     <div id="host-tv-dashboard">
-        <!-- Live Newsfeed Ticker -->
         <div class="tv-news-ticker" id="tv-news-ticker">
             <i class="fa-solid fa-bullhorn"></i>
-            <span id="tv-news-text">أهلاً بكم في جلسة الاستراحة! ابدأوا التداول في البورصة لتشتعل المنافسة...</span>
-        </div>
-
-        <!-- Live Auction Box on TV (ROUND 5) -->
-        <div id="tv-auction-box">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <span style="background: var(--gold); color:#000; padding:3px 8px; border-radius:4px; font-weight:bold; font-size:12px;">مزاد علني مباشر - الجولة الخامسة 🔔</span>
-                    <h2 style="font-size: 22px; color: #fff; margin-top: 6px;" id="tv-auction-title">أصل نادر</h2>
-                    <p style="color: var(--text-muted); font-size: 13px;" id="tv-auction-desc">الوصف</p>
-                </div>
-                <div style="text-align: left;">
-                    <div style="font-size: 13px; color: var(--text-muted);">أعلى سومة حالياً:</div>
-                    <div style="font-family: 'Changa'; font-size: 28px; font-weight: 900; color: var(--gold);"><span id="tv-auction-price">0</span> ¥</div>
-                    <div style="color: var(--green); font-weight: bold;" id="tv-auction-leader">بانتظار السومات...</div>
-                </div>
-            </div>
+            <span id="tv-news-text">أهلاً بكم في استراحة الهوامير! السوق مفتوح للتداول الآن...</span>
         </div>
 
         <div class="tv-banner-card">
             <div>
                 <h1 style="font-family: 'Changa'; font-size: 22px; color: var(--gold); margin-bottom: 4px;"><i class="fa-solid fa-crown"></i> شاشة بث الاستراحة المباشرة</h1>
                 <p style="color: var(--text-muted); font-size: 13px;">امسح الباركود بجوالك أو ادخل برمز الغرفة: <strong style="color:#60a5fa; font-size: 18px;" id="tv-room-banner">---</strong></p>
-                <div style="color: var(--green); font-weight: 800; font-size: 13px; margin-top: 6px;">● بث لحظي وتحديث مباشر للأسعار والألقاب</div>
             </div>
             
             <div class="qr-wrapper">
@@ -637,9 +554,8 @@
 
         <div class="tv-hero-grid">
             <div class="tv-card">
-                <div style="font-family: 'Changa'; font-size: 18px; font-weight: 800; color: var(--gold); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                    <span><i class="fa-solid fa-trophy"></i> صدارة هوامير الاستراحة</span>
-                    <button class="bank-preset-btn" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: var(--red);" onclick="triggerAntiMonopolyVote()"><i class="fa-solid fa-gavel"></i> تصويت عزل المتصدر</button>
+                <div style="font-family: 'Changa'; font-size: 18px; font-weight: 800; color: var(--gold); margin-bottom: 12px;">
+                    <i class="fa-solid fa-trophy"></i> صدارة هوامير الاستراحة
                 </div>
                 <table class="tv-leaderboard-table">
                     <thead>
@@ -672,7 +588,7 @@
         <!-- Tab 1: Trading -->
         <div id="tab-trading" class="tab-panel active">
             <div class="tv-card" style="margin-bottom: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 13px; color: var(--text-muted);">الشراء الكثير يرفع السعر والبيع ينزله!</span>
+                <span style="font-size: 13px; color: var(--text-muted);">اضغط على أي سلعة لتحديد كمية الشراء أو البيع:</span>
                 <button class="btn-trade-sell" style="padding: 6px 12px;" onclick="sellAllPlayerInventory()"><i class="fa-solid fa-tags"></i> تصفية الكل</button>
             </div>
             <div class="stock-market-grid" id="player-stocks-container"></div>
@@ -684,18 +600,9 @@
                 <div class="tv-card">
                     <h3 style="color: #60a5fa; font-size: 15px; margin-bottom: 6px;"><i class="fa-solid fa-piggy-bank"></i> الوديعة والمدخرات (+3% نمو)</h3>
                     <div style="font-size: 17px; font-weight: 800; color: #60a5fa; margin-bottom: 10px;">الرصيد المودع: <span id="player-bank-savings">0</span> ¥</div>
-                    
-                    <div class="bank-input-group">
-                        <input type="number" id="bank-custom-amount" class="bank-input" placeholder="المبلغ المطلوب">
-                    </div>
-                    <div style="display: flex; gap: 6px; margin-bottom: 10px;">
-                        <button class="bank-preset-btn" onclick="setBankAmount(0.25)">25%</button>
-                        <button class="bank-preset-btn" onclick="setBankAmount(0.50)">50%</button>
-                        <button class="bank-preset-btn" onclick="setBankAmount(1.0)">الكل</button>
-                    </div>
                     <div style="display: flex; gap: 8px;">
-                        <button class="btn-trade-buy" style="flex:1" onclick="handleDepositCustom()"><i class="fa-solid fa-arrow-down"></i> إيداع</button>
-                        <button class="btn-trade-sell" style="flex:1" onclick="handleWithdrawCustom()"><i class="fa-solid fa-arrow-up"></i> سحب</button>
+                        <button class="btn-trade-buy" style="flex:1; padding:10px;" onclick="depositBankAll()"><i class="fa-solid fa-arrow-down"></i> إيداع الكل</button>
+                        <button class="btn-trade-sell" style="flex:1; padding:10px;" onclick="withdrawBankAll()"><i class="fa-solid fa-arrow-up"></i> سحب الكل</button>
                     </div>
                 </div>
 
@@ -703,8 +610,8 @@
                     <h3 style="color: var(--red); font-size: 15px; margin-bottom: 6px;"><i class="fa-solid fa-hand-holding-dollar"></i> تسهيلات وقروض سريعة</h3>
                     <div style="font-size: 17px; font-weight: 800; color: var(--red); margin-bottom: 10px;">الدين المطلوب: <span id="player-bank-debt">0</span> ¥</div>
                     <div style="display: flex; gap: 8px;">
-                        <button class="btn-trade-buy" style="flex:1" onclick="payPlayerDebt()"><i class="fa-solid fa-check"></i> سداد كامل الدين</button>
-                        <button class="btn-trade-sell" style="flex:1" onclick="takePlayerLoan(2500)"><i class="fa-solid fa-plus"></i> قرض 2,500 ¥</button>
+                        <button class="btn-trade-buy" style="flex:1; padding:10px;" onclick="payPlayerDebt()"><i class="fa-solid fa-check"></i> سداد كامل الدين</button>
+                        <button class="btn-trade-sell" style="flex:1; padding:10px;" onclick="takePlayerLoan(2500)"><i class="fa-solid fa-plus"></i> قرض 2,500 ¥</button>
                     </div>
                 </div>
             </div>
@@ -714,7 +621,7 @@
         <div id="tab-sabotage" class="tab-panel">
             <div class="interactive-action-card">
                 <h3 style="font-size: 16px; color: var(--gold);"><i class="fa-solid fa-handshake"></i> التحالفات والعقود المشتركة</h3>
-                <p style="font-size: 12px; color: var(--text-muted);">اختر شريكك من القائمة لتقاسم أرباح الجولات، أو افض العقد واغدر به!</p>
+                <p style="font-size: 12px; color: var(--text-muted);">اختر شريكك من القائمة لتقاسم الأرباح، أو افض العقد واغدر به!</p>
                 <div id="alliance-box-content">
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                         <select id="alliance-select-player" class="custom-select">
@@ -726,7 +633,7 @@
             </div>
 
             <div class="interactive-action-card">
-                <h3 style="font-size: 16px; color: var(--red);"><i class="fa-solid fa-skull-crossbones"></i> تنفيذ مؤامرة وعقوبة على تاجر محدد</h3>
+                <h3 style="font-size: 16px; color: var(--red);"><i class="fa-solid fa-skull-crossbones"></i> مؤامرة وعقوبة على تاجر محدد</h3>
                 <p style="font-size: 12px; color: var(--text-muted);">اختر الضحية من المتواجدين بالاستراحة ونفذ الضربة:</p>
                 
                 <select id="sabotage-select-target" class="custom-select" style="margin-bottom: 8px;">
@@ -734,13 +641,13 @@
                 </select>
 
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <button class="btn-trade-sell" onclick="executeTargetedSabotage('freeze')">
+                    <button class="btn-trade-sell" style="padding:10px;" onclick="executeTargetedSabotage('freeze')">
                         <i class="fa-solid fa-snowflake"></i> تجميد حساباته لدقيقة (1,000 ¥)
                     </button>
-                    <button class="btn-trade-sell" onclick="executeTargetedSabotage('rumor')">
+                    <button class="btn-trade-sell" style="padding:10px;" onclick="executeTargetedSabotage('rumor')">
                         <i class="fa-solid fa-bullhorn"></i> إطلاق شائعة تطيح بأسهمه (750 ¥)
                     </button>
-                    <button class="btn-trade-sell" onclick="executeTargetedSabotage('heist')">
+                    <button class="btn-trade-sell" style="padding:10px;" onclick="executeTargetedSabotage('heist')">
                         <i class="fa-solid fa-mask"></i> سطو على 20% من مخزونه (1,500 ¥)
                     </button>
                 </div>
@@ -757,47 +664,69 @@
 
     </div>
 
-    <!-- Live Auction Popup for Players -->
-    <div id="player-auction-modal">
-        <div class="auction-card">
-            <div style="font-size: 36px; margin-bottom: 6px;">🔔</div>
-            <h3 style="font-size: 18px; color: var(--gold);" id="modal-auction-title">مزاد علني مباشر!</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;" id="modal-auction-desc">تفاصيل الأصل</p>
+    <!-- Trade Slider Modal (Eliminates Click-Spam Glitch Completely) -->
+    <div id="trade-slider-modal">
+        <div class="trade-slider-box">
+            <h3 style="font-size: 18px; color: var(--gold);" id="slider-asset-name">السلعة</h3>
+            <div style="font-size: 13px; color: var(--text-muted); margin: 6px 0;" id="slider-asset-price">السعر: 0 ¥</div>
             
-            <div style="background: var(--bg-card); padding: 12px; border-radius: var(--radius-sm); margin-bottom: 14px;">
-                <div style="font-size: 12px; color: var(--text-muted);">السومة الحالية:</div>
-                <div style="font-family: 'Changa'; font-size: 26px; font-weight: 900; color: var(--gold);"><span id="modal-auction-price">0</span> ¥</div>
-                <div style="font-size: 12px; color: var(--green);" id="modal-auction-leader">بانتظار السومات...</div>
+            <div style="font-size: 24px; font-weight: 900; font-family: 'Changa'; color: #fff; margin-top: 10px;">
+                الكمية: <span id="slider-qty-val">1</span>
+            </div>
+            <div style="font-size: 13px; color: var(--green); font-weight: bold; margin-bottom: 10px;">
+                الإجمالي: <span id="slider-total-cost">0</span> ¥
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-                <button class="btn-trade-buy" onclick="bidAuction(100)">+100 ¥</button>
-                <button class="btn-trade-buy" onclick="bidAuction(500)">+500 ¥</button>
-                <button class="btn-trade-buy" onclick="bidAuction(1000)">+1,000 ¥</button>
+            <input type="range" id="trade-range-slider" class="slider-control" min="1" max="10" value="1" oninput="updateSliderCalc()">
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="btn-trade-buy" style="flex:1; padding:12px;" onclick="executeSliderTrade('BUY')"><i class="fa-solid fa-cart-plus"></i> تأكيد الشراء</button>
+                <button class="btn-trade-sell" style="flex:1; padding:12px;" onclick="executeSliderTrade('SELL')"><i class="fa-solid fa-hand-holding-dollar"></i> تأكيد البيع</button>
             </div>
+            <button class="btn-main" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); margin-top: 10px;" onclick="closeSliderModal()">إلغاء</button>
         </div>
     </div>
 
-    <!-- Fate Card Modal (Round 3+) -->
-    <div id="fate-card-modal">
-        <div class="fate-box">
-            <div style="font-size: 40px; margin-bottom: 8px;" id="fate-card-icon">🔮</div>
-            <h3 style="font-size: 18px; color: var(--purple); margin-bottom: 6px;" id="fate-card-header">بطاقة القدر!</h3>
-            <p style="font-size: 13.5px; color: var(--text-main); margin-bottom: 16px;" id="fate-card-text">نص البطاقة</p>
-            <button class="btn-main btn-purple" onclick="closeFateCard()">موافق</button>
+    <!-- Welcome Tutorial Modal -->
+    <div id="tutorial-modal">
+        <div class="tutorial-card">
+            <h2 style="font-family: 'Changa'; color: var(--gold); font-size: 22px; text-align: center; margin-bottom: 16px;">👑 كيف تلعب وتتصدر الهوامير؟</h2>
+            
+            <div class="tutorial-step">
+                <div class="step-icon">📈</div>
+                <div>
+                    <strong style="color: #60a5fa;">1. ضارب بالبورصة:</strong>
+                    <p style="font-size: 12.5px; color: var(--text-muted);">اشتر السلع الرخيصة وبِعها إذا ارتفعت. الشراء الكثير يرفع السعر والبيع ينزله!</p>
+                </div>
+            </div>
+
+            <div class="tutorial-step">
+                <div class="step-icon">🤝</div>
+                <div>
+                    <strong style="color: var(--green);">2. التحالفات والغدر:</strong>
+                    <p style="font-size: 12.5px; color: var(--text-muted);">وقع عقد شراكة مع خويك لتقاسم الأرباح، وتقدر بأي لحظة تغدر فيه وتسرق نصيبه!</p>
+                </div>
+            </div>
+
+            <div class="tutorial-step">
+                <div class="step-icon">🥷</div>
+                <div>
+                    <strong style="color: var(--red);">3. المؤامرات والتخريب:</strong>
+                    <p style="font-size: 12.5px; color: var(--text-muted);">جمد حسابات المتصدر، أطلق شائعات تطيح بأسهمه، أو اسطُ على مخزونه!</p>
+                </div>
+            </div>
+
+            <button class="btn-main btn-gold" onclick="closeTutorial()"><i class="fa-solid fa-play"></i> فهمت، خلنا نبدأ!</button>
         </div>
     </div>
 
-    <!-- Anti-Monopoly Vote Modal -->
-    <div id="monopoly-vote-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:11500; display:none; align-items:center; justify-content:center; padding:20px;">
-        <div style="background:var(--bg-nav); border:2px solid var(--red); border-radius:var(--radius-lg); padding:24px; max-width:380px; width:100%; text-align:center;">
-            <div style="font-size:36px; margin-bottom:6px;">⚖️</div>
-            <h3 style="font-size:18px; color:var(--red); margin-bottom:6px;">تصويت طارئ: عزل المتصدر!</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;" id="monopoly-vote-desc">هل توافقون على فرض ضريبة احتكار 25% على المتصدر؟ (قوة صوتك مستندة لحجم أصولك!)</p>
-            <div style="display:flex; gap:10px;">
-                <button class="btn-trade-buy" style="flex:1; padding:12px;" onclick="castMonopolyVote('yes')">نعم (موافق)</button>
-                <button class="btn-trade-sell" style="flex:1; padding:12px;" onclick="castMonopolyVote('no')">لا (رافض)</button>
-            </div>
+    <!-- Fate Card Modal -->
+    <div id="fate-card-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:11000; display:none; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:var(--bg-nav); border:2px solid var(--purple); border-radius:var(--radius-lg); padding:24px; max-width:380px; width:100%; text-align:center;">
+            <div style="font-size:40px; margin-bottom:8px;" id="fate-card-icon">🔮</div>
+            <h3 style="font-size:18px; color:var(--purple); margin-bottom:6px;" id="fate-card-header">بطاقة القدر!</h3>
+            <p style="font-size:13.5px; color:var(--text-main); margin-bottom:16px;" id="fate-card-text">نص البطاقة</p>
+            <button class="btn-main btn-purple" onclick="closeFateCard()">استيعاب الصدمة</button>
         </div>
     </div>
 
@@ -823,9 +752,11 @@
     <div id="toast-box"></div>
 
     <script>
+        /* --- Funny & Epic Web Audio Synth Effects --- */
         const SoundFX = {
             ctx: null,
             init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+            // صوت كاشينق سريع وممتع
             playCoin() {
                 try {
                     this.init();
@@ -833,15 +764,33 @@
                     const osc = this.ctx.createOscillator();
                     const g = this.ctx.createGain();
                     osc.connect(g); g.connect(this.ctx.destination);
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(987.77, now);
-                    osc.frequency.setValueAtTime(1318.51, now + 0.08);
-                    g.gain.setValueAtTime(0.2, now);
-                    g.gain.linearRampToValueAtTime(0.01, now + 0.2);
-                    osc.start(now); osc.stop(now + 0.2);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(1046.50, now);
+                    osc.frequency.setValueAtTime(1318.51, now + 0.06);
+                    osc.frequency.setValueAtTime(1567.98, now + 0.12);
+                    g.gain.setValueAtTime(0.3, now);
+                    g.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now); osc.stop(now + 0.25);
                 }catch(e){}
             },
-            playGong() {
+            // صوت شخير/صفير غريب ومضحك عند الخسارة أو التخريب
+            playFunnyLoss() {
+                try {
+                    this.init();
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const g = this.ctx.createGain();
+                    osc.connect(g); g.connect(this.ctx.destination);
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(320, now);
+                    osc.frequency.linearRampToValueAtTime(80, now + 0.4);
+                    g.gain.setValueAtTime(0.35, now);
+                    g.gain.linearRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now); osc.stop(now + 0.4);
+                }catch(e){}
+            },
+            // صوت بووونق قوي للتخريب والسطو
+            playBoing() {
                 try {
                     this.init();
                     const now = this.ctx.currentTime;
@@ -849,44 +798,37 @@
                     const g = this.ctx.createGain();
                     osc.connect(g); g.connect(this.ctx.destination);
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(440, now);
-                    osc.frequency.exponentialRampToValueAtTime(110, now + 0.8);
-                    g.gain.setValueAtTime(0.5, now);
-                    g.gain.linearRampToValueAtTime(0.01, now + 0.8);
-                    osc.start(now); osc.stop(now + 0.8);
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.2);
+                    osc.frequency.exponentialRampToValueAtTime(100, now + 0.4);
+                    g.gain.setValueAtTime(0.4, now);
+                    g.gain.linearRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now); osc.stop(now + 0.4);
                 }catch(e){}
             }
         };
 
         const INITIAL_ASSETS = [
-            { id: "gold", name: "سبائك الذهب 24", icon: "🪙", basePrice: 2500, price: 2500, prevPrice: 2500, owned: 0, avgCost: 0 },
-            { id: "real_estate", name: "صكوك أراضي وعقار", icon: "🏢", basePrice: 4200, price: 4200, prevPrice: 4200, owned: 0, avgCost: 0 },
-            { id: "tech", name: "أسهم الذكاء والتقنية", icon: "💻", basePrice: 900, price: 900, prevPrice: 900, owned: 0, avgCost: 0 },
-            { id: "oil", name: "عقود النفط والطاقة", icon: "🛢️", basePrice: 650, price: 650, prevPrice: 650, owned: 0, avgCost: 0 },
-            { id: "oud", name: "دهن عود ومخلط ملكي", icon: "✨", basePrice: 350, price: 350, prevPrice: 350, owned: 0, avgCost: 0 }
+            { id: "gold", name: "سبائك الذهب 24", icon: "🪙", basePrice: 2500, price: 2500, prevPrice: 2500, owned: 0 },
+            { id: "real_estate", name: "صكوك أراضي وعقار", icon: "🏢", basePrice: 4200, price: 4200, prevPrice: 4200, owned: 0 },
+            { id: "tech", name: "أسهم الذكاء والتقنية", icon: "💻", basePrice: 900, price: 900, prevPrice: 900, owned: 0 },
+            { id: "oil", name: "عقود النفط والطاقة", icon: "🛢️", basePrice: 650, price: 650, prevPrice: 650, owned: 0 },
+            { id: "oud", name: "دهن عود ومخلط ملكي", icon: "✨", basePrice: 350, price: 350, prevPrice: 350, owned: 0 }
         ];
 
         const FATE_CARDS = [
-            { type: "disaster", title: "مصيبة مالية!", icon: "💸", text: "مصلحة الضرائب دهمتك وخصمت 15% من كاشك الحالي!", effect: (p) => { p.cash = Math.max(0, Math.round(p.cash * 0.85)); } },
-            { type: "fortune", title: "حظ وفير!", icon: "🎁", text: "لقيت محفظة استثمارية منسية فيها أرباح 2,000 ¥ كاش أضيفت لحسابك!", effect: (p) => { p.cash += 2000; } },
-            { type: "fortune", title: "طفرة سوقية!", icon: "📈", text: "طفرة في قطاع الذكاء والتقنية رفعت قيمة أصولك 40%!", effect: (p) => { let a = p.assets.find(i=>i.id==='tech'); if(a) a.price = Math.min(40000, Math.round(a.price*1.4)); } },
-            { type: "disaster", title: "مخالفة تجارية!", icon: "⚠️", text: "غرامة بلدية وسوء تخزين: خسرت حبة واحدة من كل أصل تملكه بالمستودع!", effect: (p) => { p.assets.forEach(i => { if(i.owned>0) i.owned--; }); } },
-            { type: "fortune", title: "منحة استثمارية!", icon: "👑", text: "منحة ملكية للمستثمرين النشطين: حصلت على 1,500 ¥ كاش فوراً!", effect: (p) => { p.cash += 1500; } }
+            { title: "مصيبة مالية!", icon: "💸", text: "مصلحة الضرائب دهمتك وخصمت 15% من كاشك الحالي!", effect: (p) => { p.cash = Math.max(0, Math.round(p.cash * 0.85)); } },
+            { title: "حظ وفير!", icon: "🎁", text: "لقيت محفظة استثمارية منسية فيها 2,000 ¥ كاش أضيفت لحسابك!", effect: (p) => { p.cash += 2000; } },
+            { title: "طفرة سوقية!", icon: "📈", text: "طفرة في أسهم التقنية رفعت قيمة أصولك 40%!", effect: (p) => { let a = p.assets.find(i=>i.id==='tech'); if(a) a.price = Math.min(40000, Math.round(a.price*1.4)); } },
+            { title: "مخالفة بلدية!", icon: "⚠️", text: "غرامة سوء تخزين: خسرت حبة واحدة من كل سلعة بمستودعك!", effect: (p) => { p.assets.forEach(i => { if(i.owned>0) i.owned--; }); } },
+            { title: "منحة ملكية!", icon: "👑", text: "منحة ملكية للمستثمرين النشطين: استلمت 1,500 ¥ كاش فوراً!", effect: (p) => { p.cash += 1500; } }
         ];
-
-        const RARE_AUCTION_ITEM = {
-            title: "مخطط أرض استراتيجي حصري (الجولة 5)",
-            desc: "أصل استثماري نادر يضاعف ثروة مالكه ويضخ 20% أرباحاً كاش في نهاية كل جولة!",
-            baseBid: 4000
-        };
 
         const App = {
             isHost: false,
             playerName: "محمد",
             roomCode: "LODGE",
             round: 1,
-            phaseTimeLeft: 300,
-            currentPhase: "trading",
             cash: 10000,
             bankSavings: 0,
             bankDebt: 0,
@@ -896,13 +838,11 @@
             connections: [],
             connectedPlayers: {},
             assets: JSON.parse(JSON.stringify(INITIAL_ASSETS)),
-            currentAuction: null,
-            isTradingBlocked: false,
-            voteTallies: { yes: 0, no: 0 }
+            activeSliderAsset: null
         };
 
         function calculateAssetsValue() {
-            return App.assets.reduce((sum, item) => sum + (Math.max(0, item.owned) * item.price), 0);
+            return App.assets.reduce((sum, item) => sum + ((Number(item.owned) || 0) * item.price), 0);
         }
 
         function calculateNetWorth() {
@@ -910,7 +850,6 @@
             return Math.max(0, total);
         }
 
-        // تحديد الألقاب التلقائية حسب المحفظة والتخريب
         function getPlayerTitle(netWorth, isHighest) {
             if (isHighest) return "👑 الهامور";
             if (netWorth < 8000) return "📉 المنكوب";
@@ -934,6 +873,7 @@
 
         function logoutSession() {
             localStorage.removeItem('asyad_active_session');
+            localStorage.removeItem('asyad_tutorial_seen');
             location.reload();
         }
 
@@ -953,7 +893,7 @@
                         App.bankSavings = Number(session.bankSavings) || 0;
                         App.bankDebt = Number(session.bankDebt) || 0;
                         if (Array.isArray(session.assets)) App.assets = session.assets;
-                        joinAsPlayer();
+                        joinAsPlayer(true);
                         return;
                     }
                 } catch(e){}
@@ -966,7 +906,7 @@
             }
         });
 
-        function joinAsPlayer() {
+        function joinAsPlayer(isResume = false) {
             const name = document.getElementById('player-name-input').value.trim();
             const room = document.getElementById('room-code-input').value.trim().toUpperCase();
             if (!name) { showToast("فضلاً اكتب اسمك التجاري!", "danger"); return; }
@@ -987,7 +927,16 @@
             saveSession();
             setupPlayerPeer();
             updateAllUI();
+
+            if (!isResume && !localStorage.getItem('asyad_tutorial_seen')) {
+                document.getElementById('tutorial-modal').style.display = 'flex';
+            }
             showToast(`أهلاً بك يا ${App.playerName}! تم الدخول بنجاح`, "success");
+        }
+
+        function closeTutorial() {
+            localStorage.setItem('asyad_tutorial_seen', 'true');
+            document.getElementById('tutorial-modal').style.display = 'none';
         }
 
         function startAsHostTV() {
@@ -1029,7 +978,7 @@
                     App.connections.push(conn);
                     conn.on('data', (data) => handleHostIncoming(data, conn));
                     conn.on('open', () => {
-                        conn.send({ type: "MARKET_SYNC", assets: App.assets, round: App.round, phase: App.currentPhase, timeLeft: App.phaseTimeLeft });
+                        conn.send({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
                         broadcastPlayerList();
                     });
                 });
@@ -1069,10 +1018,10 @@
                 if (item) {
                     item.prevPrice = item.price;
                     if (data.action === 'BUY') {
-                        let hike = Math.round(item.price * Math.min(0.25, (0.02 * (Number(data.qty)||1))));
+                        let hike = Math.round(item.price * Math.min(0.20, (0.02 * (Number(data.qty)||1))));
                         item.price = Math.min(40000, item.price + hike);
                     } else if (data.action === 'SELL') {
-                        let drop = Math.round(item.price * Math.min(0.25, (0.02 * (Number(data.qty)||1))));
+                        let drop = Math.round(item.price * Math.min(0.20, (0.02 * (Number(data.qty)||1))));
                         item.price = Math.max(100, item.price - drop);
                     }
                 }
@@ -1080,20 +1029,7 @@
                 broadcastAll({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
             } else if (data.type === "TARGETED_SABOTAGE") {
                 broadcastAll({ type: "RECEIVE_SABOTAGE", target: data.target, from: data.from, sabotageType: data.sabotageType });
-                pushNewsTicker(`🚨 تخريب: التاجر (${data.from}) استهدف (${data.target}) بضربة اقتصادية قوية!`);
-            } else if (data.type === "AUCTION_BID") {
-                if (App.currentAuction) {
-                    App.currentAuction.currentBid += data.amount;
-                    App.currentAuction.leader = data.name;
-                    broadcastAll({ type: "AUCTION_UPDATE", auction: App.currentAuction });
-                    updateHostTVDisplay();
-                }
-            } else if (data.type === "REQUEST_SKIP_PHASE") {
-                advancePhaseHost();
-            } else if (data.type === "CAST_MONOPOLY_VOTE") {
-                let weight = Math.max(1, Math.floor(data.netWorth / 1000)); // الوزن مستند لحجم الأصول
-                if (data.vote === 'yes') App.voteTallies.yes += weight;
-                else App.voteTallies.no += weight;
+                pushNewsTicker(`🚨 تخريب: التاجر (${data.from}) نفّذ ضربة على (${data.target})!`);
             }
         }
 
@@ -1106,52 +1042,17 @@
                         local.price = Math.max(100, Math.min(40000, serverAsset.price));
                     }
                 });
-                if (data.round) {
+                if (data.round && data.round !== App.round) {
                     App.round = data.round;
-                    document.getElementById('bar-round-num').innerText = App.round;
+                    if (App.round >= 3) triggerFateCardModal();
                 }
                 updateAllUI();
-            } else if (data.type === "PHASE_UPDATE") {
-                App.currentPhase = data.phase;
-                App.phaseTimeLeft = data.timeLeft;
-                document.getElementById('bar-round-num').innerText = data.round;
-                
-                let mins = Math.floor(data.timeLeft / 60);
-                let secs = data.timeLeft % 60;
-                document.getElementById('phase-timer-display').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-
-                if (data.phase === "trading") {
-                    document.getElementById('current-phase-name').innerText = "مرحلة التداول والمضاربة 📈";
-                } else if (data.phase === "fate") {
-                    document.getElementById('current-phase-name').innerText = "مرحلة بطاقات القدر 🔮";
-                    if (data.round >= 3) triggerFateCardModal();
-                } else if (data.phase === "sabotage") {
-                    document.getElementById('current-phase-name').innerText = "مرحلة التحالفات والمؤامرات ⚔️";
-                }
             } else if (data.type === "PLAYERS_LIST_UPDATE") {
                 updateDropdownTargets(data.players);
             } else if (data.type === "RECEIVE_SABOTAGE") {
                 if (data.target === App.playerName) {
                     applySabotageToMe(data.sabotageType, data.from);
                 }
-            } else if (data.type === "START_AUCTION") {
-                App.currentAuction = data.auction;
-                openPlayerAuctionModal(data.auction);
-            } else if (data.type === "AUCTION_UPDATE") {
-                App.currentAuction = data.auction;
-                updatePlayerAuctionModal(data.auction);
-            } else if (data.type === "END_AUCTION") {
-                closePlayerAuctionModal();
-                if (data.winner === App.playerName) {
-                    App.cash = Math.max(0, App.cash - data.finalBid);
-                    showToast(`🏆 مبروك! فزت بالمزاد وتضاعفت ثروتك!`, "success");
-                    confetti({ particleCount: 100 });
-                }
-                syncMyPlayerData();
-                updateAllUI();
-            } else if (data.type === "TRIGGER_MONOPOLY_VOTE") {
-                document.getElementById('monopoly-vote-modal').style.display = 'flex';
-                SoundFX.playGong();
             } else if (data.type === "NEWS_TICKER") {
                 pushNewsTicker(data.text);
             }
@@ -1179,171 +1080,117 @@
             App.connections.forEach(c => { if(c.open) c.send(payload); });
         }
 
-        function manualSkipPhase() {
-            if (App.isHost) {
-                advancePhaseHost();
-            } else {
-                App.connections.forEach(c => {
-                    if (c.open) c.send({ type: "REQUEST_SKIP_PHASE" });
-                });
-            }
-            showToast("تم طلب تخطي المرحلة الحالية ⏭️", "info");
-        }
-
-        function advancePhaseHost() {
-            if (App.currentPhase === "trading") {
-                App.currentPhase = "fate";
-                App.phaseTimeLeft = 20;
-            } else if (App.currentPhase === "fate") {
-                App.currentPhase = "sabotage";
-                App.phaseTimeLeft = 30;
-            } else if (App.currentPhase === "sabotage") {
+        function startHostPhasesEngine() {
+            // New Round every 2.5 minutes automatically
+            setInterval(() => {
                 App.round++;
-                App.currentPhase = "trading";
-                App.phaseTimeLeft = 300; // 5 mins
-
                 App.assets.forEach(a => {
                     a.prevPrice = a.price;
                     let factor = 0.85 + (Math.random() * 0.30);
                     a.price = Math.max(100, Math.min(40000, Math.round(a.price * factor)));
                 });
-
-                if (App.round === 5) {
-                    setTimeout(() => triggerHostAuction(), 3000);
-                }
-            }
-
-            broadcastAll({
-                type: "PHASE_UPDATE",
-                phase: App.currentPhase,
-                timeLeft: App.phaseTimeLeft,
-                round: App.round
-            });
-            updateHostTVDisplay();
+                broadcastAll({ type: "MARKET_SYNC", assets: App.assets, round: App.round });
+                updateHostTVDisplay();
+                pushNewsTicker(`🔔 بدأت الجولة رقم (${App.round}) والأسعار تغيرت بالبورصة!`);
+            }, 150000);
         }
 
-        function startHostPhasesEngine() {
-            setInterval(() => {
-                App.phaseTimeLeft--;
+        /* --- Trade Slider Logic (Eliminates Glitch Completely) --- */
+        function openSliderModal(assetId) {
+            const item = App.assets.find(a => a.id === assetId);
+            if (!item) return;
+            App.activeSliderAsset = item;
 
-                if (App.phaseTimeLeft <= 0) {
-                    advancePhaseHost();
-                }
+            document.getElementById('slider-asset-name').innerText = `${item.icon} ${item.name}`;
+            document.getElementById('slider-asset-price').innerText = `السعر الحالي: ${item.price.toLocaleString()} ¥ (المتوفر بمحفظتك: ${item.owned})`;
 
-                broadcastAll({
-                    type: "PHASE_UPDATE",
-                    phase: App.currentPhase,
-                    timeLeft: App.phaseTimeLeft,
-                    round: App.round
-                });
+            let maxBuy = Math.max(1, Math.min(50, Math.floor(App.cash / item.price)));
+            let slider = document.getElementById('trade-range-slider');
+            slider.max = Math.max(maxBuy, item.owned, 1);
+            slider.value = 1;
 
-                let mins = Math.floor(App.phaseTimeLeft / 60);
-                let secs = App.phaseTimeLeft % 60;
-                document.getElementById('phase-timer-display').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-                document.getElementById('bar-round-num').innerText = App.round;
-            }, 1000);
+            updateSliderCalc();
+            document.getElementById('trade-slider-modal').style.display = 'flex';
         }
 
-        /* --- BULLETPROOF ATOMIC MATH TRADING ENGINE --- */
-        function tradeAsset(assetId, action, qtyMode = 1) {
-            if (App.isTradingLocked) return;
-            App.isTradingLocked = true;
+        function updateSliderCalc() {
+            if (!App.activeSliderAsset) return;
+            let qty = Number(document.getElementById('trade-range-slider').value) || 1;
+            document.getElementById('slider-qty-val').innerText = qty;
+            document.getElementById('slider-total-cost').innerText = (qty * App.activeSliderAsset.price).toLocaleString();
+        }
 
-            document.querySelectorAll('.btn-trade-buy, .btn-trade-sell').forEach(b => b.disabled = true);
+        function closeSliderModal() {
+            document.getElementById('trade-slider-modal').style.display = 'none';
+            App.activeSliderAsset = null;
+        }
+
+        function executeSliderTrade(action) {
+            if (!App.activeSliderAsset) return;
+            let item = App.activeSliderAsset;
+            let qty = Number(document.getElementById('trade-range-slider').value) || 1;
 
             if (App.isFrozen) {
-                showToast("حسابك مجمد حالياً بسبب عقوبة موجهة لك!", "danger");
-                unlockTrading();
-                return;
-            }
-
-            const item = App.assets.find(a => a.id === assetId);
-            if (!item || item.price <= 0 || !isFinite(item.price)) {
-                unlockTrading();
+                showToast("حسابك مجمد بسبب عقوبة!", "danger");
+                SoundFX.playFunnyLoss();
+                closeSliderModal();
                 return;
             }
 
             if (action === 'BUY') {
-                let maxAffordable = Math.floor(App.cash / item.price);
-                let qty = qtyMode === 'max' ? maxAffordable : Number(qtyMode);
-
-                if (qty <= 0 || !isFinite(qty) || App.cash < (qty * item.price)) {
+                let totalCost = qty * item.price;
+                if (App.cash < totalCost) {
                     showToast("الكاش المتوفر لا يكفي!", "danger");
-                    unlockTrading();
+                    SoundFX.playFunnyLoss();
                     return;
                 }
-
-                let totalCost = qty * item.price;
-                App.cash = Math.max(0, Math.round(App.cash - totalCost));
-                item.owned = (Number(item.owned) || 0) + qty;
-
-                item.prevPrice = item.price;
-                let priceRise = Math.round(item.price * Math.min(0.25, (0.02 * qty)));
-                item.price = Math.min(40000, item.price + priceRise);
-
+                App.cash -= totalCost;
+                item.owned += qty;
+                item.price = Math.min(40000, item.price + Math.round(item.price * Math.min(0.20, (0.02 * qty))));
                 SoundFX.playCoin();
                 showToast(`تم شراء ${qty} × ${item.name}`, "success");
             } else if (action === 'SELL') {
-                let currentOwned = Number(item.owned) || 0;
-                let qty = qtyMode === 'all' ? currentOwned : Number(qtyMode);
-
-                if (qty <= 0 || currentOwned < qty || !isFinite(qty)) {
-                    showToast("لا تملك أصولاً كافية للبيع!", "danger");
-                    unlockTrading();
+                if (item.owned < qty) {
+                    showToast("لا تملك هذه الكمية للبيع!", "danger");
+                    SoundFX.playFunnyLoss();
                     return;
                 }
-
                 let revenue = qty * item.price;
-                item.owned = Math.max(0, currentOwned - qty);
-                App.cash = Math.round(App.cash + revenue);
-
-                item.prevPrice = item.price;
-                let priceDrop = Math.round(item.price * Math.min(0.25, (0.02 * qty)));
-                item.price = Math.max(100, item.price - priceDrop);
-
+                item.owned -= qty;
+                App.cash += revenue;
+                item.price = Math.max(100, item.price - Math.round(item.price * Math.min(0.20, (0.02 * qty))));
                 SoundFX.playCoin();
                 showToast(`تم بيع ${qty} × ${item.name}`, "info");
             }
 
             App.connections.forEach(c => {
-                if(c.open) c.send({ type: "MARKET_TRADE", assetId: assetId, action: action, qty: qtyMode === 'max' || qtyMode === 'all' ? 5 : 1 });
+                if(c.open) c.send({ type: "MARKET_TRADE", assetId: item.id, action: action, qty: qty });
             });
 
+            closeSliderModal();
             syncMyPlayerData();
-            updateAllUI();
-            setTimeout(() => { unlockTrading(); }, 120);
-        }
-
-        function unlockTrading() {
-            App.isTradingLocked = false;
             updateAllUI();
         }
 
         function sellAllPlayerInventory() {
-            if (App.isTradingLocked) return;
-            App.isTradingLocked = true;
-
             let totalRev = 0;
-            let count = 0;
             App.assets.forEach(a => {
-                let owned = Number(a.owned) || 0;
-                if (owned > 0 && a.price > 0) {
-                    totalRev += (owned * a.price);
+                if (a.owned > 0) {
+                    totalRev += (a.owned * a.price);
                     a.owned = 0;
                 }
             });
 
-            if (count > 0) {
-                App.cash = Math.round(App.cash + totalRev);
+            if (totalRev > 0) {
+                App.cash += totalRev;
                 SoundFX.playCoin();
                 showToast(`تمت تصفية المخزون بالكامل (+${totalRev.toLocaleString()} ¥)`, "success");
                 syncMyPlayerData();
                 updateAllUI();
             } else {
                 showToast("المخزون فارغ!", "danger");
+                SoundFX.playFunnyLoss();
             }
-
-            setTimeout(() => { unlockTrading(); }, 150);
         }
 
         function updateDropdownTargets(playersList) {
@@ -1366,17 +1213,19 @@
             const target = select.value;
 
             if (!target) {
-                showToast("فضلاً اختر التاجر المستهدف من القائمة أولاً!", "danger");
+                showToast("اختر التاجر المستهدف من القائمة أولاً!", "danger");
                 return;
             }
 
             let cost = type === 'freeze' ? 1000 : (type === 'rumor' ? 750 : 1500);
             if (App.cash < cost) {
                 showToast("الكاش المتوفر لا يكفي لتنفيذ هذه الضربة!", "danger");
+                SoundFX.playFunnyLoss();
                 return;
             }
 
             App.cash -= cost;
+            SoundFX.playBoing();
 
             App.connections.forEach(c => {
                 if(c.open) c.send({
@@ -1393,18 +1242,18 @@
         }
 
         function applySabotageToMe(type, from) {
-            SoundFX.playGong();
+            SoundFX.playFunnyLoss();
             if (type === 'freeze') {
                 App.isFrozen = true;
-                showToast(`⚠️ تم تجميد حساباتك من قبل التاجر: ${from}!`, "danger");
+                showToast(`⚠️ تم تجميد حساباتك من قبل: ${from}!`, "danger");
                 setTimeout(() => { App.isFrozen = false; showToast("تم فك التجميد عن حسابك", "info"); }, 30000);
             } else if (type === 'rumor') {
                 App.assets.forEach(a => { a.price = Math.max(100, Math.round(a.price * 0.8)); });
-                showToast(`📉 شائعة موجهة من ${from} خسرتك 20% من قيمة أصولك!`, "danger");
+                showToast(`📉 شائعة موجهة من ${from} خسرتك 20% من أصولك!`, "danger");
             } else if (type === 'heist') {
                 let stolen = Math.min(App.cash, 1500);
                 App.cash = Math.max(0, App.cash - stolen);
-                showToast(`🥷 عملية سطو من ${from} نهبت منك ${stolen} ¥!`, "danger");
+                showToast(`🥷 سطو من ${from} نهب منك ${stolen} ¥!`, "danger");
             }
             syncMyPlayerData();
             updateAllUI();
@@ -1426,12 +1275,14 @@
                     <button class="btn-trade-sell" style="padding: 6px 12px; font-size: 12px;" onclick="breakAlliance()"><i class="fa-solid fa-handshake-slash"></i> فسخ العقد والغدر به (+1,500¥)</button>
                 </div>
             `;
+            SoundFX.playCoin();
             showToast(`تم توقيع عقد الشراكة مع ${partner}!`, "success");
             pushNewsTicker(`🤝 تحالف تجاري جديد تم توقيعه بين (${App.playerName}) و(${partner})!`);
         }
 
         function breakAlliance() {
             App.cash += 1500;
+            SoundFX.playBoing();
             showToast(`فسخت العقد وسرقت 1,500 ¥ من أموال الشراكة!`, "danger");
             pushNewsTicker(`⚡ غدر وخيانة: (${App.playerName}) فض التحالف وغدر بشريكه!`);
             App.alliancePartner = null;
@@ -1454,7 +1305,7 @@
             document.getElementById('fate-card-icon').innerText = card.icon;
             document.getElementById('fate-card-text').innerText = card.text;
             document.getElementById('fate-card-modal').style.display = 'flex';
-            SoundFX.playGong();
+            SoundFX.playBoing();
         }
 
         function closeFateCard() {
@@ -1463,124 +1314,22 @@
             updateAllUI();
         }
 
-        function triggerHostAuction() {
-            App.currentAuction = {
-                title: RARE_AUCTION_ITEM.title,
-                desc: RARE_AUCTION_ITEM.desc,
-                currentBid: RARE_AUCTION_ITEM.baseBid,
-                leader: "لا يوجد"
-            };
-
-            SoundFX.playGong();
-            document.getElementById('tv-auction-box').style.display = 'block';
-            document.getElementById('tv-auction-title').innerText = App.currentAuction.title;
-            document.getElementById('tv-auction-desc').innerText = App.currentAuction.desc;
-            document.getElementById('tv-auction-price').innerText = App.currentAuction.currentBid.toLocaleString();
-            document.getElementById('tv-auction-leader').innerText = `السومة عند: ${App.currentAuction.leader}`;
-
-            broadcastAll({ type: "START_AUCTION", auction: App.currentAuction });
-            pushNewsTicker(`🔔 تنبيه مزاد الجولة الخامسة: بدأ المزاد العلني على الأصل النادر!`);
-
-            setTimeout(() => {
-                document.getElementById('tv-auction-box').style.display = 'none';
-                broadcastAll({ type: "END_AUCTION", winner: App.currentAuction.leader, finalBid: App.currentAuction.currentBid });
-                showToast(`انتهى مزاد الجولة الخامسة بفوز: ${App.currentAuction.leader}!`, "success");
-                pushNewsTicker(`🏆 فاز التاجر (${App.currentAuction.leader}) بالمزاد العلني للجولة الخامسة!`);
-                App.currentAuction = null;
-            }, 30000);
-        }
-
-        function openPlayerAuctionModal(auction) {
-            document.getElementById('modal-auction-title').innerText = auction.title;
-            document.getElementById('modal-auction-desc').innerText = auction.desc;
-            document.getElementById('modal-auction-price').innerText = auction.currentBid.toLocaleString();
-            document.getElementById('modal-auction-leader').innerText = `أعلى سومة: ${auction.leader}`;
-            document.getElementById('player-auction-modal').style.display = 'flex';
-            SoundFX.playGong();
-        }
-
-        function updatePlayerAuctionModal(auction) {
-            document.getElementById('modal-auction-price').innerText = auction.currentBid.toLocaleString();
-            document.getElementById('modal-auction-leader').innerText = `أعلى سومة: ${auction.leader}`;
-        }
-
-        function closePlayerAuctionModal() {
-            document.getElementById('player-auction-modal').style.display = 'none';
-        }
-
-        function bidAuction(amount) {
-            if (App.cash < (App.currentAuction.currentBid + amount)) {
-                showToast("كاشك لا يكفي لهذه السومة!", "danger");
-                return;
-            }
-            App.connections.forEach(c => {
-                if(c.open) c.send({ type: "AUCTION_BID", amount: amount, name: App.playerName });
-            });
+        function depositBankAll() {
+            if (App.cash <= 0) { showToast("ما معك كاش للإيداع!", "danger"); return; }
+            App.bankSavings += App.cash;
+            App.cash = 0;
             SoundFX.playCoin();
-        }
-
-        /* --- ANTI-MONOPOLY VOTE (WITH ASSET WEIGHT) --- */
-        function triggerAntiMonopolyVote() {
-            App.voteTallies = { yes: 0, no: 0 };
-            broadcastAll({ type: "TRIGGER_MONOPOLY_VOTE" });
-            document.getElementById('monopoly-vote-modal').style.display = 'flex';
-            SoundFX.playGong();
-        }
-
-        function castMonopolyVote(choice) {
-            document.getElementById('monopoly-vote-modal').style.display = 'none';
-            let netWorth = calculateNetWorth();
-            
-            App.connections.forEach(c => {
-                if(c.open) c.send({ type: "CAST_MONOPOLY_VOTE", vote: choice, netWorth: netWorth });
-            });
-
-            // Local vote
-            let weight = Math.max(1, Math.floor(netWorth / 1000));
-            if (choice === 'yes') App.voteTallies.yes += weight;
-            else App.voteTallies.no += weight;
-
-            showToast("تم تسجيل صوتك بقوة أصولك المالية!", "success");
-
-            setTimeout(() => {
-                if (App.voteTallies.yes > App.voteTallies.no) {
-                    App.cash = Math.max(0, Math.round(App.cash * 0.75));
-                    showToast("⚖️ نجح التصويت! تم خصم ضريبة احتكار 25% من رصيدك بناءً على قوة أصولك.", "danger");
-                    pushNewsTicker(`⚖️ قرار مجلس الاستراحة: تم فرض ضريبة احتكار على المتصدر!`);
-                } else {
-                    showToast("⚖️ فشل التصويت، نجا المتصدر من الضريبة!", "info");
-                }
-                syncMyPlayerData();
-                updateAllUI();
-            }, 6000);
-        }
-
-        function setBankAmount(ratio) {
-            document.getElementById('bank-custom-amount').value = Math.floor(App.cash * ratio);
-        }
-
-        function handleDepositCustom() {
-            const input = document.getElementById('bank-custom-amount');
-            let amt = parseInt(input.value) || 0;
-            if (amt <= 0 || App.cash < amt) { showToast("المبلغ غير صالح أو الكاش لا يكفي!", "danger"); return; }
-            App.cash -= amt;
-            App.bankSavings += amt;
-            input.value = '';
-            SoundFX.playCoin();
-            showToast(`تم إيداع ${amt.toLocaleString()} ¥ بالبنك`, "success");
+            showToast("تم إيداع كامل الكاش بالبنك", "success");
             syncMyPlayerData();
             updateAllUI();
         }
 
-        function handleWithdrawCustom() {
-            const input = document.getElementById('bank-custom-amount');
-            let amt = parseInt(input.value) || 0;
-            if (amt <= 0 || App.bankSavings < amt) { showToast("المبلغ أكبر من رصيد الوديعة!", "danger"); return; }
-            App.bankSavings -= amt;
-            App.cash += amt;
-            input.value = '';
+        function withdrawBankAll() {
+            if (App.bankSavings <= 0) { showToast("الوديعة فارغة!", "danger"); return; }
+            App.cash += App.bankSavings;
+            App.bankSavings = 0;
             SoundFX.playCoin();
-            showToast(`تم سحب ${amt.toLocaleString()} ¥`, "info");
+            showToast("تم سحب كامل الوديعة", "info");
             syncMyPlayerData();
             updateAllUI();
         }
@@ -1631,10 +1380,10 @@
                 let diff = item.price - item.prevPrice;
                 let chgClass = diff >= 0 ? 'change-up' : 'change-down';
                 let ownedCount = Number(item.owned) || 0;
-                let canBuy = App.cash >= item.price && !App.isTradingLocked;
 
                 const card = document.createElement('div');
                 card.className = 'stock-card';
+                card.onclick = () => openSliderModal(item.id);
                 card.innerHTML = `
                     <div class="stock-top">
                         <div class="stock-info">
@@ -1649,13 +1398,8 @@
                             <div class="${chgClass}">${diff >= 0 ? '+' : ''}${diff} ¥</div>
                         </div>
                     </div>
-                    <div class="action-grid">
-                        <button class="btn-trade-buy" onclick="tradeAsset('${item.id}', 'BUY', 1)" ${!canBuy ? 'disabled' : ''}>شراء 1</button>
-                        <button class="btn-trade-sell" onclick="tradeAsset('${item.id}', 'SELL', 1)" ${ownedCount <= 0 || App.isTradingLocked ? 'disabled' : ''}>بيع 1</button>
-                    </div>
-                    <div class="action-grid">
-                        <button class="btn-trade-buy" style="font-size:11.5px; padding:5px;" onclick="tradeAsset('${item.id}', 'BUY', 'max')" ${!canBuy ? 'disabled' : ''}>أقصى كمية</button>
-                        <button class="btn-trade-sell" style="font-size:11.5px; padding:5px;" onclick="tradeAsset('${item.id}', 'SELL', 'all')" ${ownedCount <= 0 || App.isTradingLocked ? 'disabled' : ''}>بيع الكل (${ownedCount})</button>
+                    <div style="font-size:11.5px; color:var(--gold); text-align:center; background:rgba(245,158,11,0.08); padding:6px; border-radius:6px;">
+                        اضغط هنا لفتح نافذة الشراء أو البيع بالسلايدر 👆
                     </div>
                 `;
                 container.appendChild(card);
@@ -1675,6 +1419,7 @@
                 let val = count * item.price;
                 const card = document.createElement('div');
                 card.className = 'stock-card';
+                card.onclick = () => openSliderModal(item.id);
                 card.innerHTML = `
                     <div class="stock-top">
                         <div class="stock-info">
@@ -1688,10 +1433,6 @@
                             <div class="stock-price" style="color:var(--green);">${val.toLocaleString()} ¥</div>
                         </div>
                     </div>
-                    <div class="action-grid">
-                        <button class="btn-trade-sell" onclick="tradeAsset('${item.id}', 'SELL', 1)">بيع 1</button>
-                        <button class="btn-trade-sell" style="background:var(--red); color:#fff;" onclick="tradeAsset('${item.id}', 'SELL', 'all')">بيع الكل</button>
-                    </div>
                 `;
                 container.appendChild(card);
             });
@@ -1701,8 +1442,6 @@
             const tbody = document.getElementById('tv-leaderboard-rows');
             tbody.innerHTML = '';
             let playersArray = Object.entries(App.connectedPlayers);
-            
-            // ترتيب حسب الثروة لاكتشاف الهامور
             playersArray.sort((a,b) => b[1].netWorth - a[1].netWorth);
 
             if (playersArray.length === 0) {
